@@ -11,6 +11,6 @@
 		Width="900"
 		Height="700"
 		MinWidth="300"
-		MinHeight="300">
+		MinHeight="300" Closing="Window_Closing">
         <views:MainView />
 </Window>

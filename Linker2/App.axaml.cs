@@ -34,17 +34,15 @@ public partial class App : Application
         else
         {
             Bootstrapper.Bootstrap();
-        }
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow = new MainWindow();
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-            };
-        }
-        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-        {
-            singleViewPlatform.MainView = new MainView();
+                desktop.MainWindow = new MainWindow();
+            }
+            else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+            {
+                singleViewPlatform.MainView = new MainView();
+            }
         }
 
         base.OnFrameworkInitializationCompleted();

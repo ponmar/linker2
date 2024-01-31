@@ -13,4 +13,9 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = ServiceLocator.Resolve<MainViewModel>();
     }
+
+    private void Window_Closing(object? sender, Avalonia.Controls.WindowClosingEventArgs e)
+    {
+        sessionUtils.StopSession();
+    }
 }
