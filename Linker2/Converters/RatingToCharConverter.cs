@@ -7,7 +7,8 @@ public class RatingToCharConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
     {
-        if (value is not null)
+        if (value is not null &&
+            parameter is not null)
         {
             var linkRating = (int)value;
             var buttonRating = int.Parse((string)parameter);

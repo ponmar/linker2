@@ -52,15 +52,6 @@
 
 				<Border Margin="5" Grid.Row="0" Grid.Column="1" CornerRadius="8" IsVisible="{Binding HasThumbnailUrl}" Width="{Binding ThumbnailWidth}" Height="{Binding ThumbnailHeight}" BorderThickness="1" BorderBrush="Black" ToolTip.Tip="{Binding LongTitle}" ClipToBounds="True">
 					<Image IsVisible="{Binding ThumbnailImage,Converter={x:Static ObjectConverters.IsNotNull}}" Source="{Binding ThumbnailImage}" Stretch="UniformToFill" UseLayoutRounding="True"/>
-					<!--
-					<Border.Background>
-						<VisualBrush AlignmentY="Top" Stretch="UniformToFill">
-							<VisualBrush.Visual>
-								<Image Source="{Binding ThumbnailImage, TargetNullValue={x:Null}}"/>
-							</VisualBrush.Visual>
-						</VisualBrush>
-					</Border.Background>
-						-->
 				</Border>
 
 				<StackPanel
@@ -127,7 +118,6 @@
 		</Grid.RowDefinitions>
 
 		<ListBox
-            x:Name="LinksListView"
             Grid.Row="0"
             Grid.Column="0"
             BorderThickness="0"
@@ -135,20 +125,6 @@
             ItemTemplate="{StaticResource LinkTemplate}"
             ItemsSource="{Binding Links}"
             SelectedItem="{Binding SelectedLink}"
-            SelectionMode="Single">
-
-			<!--
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<Style.Triggers>
-						<Trigger Property="IsSelected" Value="true" >
-							<Setter Property="Foreground" Value="Orange" />
-							<Setter Property="Background" Value="Transparent" />
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</ListBox.ItemContainerStyle>
-				-->
-			</ListBox>
+            SelectionMode="Single"/>
 	</Grid>
 </UserControl>
