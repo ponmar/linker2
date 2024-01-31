@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
@@ -271,8 +273,10 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private static void Exit()
     {
-        // TODO
-        //Application.Current.Shutdown();
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopApp)
+        {
+            desktopApp.Shutdown();
+        }
     }
 
     [RelayCommand]

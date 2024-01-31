@@ -1,4 +1,6 @@
-﻿using Linker2.Configuration;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Linker2.Configuration;
 using Linker2.Validators;
 using Newtonsoft.Json;
 using System;
@@ -230,8 +232,10 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
         if (session.Data.Settings.QuitWhenSessionTimeouts)
         {
-            // TODO
-            //Application.Current.Shutdown();
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopApp)
+            {
+                desktopApp.Shutdown();
+            }
         }
 
         session = null;
