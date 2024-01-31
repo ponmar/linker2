@@ -1,20 +1,23 @@
 ﻿using FluentValidation.Results;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace Linker2;
 
 public interface IDialogs
 {
-    void ShowInfoDialog(string message);
+    void ShowInfoDialogAsync(string message);
     void ShowWarningDialog(string message);
     void ShowErrorDialog(string message);
     void ShowErrorDialog(IEnumerable<string> messages);
     void ShowErrorDialog(ValidationResult validationResult);
-    bool ShowConfirmDialog(string question);
+    Task<bool> ShowConfirmDialog(string question);
     string? SelectNewFileDialog(string title, string initialDirectory, string fileExtension, string filter);
     string? BrowseExistingFileDialog(string title, string initialDirectory, string filter);
     string? ShowBrowseExistingDirectoryDialog(string title);
@@ -24,19 +27,22 @@ public interface IDialogs
 
 public class Dialogs : IDialogs
 {
-    public void ShowInfoDialog(string message)
+    public async void ShowInfoDialogAsync(string message)
     {
-        //MessageBox.Show(message, Constants.AppName, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.No);
+        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Info);
+        var result = await box.ShowAsync();
     }
 
-    public void ShowWarningDialog(string message)
+    public async void ShowWarningDialog(string message)
     {
-        //MessageBox.Show(message, Constants.AppName, MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.No);
+        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Warning);
+        var result = await box.ShowAsync();
     }
 
-    public void ShowErrorDialog(string message)
+    public async void ShowErrorDialog(string message)
     {
-        //MessageBox.Show(message, Constants.AppName, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.No);
+        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Error);
+        var result = await box.ShowAsync();
     }
 
     public void ShowErrorDialog(IEnumerable<string> messages)
@@ -49,10 +55,11 @@ public class Dialogs : IDialogs
         ShowErrorDialog(validationResult.Errors.Select(x => x.ErrorMessage));
     }
 
-    public bool ShowConfirmDialog(string question)
+    public async Task<bool> ShowConfirmDialog(string question)
     {
-        //return MessageBox.Show(question, Constants.AppName, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
-        return false;
+        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, question, ButtonEnum.YesNo, Icon.Question);
+        var result = await box.ShowAsync();
+        return result == ButtonResult.Yes;
     }
 
     public string? SelectNewFileDialog(string title, string initialDirectory, string fileExtension, string filter)

@@ -9,13 +9,12 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Linker2.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    //private SecureString sessionPassword = new();
-
     [ObservableProperty]
     private string password = string.Empty;
 
@@ -82,9 +81,9 @@ public partial class MainViewModel : ObservableObject
             sessionUtils.OpenLinkWithExternalProgram(m.Url);
         });
 
-        this.RegisterForEvent<StartRemoveLink>((m) =>
+        this.RegisterForEvent<StartRemoveLink>(async (m) =>
         {
-            RemoveLink(m.Link);
+            await RemoveLinkAsync(m.Link);
         });
 
         this.RegisterForEvent<LinkSelected>((m) =>
@@ -171,7 +170,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void RemoveSelectedLink()
+    private async Task RemoveSelectedLinkAsync()
     {
         if (SelectedLink is null)
         {
@@ -179,12 +178,13 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        RemoveLink(SelectedLink);
+        await RemoveLinkAsync(SelectedLink);
     }
 
-    private void RemoveLink(LinkDto link)
+    private async Task RemoveLinkAsync(LinkDto link)
     {
-        if (!dialogs.ShowConfirmDialog($"Remove link '{link.Title ?? link.Url}'?"))
+        var removeConfirmed = await dialogs.ShowConfirmDialog($"Remove link '{link.Title ?? link.Url}'?");
+        if (!removeConfirmed)
         {
             return;
         }
@@ -260,7 +260,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             fileUtils.BackupConfigFile(SelectedFilename);
-            dialogs.ShowInfoDialog("Backup file created");
+            dialogs.ShowInfoDialogAsync("Backup file created");
         }
         catch (Exception e)
         {
@@ -347,7 +347,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Import()
+    private async Task ImportAsync()
     {
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
         var filePath = dialogs.BrowseExistingFileDialog("Select file to import", initialDirectory, "Linker export (.json)|*.json");
@@ -356,26 +356,19 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var includeLinks = dialogs.ShowConfirmDialog($"Import links from {filePath}?");
-        var includeFilters = dialogs.ShowConfirmDialog($"Import filters from {filePath}?");
-        var includeSettings = dialogs.ShowConfirmDialog($"Import settings from {filePath}?");
+        var includeLinks = await dialogs.ShowConfirmDialog($"Import links from {filePath}?");
+        var includeFilters = await dialogs.ShowConfirmDialog($"Import filters from {filePath}?");
+        var includeSettings = await dialogs.ShowConfirmDialog($"Import settings from {filePath}?");
         var importSettings = new ImportSettings(filePath, includeLinks, includeFilters, includeSettings);
 
         try
         {
             sessionUtils.Import(importSettings);
-            dialogs.ShowInfoDialog("Import finished successfully!");
+            dialogs.ShowInfoDialogAsync("Import finished successfully!");
         }
         catch (Exception e)
         {
             dialogs.ShowErrorDialog($"Import error: {e.Message}");
         }
     }
-
-    /*
-    public void SessionPasswordInputUpdated(SecureString password)
-    {
-        sessionPassword = password;
-    }
-    */
 }
