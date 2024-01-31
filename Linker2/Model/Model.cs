@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
-using System.Windows;
 using TextCopy;
 
 namespace Linker2.Model;
@@ -227,7 +226,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
         if (session.Data.Settings.DeselectFileWhenSessionTimeouts)
         {
-
+            // TODO
         }
 
         if (session.Data.Settings.QuitWhenSessionTimeouts)

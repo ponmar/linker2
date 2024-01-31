@@ -4,7 +4,6 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Linker2.Views;
 using System.Diagnostics;
-using System.IO.Abstractions;
 using System.Linq;
 
 namespace Linker2;

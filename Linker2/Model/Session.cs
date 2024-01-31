@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.HttpHelpers;
-using Linker2.Model;
 
 namespace Linker2.Model;
 

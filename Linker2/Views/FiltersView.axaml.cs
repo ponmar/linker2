@@ -1,14 +1,13 @@
 using Avalonia.Controls;
 using Linker2.ViewModels;
 
-namespace Linker2.Views
+namespace Linker2.Views;
+
+public partial class FiltersView : UserControl
 {
-    public partial class FiltersView : UserControl
+    public FiltersView()
     {
-        public FiltersView()
-        {
-            InitializeComponent();
-            DataContext = ServiceLocator.Resolve<LinksViewModel>();
-        }
+        InitializeComponent();
+        DataContext = ServiceLocator.Resolve<LinksViewModel>();
     }
 }

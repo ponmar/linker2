@@ -1,14 +1,13 @@
 using Avalonia.Controls;
 using Linker2.ViewModels;
 
-namespace Linker2.Views
+namespace Linker2.Views;
+
+public partial class FileView : UserControl
 {
-    public partial class FileView : UserControl
+    public FileView()
     {
-        public FileView()
-        {
-            InitializeComponent();
-            DataContext = ServiceLocator.Resolve<MainViewModel>();
-        }
+        InitializeComponent();
+        DataContext = ServiceLocator.Resolve<MainViewModel>();
     }
 }
