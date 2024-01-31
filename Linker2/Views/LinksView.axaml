@@ -1,0 +1,154 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:converters="clr-namespace:Linker2.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Linker2.Views.LinksView">
+	<UserControl.Resources>
+		<converters:RatingToTextConverter x:Key="RatingToTextConverter" />
+		<!--
+		<converters:RatingToTextConverter x:Key="RatingToTextConverter" />
+		<converters:ListContentToVisibilityConverter x:Key="ListContentToVisibilityConverter" />
+		<converters:NegatedBoolToVisibilityConverter x:Key="NegatedBoolToVisibilityConverter" />
+		<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+		-->
+
+		<DataTemplate x:Key="LinkTemplate">
+			<Grid Background="Transparent">
+				<!-- Note: transparent background to be able to open the context menu from everywhere -->
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto" SharedSizeGroup="TagsColumn" />
+					<ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
+					<ColumnDefinition Width="*" SharedSizeGroup="LinkColumn" />
+					<ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
+					<ColumnDefinition Width="auto" SharedSizeGroup="CounterColumn" />
+					<ColumnDefinition Width="auto" SharedSizeGroup="DateColumn" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<Grid.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Open" Command="{Binding OpenLinkCommand}" CommandParameter="{Binding LinkDto}"/>
+						<MenuItem Header="Edit..." Command="{Binding EditLinkCommand}" CommandParameter="{Binding LinkDto}"/>
+						<MenuItem Header="Remove..." Command="{Binding RemoveLinkCommand}" CommandParameter="{Binding LinkDto}"/>
+						<Separator/>
+						<MenuItem Header="Add..."  Command="{Binding AddLinkCommand}"/>
+					</ContextMenu>
+				</Grid.ContextMenu>
+
+				<ItemsControl
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    ItemsSource="{Binding Tags}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<ToggleButton Margin="2" Content="{Binding Name}" IsChecked="{Binding IsChecked}" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterByNameCommand}" CommandParameter="{Binding}" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+				<Border Margin="5" Grid.Row="0" Grid.Column="1" CornerRadius="8" IsVisible="{Binding HasThumbnailUrl}" Width="{Binding ThumbnailWidth}" Height="{Binding ThumbnailHeight}" BorderThickness="1" BorderBrush="Black" ToolTip.Tip="{Binding LongTitle}" ClipToBounds="True">
+					<Image IsVisible="{Binding ThumbnailImage,Converter={x:Static ObjectConverters.IsNotNull}}" Source="{Binding ThumbnailImage}" Stretch="UniformToFill" UseLayoutRounding="True"/>
+					<!--
+					<Border.Background>
+						<VisualBrush AlignmentY="Top" Stretch="UniformToFill">
+							<VisualBrush.Visual>
+								<Image Source="{Binding ThumbnailImage, TargetNullValue={x:Null}}"/>
+							</VisualBrush.Visual>
+						</VisualBrush>
+					</Border.Background>
+						-->
+				</Border>
+
+				<StackPanel
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical">
+
+					<TextBlock Margin="5" Text="{Binding ShortTitle}" FontSize="{Binding FontSize}" ToolTip.Tip="{Binding LongTitle}"/>
+
+					<TextBlock Margin="5"
+                        IsVisible="{Binding ShowDetails}"
+                        Foreground="Blue"
+                        Text="{Binding Url}"
+                        MaxWidth="600"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip.Tip="{Binding Url}" />
+
+					<TextBlock
+                        Margin="5"
+                        IsVisible="{Binding !ShowDetails}"
+                        FontSize="{Binding RatingFontSize}"
+                        Text="{Binding Rating,Converter={StaticResource RatingToTextConverter}}"
+                        ToolTip.Tip="{Binding RatingDescription}"/>
+				</StackPanel>
+
+				<TextBlock
+                    IsVisible="{Binding ShowDetails}"
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    FontSize="{Binding RatingFontSize}"
+                    Text="{Binding Rating,Converter={StaticResource RatingToTextConverter}}"
+                    ToolTip.Tip="{Binding RatingDescription}"/>
+
+				<TextBlock
+                    IsVisible="{Binding ShowDetails}"
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="{Binding OpenCounter}"
+                    ToolTip.Tip="Number of views"/>
+
+				<TextBlock
+                    IsVisible="{Binding ShowDetails}"
+                    Grid.Row="0"
+                    Grid.Column="5"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="{Binding VisualizedDateTime}" />
+			</Grid>
+		</DataTemplate>
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<ListBox
+            x:Name="LinksListView"
+            Grid.Row="0"
+            Grid.Column="0"
+            BorderThickness="0"
+            Grid.IsSharedSizeScope="True"
+            ItemTemplate="{StaticResource LinkTemplate}"
+            ItemsSource="{Binding Links}"
+            SelectedItem="{Binding SelectedLink}"
+            SelectionMode="Single">
+
+			<!--
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<Style.Triggers>
+						<Trigger Property="IsSelected" Value="true" >
+							<Setter Property="Foreground" Value="Orange" />
+							<Setter Property="Background" Value="Transparent" />
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</ListBox.ItemContainerStyle>
+				-->
+			</ListBox>
+	</Grid>
+</UserControl>

@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Linker2.ViewModels"
+			 xmlns:views="clr-namespace:Linker2.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Linker2.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+	<DockPanel>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="_File">
+				<MenuItem Header="_New..." Command="{Binding CreateCommand}" IsEnabled="{Binding !SessionStarted}"/>
+				<Separator />
+				<MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
+			</MenuItem>
+			<MenuItem Header="_Session" IsEnabled="{Binding SessionStarted}">
+				<MenuItem Header="_Settings..." Command="{Binding OpenSettingsCommand}" />
+				<MenuItem Header="_Change password..." Command="{Binding OpenChangePasswordCommand}" />
+				<Separator />
+				<MenuItem Header="_Import..." Command="{Binding ImportCommand}" />
+				<MenuItem Header="_Export..." Command="{Binding ExportCommand}" />
+				<Separator />
+				<MenuItem Header="_Save" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" />
+				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
+			</MenuItem>
+			<MenuItem Header="Link">
+				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}" IsEnabled="{Binding SessionStarted}"/>
+				<Separator/>
+				<MenuItem Header="_Open" Command="{Binding OpenLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Edit..." Command="{Binding OpenEditLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Remove..." Command="{Binding RemoveSelectedLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+			</MenuItem>
+		</Menu>
+
+		<Grid Margin="6">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<TextBlock
+                Grid.Column="0"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Foreground="LightGray"
+                FontWeight="UltraBold"
+                FontFamily="Consolas"
+                FontSize="200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="{Binding BackgroundText}"
+                IsVisible="{Binding !SessionStarted}"/>
+
+			<views:FileView
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="30"
+                IsVisible="{Binding !SessionStarted}"/>
+
+			<Grid
+                IsVisible="{Binding SessionStarted}"
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch">
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<views:FiltersView Grid.Row="0"/>
+				<views:LinksView Grid.Row="1"/>
+			</Grid>
+		</Grid>
+	</DockPanel>
+	
+</UserControl>

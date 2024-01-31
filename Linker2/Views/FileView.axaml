@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Linker2.Views.FileView">
+	<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+		<Button
+            Margin="3"
+            Command="{Binding RefreshCommand}"
+            ToolTip.Tip="Refresh"
+            Width="25"
+            Content="&#x21BB;"/>
+		<ComboBox
+            MinWidth="100"
+            Margin="3"
+            VerticalAlignment="Center"
+            IsEnabled="{Binding !SessionStarted}"
+            ItemsSource="{Binding Filenames}"
+            SelectedItem="{Binding SelectedFilename}" />
+		<TextBlock
+            Margin="3"
+            VerticalAlignment="Center"
+            Text="Password:" />
+		<TextBox
+            Margin="3"
+            Width="100"
+			PasswordChar="*"
+            VerticalAlignment="Center"
+			Text="{Binding Password}"/>
+		<Button
+            Width="50"
+            Margin="3"
+            Command="{Binding OpenCommand}"
+            Content="Open"
+            IsDefault="True"
+            IsEnabled="{Binding !SessionStarted}" />
+		<Button Margin="3" Width="50" Content="Backup" Command="{Binding BackupCommand}" IsEnabled="{Binding !SessionStarted}"/>
+	</StackPanel>
+</UserControl>
