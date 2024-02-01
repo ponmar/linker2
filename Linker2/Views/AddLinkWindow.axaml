@@ -183,7 +183,8 @@
 			<Button
                 Width="100"
                 Margin="5"
-                IsCancel="True">
+                IsCancel="True"
+				Click="Button_Click">
 				Cancel
 			</Button>
 			<Button
