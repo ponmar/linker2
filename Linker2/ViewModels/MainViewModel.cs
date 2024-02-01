@@ -297,14 +297,11 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void OpenSettings()
     {
-        // TODO
-        /*
-        var settingsWindow = new SettingsWindow(Session!.Data.Settings)
+        var settingsWindow = new SettingsWindow(Session!.Data.Settings);
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Owner = Application.Current.MainWindow
-        };
-        settingsWindow.ShowDialog();
-        */
+            settingsWindow.ShowDialog(desktop.MainWindow!);
+        }
     }
 
     [RelayCommand]

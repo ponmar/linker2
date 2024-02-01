@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Linker2.Views.SettingsWindow"
+        Title="Settings"
+		WindowStartupLocation="CenterOwner"
+		SizeToContent="WidthAndHeight">
+	<StackPanel Orientation="Vertical">
+		<TextBlock Margin="5" FontWeight="Bold">Session</TextBlock>
+		<Grid Margin="5" ColumnDefinitions="auto,auto" RowDefinitions="auto,auto,auto,auto">
+			<CheckBox Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding ClearClipboardWhenSessionStops}">Clear clipboard when session stops</CheckBox>
+			<CheckBox Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding DeselectFileWhenSessionTimeouts}">Deselect file at session timeout</CheckBox>
+			<CheckBox Margin="5" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding QuitWhenSessionTimeouts}">Quit at session timeout</CheckBox>
+
+			<TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Session timeout (seconds):"/>
+			<TextBox Margin="5" Width="50" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LockAfterSeconds}"/>
+		</Grid>
+
+		<TextBlock Margin="5" FontWeight="Bold">View</TextBlock>
+		<Grid Margin="5" ColumnDefinitions="auto" RowDefinitions="auto">
+			<CheckBox Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding ShowDetails}">Show details</CheckBox>
+		</Grid>
+
+		<TextBlock Margin="5" FontWeight="Bold">Link</TextBlock>
+		<Grid Margin="5" ColumnDefinitions="auto,320,auto" RowDefinitions="auto,auto,auto">
+			<TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Default tag (set to be able to find new links):"/>
+			<TextBox Margin="5" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding DefaultTag}"/>
+
+			<TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Open link command:"/>
+			<TextBox Margin="5" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkCommand}"/>
+
+			<TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Command arguments (must contain %URL%):"/>
+			<TextBox Margin="5" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkArguments}"/>
+		</Grid>
+
+		<TextBlock Margin="5" FontWeight="Bold">Link Metadata Download</TextBlock>
+		<StackPanel Orientation="Vertical">
+			<StackPanel Margin="5">
+				<TextBlock Margin="0" Text="Preferred thumbnail image ids (from linked webpage, will be listed first):"/>
+				<TextBox Margin="0 3" Text="{Binding ThumbnailImageIds}" ToolTip.Tip="Comma separated list of ids"/>
+			</StackPanel>
+
+			<StackPanel Margin="5">
+				<TextBlock Margin="0" Text="Optional: Gecko driver directory path (needed to load title and thumbnail from javascript based pages):"/>
+				<Grid Margin="0 3" ColumnDefinitions="*,auto,auto" RowDefinitions="auto">
+					<TextBox Margin="0" Grid.Column="0" Text="{Binding GeckoDriverPath}"/>
+					<Button Margin="3 0" Grid.Column="1" Width="100" Command="{Binding BrowseGeckoDriverDirectoryPathCommand}">Browse...</Button>
+					<Button Margin="0" Grid.Column="2" Width="100" Command="{Binding DownloadGeckoDriverCommand}">Download...</Button>
+				</Grid>
+			</StackPanel>
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+			<Button Width="100" IsCancel="True" Margin="5" Click="Button_Click">Cancel</Button>
+			<Button Width="100" IsDefault="True" Margin="5" Command="{Binding SaveCommand}">Save</Button>
+		</StackPanel>
+	</StackPanel>
+</Window>
