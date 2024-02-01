@@ -156,10 +156,7 @@ public partial class MainViewModel : ObservableObject
     private void AddOrEditLink(LinkDto? link)
     {
         var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
-        var addLinkWindow = new AddLinkWindow(addLinkViewModel)
-        {
-            //Owner = Application.Current.MainWindow,
-        };
+        var addLinkWindow = new AddLinkWindow(addLinkViewModel);
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -240,16 +237,14 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Create()
     {
-        // TODO
-        /*
-        var createWindow = new CreateWindow()
+        var createWindow = new CreateWindow();
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Owner = Application.Current.MainWindow
-        };
-        createWindow.ShowDialog();
+            createWindow.ShowDialog(desktop.MainWindow!);
+        }
 
         UpdateAvailabelConfigFiles();
-        */
     }
 
     [RelayCommand]
