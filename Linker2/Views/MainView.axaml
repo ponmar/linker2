@@ -39,15 +39,7 @@
 			</MenuItem>
 		</Menu>
 
-		<Grid Margin="6">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-
+		<Grid Margin="6" ColumnDefinitions="*" RowDefinitions="auto,*">
 			<TextBlock
                 Grid.Column="0"
                 Grid.Row="0"
@@ -67,20 +59,11 @@
                 Margin="30"
                 IsVisible="{Binding !SessionStarted}"/>
 
-			<Grid
+			<Grid ColumnDefinitions="*" RowDefinitions="auto,*"
                 IsVisible="{Binding SessionStarted}"
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch">
-
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-
 				<views:FiltersView Grid.Row="0"/>
 				<views:LinksView Grid.Row="1"/>
 			</Grid>

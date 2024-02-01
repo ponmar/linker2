@@ -109,14 +109,7 @@
 		</DataTemplate>
 	</UserControl.Resources>
 
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-
+	<Grid ColumnDefinitions="*" RowDefinitions="*">
 		<ListBox
             Grid.Row="0"
             Grid.Column="0"
