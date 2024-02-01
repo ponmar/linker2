@@ -23,7 +23,7 @@ public static class Bootstrapper
             typeof(ISessionUtils),
             typeof(IUrlDataFetcher)).ImplementedBy<Model.Model>());
 
-        //Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
+        Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
         //Container.Register(Component.For<CreateViewModel>().ImplementedBy<CreateViewModel>().LifestyleTransient());
         //Container.Register(Component.For<PasswordViewModel>().ImplementedBy<PasswordViewModel>().LifestyleTransient());
         Container.Register(Component.For<MainViewModel>().ImplementedBy<MainViewModel>());

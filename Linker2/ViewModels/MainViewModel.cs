@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.Model;
+using Linker2.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -154,15 +155,16 @@ public partial class MainViewModel : ObservableObject
 
     private void AddOrEditLink(LinkDto? link)
     {
-        // TODO
-        /*
         var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
         var addLinkWindow = new AddLinkWindow(addLinkViewModel)
         {
-            Owner = Application.Current.MainWindow,
+            //Owner = Application.Current.MainWindow,
         };
-        addLinkWindow.ShowDialog();
-        */
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            addLinkWindow.ShowDialog(desktop.MainWindow!);
+        }
     }
 
     [RelayCommand]
