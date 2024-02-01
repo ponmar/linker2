@@ -223,6 +223,7 @@ public partial class MainViewModel : ObservableObject
         {
             var securePassword = AesUtils.StringToSecureString(Password);
             sessionUtils.StartSession(SelectedFilename, securePassword);
+            Password = string.Empty;
         }
         catch (Validators.ValidationException e)
         {
