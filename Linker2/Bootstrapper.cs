@@ -25,7 +25,7 @@ public static class Bootstrapper
 
         Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
         Container.Register(Component.For<CreateViewModel>().ImplementedBy<CreateViewModel>().LifestyleTransient());
-        //Container.Register(Component.For<PasswordViewModel>().ImplementedBy<PasswordViewModel>().LifestyleTransient());
+        Container.Register(Component.For<PasswordViewModel>().ImplementedBy<PasswordViewModel>().LifestyleTransient());
         Container.Register(Component.For<MainViewModel>().ImplementedBy<MainViewModel>());
         Container.Register(Component.For<LinksViewModel>().ImplementedBy<LinksViewModel>());
     }

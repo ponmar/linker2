@@ -302,14 +302,11 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void OpenChangePassword()
     {
-        // TODO
-        /*
-        var settingsWindow = new PasswordWindow()
+        var passwordWindow = new PasswordWindow();
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Owner = Application.Current.MainWindow
-        };
-        settingsWindow.ShowDialog();
-        */
+            passwordWindow.ShowDialog(desktop.MainWindow!);
+        }
     }
 
     [RelayCommand]
