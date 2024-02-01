@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:Linker2.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Linker2.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/link.ico"
         Title="{Binding Title}"
 		Width="900"
 		Height="700"

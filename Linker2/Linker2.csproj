@@ -10,6 +10,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
+  
+  <ItemGroup>
+    <None Remove="Assets\link.ico" />
+    <None Remove="Assets\link.png" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.7" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.7" />
