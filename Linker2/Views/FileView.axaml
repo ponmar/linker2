@@ -9,7 +9,7 @@
             Margin="3"
             Command="{Binding RefreshCommand}"
             ToolTip.Tip="Refresh"
-            Width="25"
+            Width="40"
             Content="&#x21BB;"/>
 		<ComboBox
             MinWidth="100"
@@ -29,12 +29,12 @@
             VerticalAlignment="Center"
 			Text="{Binding Password}"/>
 		<Button
-            Width="50"
+            Width="75"
             Margin="3"
             Command="{Binding OpenCommand}"
             Content="Open"
             IsDefault="True"
             IsEnabled="{Binding !SessionStarted}" />
-		<Button Margin="3" Width="50" Content="Backup" Command="{Binding BackupCommand}" IsEnabled="{Binding !SessionStarted}"/>
+		<Button Margin="3" Width="75" Content="Backup" Command="{Binding BackupCommand}" IsEnabled="{Binding !SessionStarted}"/>
 	</StackPanel>
 </UserControl>
