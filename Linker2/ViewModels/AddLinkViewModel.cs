@@ -7,6 +7,8 @@ using System.Linq;
 using System;
 using System.Text.RegularExpressions;
 using FluentValidation.Results;
+using Avalonia.Media.Imaging;
+using System.Threading.Tasks;
 
 namespace Linker2.ViewModels;
 
@@ -46,7 +48,10 @@ public partial class AddLinkViewModel : ObservableObject
     }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LinkThumbnailUrlBitmap))]
     private string linkThumbnailUrl = string.Empty;
+
+    public Task<Bitmap?> LinkThumbnailUrlBitmap => ImageHelper.LoadFromWeb(LinkThumbnailUrl);
 
     [ObservableProperty]
     private string linkThumbnailUrlIndexText = string.Empty;
