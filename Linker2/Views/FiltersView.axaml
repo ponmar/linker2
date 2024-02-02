@@ -94,7 +94,9 @@
 				</StackPanel>
 			</WrapPanel>
 
-			<WrapPanel Orientation="Horizontal">
+			<WrapPanel Orientation="Horizontal" Margin="5">
+				<TextBlock Margin="2" VerticalAlignment="Center" Text="Tags:"/>
+				<TextBlock IsVisible="{Binding !TagFilters.Count}" Margin="2" VerticalAlignment="Center" Text="No tags available"/>
 				<ItemsControl Margin="7" ItemsSource="{Binding TagFilters}" VerticalAlignment="Center">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
@@ -114,7 +116,7 @@
                         Command="{Binding ClearTagFilterCommand}"
                         Content="X"
                         FontSize="10"
-                        IsEnabled="{Binding HasTagFilter}" />
+						IsVisible="{Binding TagFilters.Count}"/>
 				<CheckBox Margin="10,0,0,0" IsChecked="{Binding CombineTagFilters}" VerticalAlignment="Center">Combine</CheckBox>
 			</WrapPanel>
 

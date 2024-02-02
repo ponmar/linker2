@@ -7,16 +7,10 @@
              x:Class="Linker2.Views.LinksView">
 	<UserControl.Resources>
 		<converters:RatingToTextConverter x:Key="RatingToTextConverter" />
-		<!--
-		<converters:RatingToTextConverter x:Key="RatingToTextConverter" />
-		<converters:ListContentToVisibilityConverter x:Key="ListContentToVisibilityConverter" />
-		<converters:NegatedBoolToVisibilityConverter x:Key="NegatedBoolToVisibilityConverter" />
-		<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
-		-->
 
 		<DataTemplate x:Key="LinkTemplate">
+			<!-- Note: transparent background to be able to open the context menu from everywhere -->
 			<Grid Background="Transparent">
-				<!-- Note: transparent background to be able to open the context menu from everywhere -->
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="auto" SharedSizeGroup="TagsColumn" />
 					<ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />

@@ -79,8 +79,6 @@ public partial class LinksViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<TagFilterViewModel> tagFilters = [];
 
-    public bool HasTagFilter => TagFilters.Any(x => x.IsChecked);
-
     [ObservableProperty]
     private bool reversedOrder = false;
 
@@ -316,7 +314,7 @@ public partial class LinksViewModel : ObservableObject
 
         TagFilters.Clear();
         updatedTags.ForEach(x => TagFilters.Add(new(x, preSelectedTags.Contains(x))));
-        OnPropertyChanged(nameof(HasTagFilter));
+
         OnPropertyChanged(nameof(TagFilters));
     }
 
@@ -527,7 +525,6 @@ public partial class LinksViewModel : ObservableObject
 
     private void TagFilterUpdated()
     {
-        OnPropertyChanged(nameof(HasTagFilter));
         UpdateLinks();
     }
 
