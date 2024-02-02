@@ -14,10 +14,10 @@ public class RatingToCharConverter : IValueConverter
             var buttonRating = int.Parse((string)parameter);
             if (buttonRating <= linkRating)
             {
-                return RatingToTextConverter.RatingChar;
+                return RatingToTextConverter.RatingChar.ToString();
             }
         }
-        return RatingToTextConverter.NoRatingChar;
+        return RatingToTextConverter.NoRatingChar.ToString();
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
