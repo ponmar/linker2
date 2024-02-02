@@ -104,6 +104,7 @@
 
                     <TextBlock
                         Margin="5"
+						Classes="Rating"
                         FontSize="{Binding RatingFontSize}"
                         IsVisible="{Binding !ShowDetails}"
                         Text="{Binding Rating, Converter={StaticResource RatingToTextConverter}}"
@@ -115,6 +116,7 @@
                     Grid.Column="3"
                     Margin="5"
                     VerticalAlignment="Center"
+					Classes="Rating"
                     FontSize="{Binding RatingFontSize}"
                     IsVisible="{Binding ShowDetails}"
                     Text="{Binding Rating, Converter={StaticResource RatingToTextConverter}}"
