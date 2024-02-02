@@ -92,10 +92,6 @@
                 <TextBlock
                     Margin="2"
                     VerticalAlignment="Center"
-                    Text="Tags:" />
-                <TextBlock
-                    Margin="2"
-                    VerticalAlignment="Center"
                     IsVisible="{Binding !TagFilters.Count}"
                     Text="No tags available" />
                 <ItemsControl
