@@ -1,40 +1,54 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Linker2.Views.FileView">
-	<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-		<Button
-            Margin="3"
-            Command="{Binding RefreshCommand}"
-            ToolTip.Tip="Refresh"
-			Classes="Normal"
-            Content="&#x21BB;"/>
-		<ComboBox
-            Width="125"
-            Margin="3"
-            VerticalAlignment="Center"
-            IsEnabled="{Binding !SessionStarted}"
-            ItemsSource="{Binding Filenames}"
-            SelectedItem="{Binding SelectedFilename}" />
-		<TextBlock
-            Margin="3"
-            VerticalAlignment="Center"
-            Text="Password:" />
-		<TextBox
-            Margin="3"
-            Width="100"
-			PasswordChar="*"
-            VerticalAlignment="Center"
-			Text="{Binding Password}"/>
-		<Button
-            Classes="Normal"
-            Margin="3"
-            Command="{Binding OpenCommand}"
-            Content="Open"
-            IsDefault="True"
-            IsEnabled="{Binding !SessionStarted}" />
-		<Button Margin="3" Classes="Normal" Content="Backup" Command="{Binding BackupCommand}" IsEnabled="{Binding !SessionStarted}"/>
-	</StackPanel>
+<UserControl
+    x:Class="Linker2.Views.FileView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <StackPanel Margin="5" Orientation="Horizontal">
+            <ComboBox
+                Width="125"
+                Margin="3"
+                VerticalAlignment="Center"
+                IsEnabled="{Binding !SessionStarted}"
+                ItemsSource="{Binding Filenames}"
+                SelectedItem="{Binding SelectedFilename}" />
+            <Button
+                Margin="3"
+                Classes="Icon"
+                Command="{Binding RefreshCommand}"
+                Content="&#x21BB;"
+                ToolTip.Tip="Refresh" />
+        </StackPanel>
+        <StackPanel Margin="5" Orientation="Horizontal">
+            <TextBlock
+                Margin="3"
+                VerticalAlignment="Center"
+                Text="Password:" />
+            <TextBox
+                Width="100"
+                Margin="3"
+                VerticalAlignment="Center"
+                PasswordChar="*"
+                Text="{Binding Password}" />
+        </StackPanel>
+        <StackPanel Margin="5" Orientation="Horizontal">
+            <Button
+                Margin="3"
+                Classes="Normal"
+                Command="{Binding OpenCommand}"
+                Content="Open"
+                IsDefault="True"
+                IsEnabled="{Binding !SessionStarted}" />
+            <Button
+                Margin="3"
+                Classes="Normal"
+                Command="{Binding BackupCommand}"
+                Content="Backup"
+                IsEnabled="{Binding !SessionStarted}" />
+        </StackPanel>
+    </WrapPanel>
 </UserControl>
