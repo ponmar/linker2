@@ -10,4 +10,11 @@ public partial class LinksView : UserControl
         InitializeComponent();
         DataContext = ServiceLocator.Resolve<LinksViewModel>();
     }
+
+    private void Grid_DoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        var grid = sender as Grid;
+        var linksViewModel = grid!.DataContext as LinkViewModel;
+        linksViewModel!.OpenLinkCommand.Execute(linksViewModel.LinkDto);
+    }
 }
