@@ -47,15 +47,15 @@
 				<TextBlock Margin="0" Text="Optional: Gecko driver directory path (needed to load title and thumbnail from javascript based pages):"/>
 				<Grid Margin="0 3" ColumnDefinitions="*,auto,auto" RowDefinitions="auto">
 					<TextBox Margin="0" Grid.Column="0" Text="{Binding GeckoDriverPath}"/>
-					<Button Margin="3 0" Grid.Column="1" Width="100" Command="{Binding BrowseGeckoDriverDirectoryPathCommand}">Browse...</Button>
-					<Button Margin="0" Grid.Column="2" Width="100" Command="{Binding DownloadGeckoDriverCommand}">Download...</Button>
+					<Button Margin="3 0" Grid.Column="1" Classes="Normal" Command="{Binding BrowseGeckoDriverDirectoryPathCommand}">Browse...</Button>
+					<Button Margin="0" Grid.Column="2" Classes="Normal" Command="{Binding DownloadGeckoDriverCommand}">Download...</Button>
 				</Grid>
 			</StackPanel>
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-			<Button Width="100" IsCancel="True" Margin="5" Click="Button_Click">Cancel</Button>
-			<Button Width="100" IsDefault="True" Margin="5" Command="{Binding SaveCommand}">Save</Button>
+			<Button Classes="Normal" IsCancel="True" Margin="5" Click="Button_Click">Cancel</Button>
+			<Button Classes="Normal" IsDefault="True" Margin="5" Command="{Binding SaveCommand}">Save</Button>
 		</StackPanel>
 	</StackPanel>
 </Window>

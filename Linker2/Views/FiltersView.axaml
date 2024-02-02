@@ -128,8 +128,7 @@
                         Margin="2"
                     VerticalAlignment="Center"
                     ItemsSource="{Binding OrderByValues}"
-                    SelectedItem="{Binding SelectedOrderBy}"
-                    Width="75"/>
+                    SelectedItem="{Binding SelectedOrderBy}"/>
 				</StackPanel>
 
 				<CheckBox Margin="7" IsChecked="{Binding ReversedOrder}" VerticalAlignment="Center">Reverse</CheckBox>

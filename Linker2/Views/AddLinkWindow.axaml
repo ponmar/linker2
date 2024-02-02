@@ -21,6 +21,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Margin="5"
+			VerticalAlignment="Center"
             Text="URL:" />
 		<TextBox
             Name="UrlTextBox"
@@ -28,14 +29,16 @@
             Grid.Column="1"
             Margin="5,5,0,5"
             HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
             IsReadOnly="{Binding EditingLink}"
             Text="{Binding LinkUrl}" />
 		<Button
             Grid.Row="0"
             Grid.Column="2"
-            Width="50"
+            Classes="Normal"
             Margin="5"
             Command="{Binding FetchLinkDataCommand}"
+			VerticalAlignment="Center"
             Content="Fetch"
             IsEnabled="{Binding HasLinkUrl}"
             ToolTip.Tip="Fetch data from URL" />
@@ -182,14 +185,14 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
 			<Button
-                Width="100"
+                Classes="Normal"
                 Margin="5"
                 IsCancel="True"
 				Click="Button_Click">
 				Cancel
 			</Button>
 			<Button
-                Width="100"
+                Classes="Normal"
                 Margin="5"
                 Command="{Binding SaveLinkCommand}"
                 IsDefault="True"
