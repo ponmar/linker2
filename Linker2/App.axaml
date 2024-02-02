@@ -11,6 +11,24 @@
         <Style Selector="Button.Normal">
             <Setter Property="Width" Value="100" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.Icon">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Width" Value="35" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.Clear">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Content" Value="X" />
         </Style>
     </Application.Styles>
 </Application>

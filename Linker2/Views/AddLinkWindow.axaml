@@ -91,41 +91,40 @@
             Orientation="Horizontal">
 
             <Button
+                Classes="Icon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="1"
                 ToolTip.Tip="Rating 1/5">
-                <TextBlock Margin="1,-5,0,0" Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=1}" />
+                <TextBlock Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=1}" />
             </Button>
             <Button
+                Classes="Icon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="2"
-                ToolTip.Tip="Rating 2/5">
-                <TextBlock Margin="1,-5,0,0" Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=2}" />
-            </Button>
+                Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=2}"
+                ToolTip.Tip="Rating 2/5" />
             <Button
+                Classes="Icon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="3"
-                ToolTip.Tip="Rating 3/5">
-                <TextBlock Margin="1,-5,0,0" Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=3}" />
-            </Button>
+                Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=3}"
+                ToolTip.Tip="Rating 3/5" />
             <Button
+                Classes="Icon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="4"
-                ToolTip.Tip="Rating 4/5">
-                <TextBlock Margin="1,-5,0,0" Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=4}" />
-            </Button>
+                Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=4}"
+                ToolTip.Tip="Rating 4/5" />
             <Button
+                Classes="Icon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="5"
-                ToolTip.Tip="Rating 5/5">
-                <TextBlock Margin="1,-5,0,0" Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=5}" />
-            </Button>
+                Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=5}"
+                ToolTip.Tip="Rating 5/5" />
             <Button
-                Width="20"
-                Height="20"
                 Margin="5"
+                Classes="Clear"
                 Command="{Binding ClearRatingCommand}"
-                Content="X"
                 IsEnabled="{Binding ClearRatingEnabled}"
                 ToolTip.Tip="Clear rating" />
         </StackPanel>

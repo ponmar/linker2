@@ -1,140 +1,156 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Linker2.Views.FiltersView">
-	<Grid ColumnDefinitions="*,auto" RowDefinitions="auto">
-		<StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-			<WrapPanel Orientation="Horizontal">
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock
+<UserControl
+    x:Class="Linker2.Views.FiltersView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid ColumnDefinitions="*,auto" RowDefinitions="auto">
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Orientation="Vertical">
+            <WrapPanel Orientation="Horizontal">
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock
                         Margin="2"
                         VerticalAlignment="Center"
                         Text="Text:" />
-					<TextBox
+                    <TextBox
                         Width="100"
                         Margin="2"
                         VerticalAlignment="Center"
                         IsEnabled="{Binding SessionOngoing}"
                         Text="{Binding FilterText}" />
-					<Button
-                        Width="18"
-                        Height="18"
+                    <Button
                         VerticalContentAlignment="Center"
+                        Classes="Clear"
                         Command="{Binding ClearTextFilterCommand}"
-                        Content="X"
-                        FontSize="10"
                         IsEnabled="{Binding HasTextFilter}" />
-				</StackPanel>
+                </StackPanel>
 
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock
                         Margin="2"
                         VerticalAlignment="Center"
                         Text="Rating:" />
-					<ComboBox
+                    <ComboBox
                         MinWidth="75"
                         Margin="2"
                         VerticalAlignment="Center"
                         IsEnabled="{Binding SessionOngoing}"
                         ItemsSource="{Binding RatingFilteringValues}"
                         SelectedItem="{Binding SelectedRatingFiltering}" />
-					<Button
-                        Width="18"
-                        Height="18"
+                    <Button
                         VerticalContentAlignment="Center"
+                        Classes="Clear"
                         Command="{Binding ClearRatingFilterCommand}"
-                        Content="X"
-                        FontSize="10"
                         IsEnabled="{Binding HasRatingFilter}" />
-				</StackPanel>
+                </StackPanel>
 
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock
                         Margin="2"
                         VerticalAlignment="Center"
                         Text="Site:" />
-					<ComboBox
+                    <ComboBox
                         MinWidth="75"
                         Margin="2"
                         VerticalAlignment="Center"
                         IsEnabled="{Binding SessionOngoing}"
                         ItemsSource="{Binding SiteFilteringValues}"
                         SelectedItem="{Binding SelectedSiteFiltering}" />
-					<Button
-                        Width="18"
-                        Height="18"
+                    <Button
                         VerticalContentAlignment="Center"
+                        Classes="Clear"
                         Command="{Binding ClearSiteFilterCommand}"
-                        Content="X"
-                        FontSize="10"
                         IsEnabled="{Binding HasSiteFilter}" />
-				</StackPanel>
+                </StackPanel>
 
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock
                         Margin="2"
                         VerticalAlignment="Center"
                         Text="Hide tags:" />
-					<TextBox
+                    <TextBox
                         Width="75"
                         Margin="2"
                         VerticalAlignment="Center"
                         IsEnabled="{Binding SessionOngoing}"
                         Text="{Binding HiddenTagsText}" />
-					<Button
-                        Width="18"
-                        Height="18"
+                    <Button
                         VerticalContentAlignment="Center"
+                        Classes="Clear"
                         Command="{Binding ClearHiddenTagsTextCommand}"
-                        Content="X"
-                        FontSize="10"
                         IsEnabled="{Binding HasHiddenTagsText}" />
-				</StackPanel>
-			</WrapPanel>
+                </StackPanel>
+            </WrapPanel>
 
-			<WrapPanel Orientation="Horizontal" Margin="5">
-				<TextBlock Margin="2" VerticalAlignment="Center" Text="Tags:"/>
-				<TextBlock IsVisible="{Binding !TagFilters.Count}" Margin="2" VerticalAlignment="Center" Text="No tags available"/>
-				<ItemsControl Margin="7" ItemsSource="{Binding TagFilters}" VerticalAlignment="Center">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<ToggleButton Margin="2" Content="{Binding Name}" IsChecked="{Binding IsChecked}" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterCommand}" CommandParameter="{Binding}"/>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<WrapPanel Orientation="Horizontal" />
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-				</ItemsControl>
-				<Button
-                        Width="18"
-                        Height="18"
-                        VerticalContentAlignment="Center"
-                        Command="{Binding ClearTagFilterCommand}"
-                        Content="X"
-                        FontSize="10"
-						IsVisible="{Binding TagFilters.Count}"/>
-				<CheckBox Margin="10,0,0,0" IsChecked="{Binding CombineTagFilters}" VerticalAlignment="Center">Combine</CheckBox>
-			</WrapPanel>
-
-			<WrapPanel>
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock
+            <WrapPanel Margin="5" Orientation="Horizontal">
+                <TextBlock
                     Margin="2"
                     VerticalAlignment="Center"
-                    Text="Order by:" />
-					<ComboBox
-                        Margin="2"
+                    Text="Tags:" />
+                <TextBlock
+                    Margin="2"
                     VerticalAlignment="Center"
-                    ItemsSource="{Binding OrderByValues}"
-                    SelectedItem="{Binding SelectedOrderBy}"/>
-				</StackPanel>
+                    IsVisible="{Binding !TagFilters.Count}"
+                    Text="No tags available" />
+                <ItemsControl
+                    Margin="7"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding TagFilters}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton
+                                Margin="2"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterCommand}"
+                                CommandParameter="{Binding}"
+                                Content="{Binding Name}"
+                                IsChecked="{Binding IsChecked}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Button
+                    VerticalContentAlignment="Center"
+                    Classes="Clear"
+                    Command="{Binding ClearTagFilterCommand}"
+                    IsVisible="{Binding TagFilters.Count}" />
+                <CheckBox
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding CombineTagFilters}">
+                    Combine
+                </CheckBox>
+            </WrapPanel>
 
-				<CheckBox Margin="7" IsChecked="{Binding ReversedOrder}" VerticalAlignment="Center">Reverse</CheckBox>
-			</WrapPanel>
-		</StackPanel>
-	</Grid>
+            <WrapPanel>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock
+                        Margin="2"
+                        VerticalAlignment="Center"
+                        Text="Order by:" />
+                    <ComboBox
+                        Margin="2"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding OrderByValues}"
+                        SelectedItem="{Binding SelectedOrderBy}" />
+                </StackPanel>
+
+                <CheckBox
+                    Margin="7"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ReversedOrder}">
+                    Reverse
+                </CheckBox>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
 </UserControl>
