@@ -8,7 +8,7 @@
         x:Class="Linker2.Views.MainWindow"
         Icon="/Assets/link.ico"
         Title="{Binding Title}"
-		Width="900"
+		Width="1000"
 		Height="700"
 		MinWidth="300"
 		MinHeight="300" Closing="Window_Closing">
