@@ -27,7 +27,7 @@
 				<MenuItem Header="_Import..." Command="{Binding ImportCommand}" />
 				<MenuItem Header="_Export..." Command="{Binding ExportCommand}" />
 				<Separator />
-				<MenuItem Header="_Save" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" />
+				<MenuItem Header="_Save Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" HotKey="Ctrl+S"/>
 				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
 			</MenuItem>
 			<MenuItem Header="Link">
