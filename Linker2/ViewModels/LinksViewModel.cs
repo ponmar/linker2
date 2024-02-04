@@ -489,6 +489,13 @@ public partial class LinksViewModel : ObservableObject
     [RelayCommand]
     private void ClearTagFilter()
     {
+        foreach (var link in allLinks)
+        {
+            foreach (var linkTag in link.Tags)
+            {
+                linkTag.IsChecked = false;
+            }
+        }
         foreach (var tagModel in TagFilters)
         {
             tagModel.IsChecked = false;
