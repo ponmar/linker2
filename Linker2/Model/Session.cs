@@ -34,7 +34,7 @@ public class Session
         set
         {
             dataUpdated = value;
-            Events.Send<DataUpdatedChanged>();
+            Messenger.Send<DataUpdatedChanged>();
         }
     }
     private bool dataUpdated;
@@ -56,7 +56,7 @@ public class Session
         sessionTimer.Tick += SessionTimer_Tick;
         sessionTimer.Start();
 
-        Events.Send(new SessionStarted(this));
+        Messenger.Send(new SessionStarted(this));
         SessionTimer_Tick(null, EventArgs.Empty);
     }
 
@@ -73,7 +73,7 @@ public class Session
         }
         else
         {
-            Events.Send(new SessionTick(this));
+            Messenger.Send(new SessionTick(this));
         }
     }
 
@@ -126,7 +126,7 @@ public class Session
         sessionTimer.Stop();
         webPageScraper?.Close();
 
-        Events.Send(new SessionStopped(Data.Settings));
+        Messenger.Send(new SessionStopped(Data.Settings));
     }
 
     public void ChangePassword(SecureString newPassword)

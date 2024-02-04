@@ -152,24 +152,24 @@ public partial class LinkViewModel : ObservableObject
     [RelayCommand]
     private void OpenLink(LinkDto link)
     {
-        Events.Send(new OpenLink(link.Url));
+        Messenger.Send(new OpenLink(link.Url));
     }
 
     [RelayCommand]
     private void AddLink()
     {
-        Events.Send(new StartAddLink());
+        Messenger.Send(new StartAddLink());
     }
 
     [RelayCommand]
     private void EditLink(LinkDto link)
     {
-        Events.Send(new StartEditLink(link));
+        Messenger.Send(new StartEditLink(link));
     }
 
     [RelayCommand]
     private void RemoveLink(LinkDto link)
     {
-        Events.Send(new StartRemoveLink(link));
+        Messenger.Send(new StartRemoveLink(link));
     }
 }

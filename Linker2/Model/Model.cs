@@ -79,7 +79,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         var data = new DataDto(settings, session!.Data.Links, session!.Data.Filters, session!.Data.SelectedUrl);
         SaveData(data);
 
-        Events.Send<SettingsUpdated>();
+        Messenger.Send<SettingsUpdated>();
     }
 
     public void SaveSelection(string? selectedUrl)
@@ -122,7 +122,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         session.Data.Links.Add(link);
         session.DataUpdated = true;
 
-        Events.Send(new LinkAdded(session, link));
+        Messenger.Send(new LinkAdded(session, link));
     }
 
     public void UpdateLink(LinkDto link)
@@ -143,7 +143,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         session.Data.Links[currentLinkIndex] = link;
         session.DataUpdated = true;
 
-        Events.Send(new LinkUpdated(session, link));
+        Messenger.Send(new LinkUpdated(session, link));
     }
 
     public void RemoveLink(string url)
@@ -157,7 +157,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         session.Data.Links.Remove(linkToRemove);
         session.DataUpdated = true;
 
-        Events.Send(new LinkRemoved(session, linkToRemove));
+        Messenger.Send(new LinkRemoved(session, linkToRemove));
 
         if (linkToRemove.ThumbnailUrl is not null)
         {
@@ -182,7 +182,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
             session.Data.Links[linkIndex] = updatedLink;
             session.DataUpdated = true;
 
-            Events.Send(new LinkUpdated(session, updatedLink));
+            Messenger.Send(new LinkUpdated(session, updatedLink));
 
             var args = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, url);
             ProcessRunner.Start(session.Data.Settings.OpenLinkCommand, args);
@@ -212,7 +212,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     private void CleanupSession()
     {
-        Events.Send<SessionStopping>();
+        Messenger.Send<SessionStopping>();
 
         if (session!.DataUpdated)
         {

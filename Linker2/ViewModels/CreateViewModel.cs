@@ -62,7 +62,7 @@ public partial class CreateViewModel : ObservableObject
         try
         {
             fileUtils.Create(Filename, AesUtils.StringToSecureString(Password));
-            Events.Send(new CloseDialog());
+            Messenger.Send(new CloseDialog());
         }
         catch (ValidationException e)
         {

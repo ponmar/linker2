@@ -3,7 +3,7 @@ using System;
 
 namespace Linker2;
 
-public static class Events
+public static class Messenger
 {
     public static void Register<T>(Action<T> a, object recepient) where T : class
     {
@@ -29,6 +29,6 @@ public static class ObjectExtensions
 {
     public static void RegisterForEvent<T>(this object e, Action<T> a) where T : class
     {
-        Events.Register(a, e);
+        Messenger.Register(a, e);
     }
 }

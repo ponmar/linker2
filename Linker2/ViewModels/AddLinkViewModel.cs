@@ -255,7 +255,7 @@ public partial class AddLinkViewModel : ObservableObject
             linkModification.AddLink(link);
         }
 
-        Events.Send(new CloseDialog());
+        Messenger.Send(new CloseDialog());
     }
 
     private LinkDto InputToDto(List<string> tags)

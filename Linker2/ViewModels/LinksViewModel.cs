@@ -123,7 +123,7 @@ public partial class LinksViewModel : ObservableObject
     {
         if (SelectedLink is not null)
         {
-            Events.Send<LinkDeselected>();
+            Messenger.Send<LinkDeselected>();
         }
     }
 
@@ -131,7 +131,7 @@ public partial class LinksViewModel : ObservableObject
     {
         if (SelectedLink is not null)
         {
-            Events.Send(new LinkSelected(SelectedLink.LinkDto));
+            Messenger.Send(new LinkSelected(SelectedLink.LinkDto));
         }
     }
 
