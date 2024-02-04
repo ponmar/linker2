@@ -12,6 +12,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Orientation="Vertical">
+			<TextBlock Margin="7" Text="{Binding FiltersHeading}"/>
             <WrapPanel Orientation="Horizontal">
                 <StackPanel Margin="5" Orientation="Horizontal">
                     <TextBlock
