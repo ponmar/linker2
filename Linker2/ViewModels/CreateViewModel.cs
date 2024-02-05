@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
@@ -7,6 +8,7 @@ using Linker2.Validators;
 using System;
 using System.IO;
 using System.IO.Abstractions;
+using System.Threading.Tasks;
 
 namespace Linker2.ViewModels;
 
@@ -38,10 +40,14 @@ public partial class CreateViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Browse()
+    private async Task BrowseAsync()
     {
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
-        string? filePath = dialogs.SelectNewFileDialog("New File", initialDirectory, ".linker", "Linker documents (.linker)|*.linker");
+        var linkerFileType = new FilePickerFileType("All Linker files")
+        {
+            Patterns = new[] { "*.linker" },
+        };
+        string? filePath = await dialogs.SelectNewFileDialogAsync("New File", initialDirectory, linkerFileType);
         if (filePath is null)
         {
             return;

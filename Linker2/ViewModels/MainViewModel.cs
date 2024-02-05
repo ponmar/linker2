@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
@@ -311,10 +312,14 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Export()
+    private async Task ExportAsync()
     {
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
-        var exportFilePath = dialogs.SelectNewFileDialog("Export", initialDirectory, ".json", "Linker export (.json)|*.json");
+        var jsonFileType = new FilePickerFileType("Json files")
+        {
+            Patterns = new[] { "*.json" },
+        };
+        var exportFilePath = await dialogs.SelectNewFileDialogAsync("Export", initialDirectory, jsonFileType);
 
         if (exportFilePath is not null)
         {
@@ -346,7 +351,11 @@ public partial class MainViewModel : ObservableObject
     private async Task ImportAsync()
     {
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
-        var filePath = dialogs.BrowseExistingFileDialog("Select file to import", initialDirectory, "Linker export (.json)|*.json");
+        var exportedFileType = new FilePickerFileType("Linker exported file (.json)")
+        {
+            Patterns = new[] { "*.json" },
+        };
+        var filePath = await dialogs.BrowseExistingFileDialogAsync("Select file to import", initialDirectory, exportedFileType);
         if (filePath is null)
         {
             return;

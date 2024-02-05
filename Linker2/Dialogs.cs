@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
+using System;
 
 namespace Linker2;
 
@@ -16,8 +21,8 @@ public interface IDialogs
     void ShowErrorDialog(IEnumerable<string> messages);
     void ShowErrorDialog(ValidationResult validationResult);
     Task<bool> ShowConfirmDialog(string question);
-    string? SelectNewFileDialog(string title, string initialDirectory, string fileExtension, string filter);
-    string? BrowseExistingFileDialog(string title, string initialDirectory, string filter);
+    Task<string?> SelectNewFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
+    Task<string?> BrowseExistingFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
     string? ShowBrowseExistingDirectoryDialog(string title);
     string? ShowBrowseExistingDirectoryDialog(string title, string initialDirectory);
     void OpenUrlInDefaultBrowser(string url);
@@ -60,51 +65,45 @@ public class Dialogs : IDialogs
         return result == ButtonResult.Yes;
     }
 
-    public string? SelectNewFileDialog(string title, string initialDirectory, string fileExtension, string filter)
+    public async Task<string?> SelectNewFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType)
     {
-        /*
-        var dialog = new System.Windows.Forms.OpenFileDialog()
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopApp)
+        {
+            throw new NotSupportedException();
+        }
+
+        var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
+        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = title,
-            DefaultExt = fileExtension,
-            Filter = filter,
-            InitialDirectory = initialDirectory,
-            CheckFileExists = false,
-            CheckPathExists = true,
-        };
+            SuggestedStartLocation = suggestedStartLocation,
+            FileTypeChoices = new [] { fileType, },
+        });
 
-        var result = dialog.ShowDialog();
-        if (result == System.Windows.Forms.DialogResult.OK)
-        {
-            if (dialog.FileName.EndsWith(fileExtension))
-            {
-                return dialog.FileName;
-            }
-            else
-            {
-                ShowErrorDialog($"File extension must be {fileExtension}");
-            }
-        }
-        */
-
-        return null;
+        return file?.Path.AbsolutePath;
     }
 
-    public string? BrowseExistingFileDialog(string title, string initialDirectory, string filter)
+    public async Task<string?> BrowseExistingFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType)
     {
-        /*
-        var dialog = new Microsoft.Win32.OpenFileDialog()
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopApp)
+        {
+            throw new NotSupportedException();
+        }
+
+        var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
+        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = title,
-            Filter = filter,
-            InitialDirectory = initialDirectory,
-            CheckFileExists = true,
-            CheckPathExists = true,
-        };
+            SuggestedStartLocation = suggestedStartLocation,
+            AllowMultiple = false,
+            FileTypeFilter = new[] { fileType, },
+        });
 
-        return dialog.ShowDialog() == true ? dialog.FileName : null;
-        */
-        return null;
+        return files.Count > 0 ? files[0].Path.AbsolutePath : null;
     }
 
     public string? ShowBrowseExistingDirectoryDialog(string title)
