@@ -237,16 +237,15 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Create()
+    private async Task CreateAsync()
     {
         var createWindow = new CreateWindow();
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            createWindow.ShowDialog(desktop.MainWindow!);
+            await createWindow.ShowDialog(desktop.MainWindow!);
+            UpdateAvailabelConfigFiles();
         }
-
-        UpdateAvailabelConfigFiles();
     }
 
     [RelayCommand]
