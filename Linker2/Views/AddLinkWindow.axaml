@@ -142,17 +142,19 @@
             HorizontalAlignment="Stretch"
             Orientation="Horizontal">
             <Button
-                Width="20"
                 Margin="5"
                 VerticalAlignment="Center"
+                Classes="Icon"
                 Command="{Binding PreviousThumbnailUrlCommand}"
-                Content="&lt;" />
+                Content="&lt;"
+                IsEnabled="{Binding HasPreviousThumbnailUrl}" />
             <Button
-                Width="20"
                 Margin="5"
                 VerticalAlignment="Center"
+                Classes="Icon"
                 Command="{Binding NextThumbnailUrlCommand}"
-                Content="&gt;" />
+                Content="&gt;"
+                IsEnabled="{Binding HasNextThumbnailUrl}" />
             <TextBlock
                 Margin="5"
                 VerticalAlignment="Center"

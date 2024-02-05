@@ -49,6 +49,8 @@ public partial class AddLinkViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LinkThumbnailUrlBitmap))]
+    [NotifyPropertyChangedFor(nameof(HasNextThumbnailUrl))]
+    [NotifyPropertyChangedFor(nameof(HasPreviousThumbnailUrl))]
     private string linkThumbnailUrl = string.Empty;
 
     public Task<Bitmap?> LinkThumbnailUrlBitmap => ImageHelper.LoadFromWeb(LinkThumbnailUrl);
@@ -61,8 +63,26 @@ public partial class AddLinkViewModel : ObservableObject
     partial void OnLinkThumbnailUrlChanged(string value)
     {
         var index = linkThumbnailUrls.IndexOf(value);
-        LinkThumbnailUrlIndexText = $"{(index != -1 ? index + 1 : "-")}/{linkThumbnailUrls.Count}";
+        LinkThumbnailUrlIndexText = index == -1 ? "" : $"{index + 1}/{linkThumbnailUrls.Count}";
         ValidateInput();
+    }
+
+    public bool HasNextThumbnailUrl
+    {
+        get
+        {
+            var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+            return index != -1 && index < linkThumbnailUrls.Count - 1;
+        }
+    }
+
+    public bool HasPreviousThumbnailUrl
+    {
+        get
+        {
+            var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+            return index > 1;
+        }
     }
 
     [ObservableProperty]
@@ -269,11 +289,7 @@ public partial class AddLinkViewModel : ObservableObject
     private void NextThumbnailUrl()
     {
         var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
-        if (index == -1)
-        {
-            LinkThumbnailUrl = linkThumbnailUrls.LastOrDefault() ?? string.Empty;
-        }
-        else if (index < linkThumbnailUrls.Count - 1)
+        if (index != -1 && index < linkThumbnailUrls.Count - 1)
         {
             index++;
             LinkThumbnailUrl = linkThumbnailUrls[index];
@@ -288,10 +304,6 @@ public partial class AddLinkViewModel : ObservableObject
         {
             index--;
             LinkThumbnailUrl = linkThumbnailUrls[index];
-        }
-        else
-        {
-            LinkThumbnailUrl = linkThumbnailUrls.FirstOrDefault() ?? string.Empty;
         }
     }
 }
