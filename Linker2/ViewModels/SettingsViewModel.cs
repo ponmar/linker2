@@ -4,6 +4,7 @@ using Linker2.Model;
 using Linker2.Validators;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Linker2.ViewModels;
 
@@ -62,17 +63,17 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void BrowseGeckoDriverDirectoryPath()
+    private async Task BrowseGeckoDriverDirectoryPathAsync()
     {
         var title = "Browse Gecko driver installation directory";
         string? dir;
         if (string.IsNullOrEmpty(GeckoDriverPath))
         {
-            dir = dialogs.ShowBrowseExistingDirectoryDialog(title);
+            dir = await dialogs.ShowBrowseExistingDirectoryDialogAsync(title);
         }
         else
         {
-            dir = dialogs.ShowBrowseExistingDirectoryDialog(title, GeckoDriverPath);
+            dir = await dialogs.ShowBrowseExistingDirectoryDialogAsync(title, GeckoDriverPath);
         }
 
         if (dir is not null)

@@ -23,8 +23,8 @@ public interface IDialogs
     Task<bool> ShowConfirmDialog(string question);
     Task<string?> SelectNewFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
     Task<string?> BrowseExistingFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
-    string? ShowBrowseExistingDirectoryDialog(string title);
-    string? ShowBrowseExistingDirectoryDialog(string title, string initialDirectory);
+    Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title);
+    Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title, string initialDirectory);
     void OpenUrlInDefaultBrowser(string url);
 }
 
@@ -106,30 +106,29 @@ public class Dialogs : IDialogs
         return files.Count > 0 ? files[0].Path.AbsolutePath : null;
     }
 
-    public string? ShowBrowseExistingDirectoryDialog(string title)
+    public async Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title)
     {
-        return ShowBrowseExistingDirectoryDialog(title, string.Empty);
+        return await ShowBrowseExistingDirectoryDialogAsync(title, string.Empty);
     }
 
-    public string? ShowBrowseExistingDirectoryDialog(string title, string initialDirectory)
+    public async Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title, string initialDirectory)
     {
-        /*
-        if (!initialDirectory.EndsWith(Path.DirectorySeparatorChar))
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopApp)
         {
-            initialDirectory += Path.DirectorySeparatorChar;
+            throw new NotSupportedException();
         }
 
-        using var dialog = new System.Windows.Forms.FolderBrowserDialog
-        {
-            Description = title,
-            UseDescriptionForTitle = true,
-            SelectedPath = initialDirectory,
-            ShowNewFolderButton = true
-        };
+        var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
+        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
 
-        return dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ? dialog.SelectedPath : null;
-        */
-        return null;
+        var files = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = title,
+            SuggestedStartLocation = suggestedStartLocation,
+            AllowMultiple = false,
+        });
+
+        return files.Count > 0 ? files[0].Path.AbsolutePath : null;
     }
 
     public void OpenUrlInDefaultBrowser(string url)
