@@ -39,6 +39,10 @@
                             Command="{Binding RemoveLinkCommand}"
                             CommandParameter="{Binding LinkDto}"
                             Header="Remove..." />
+						<MenuItem
+	                        Command="{Binding OpenLinkThumbnailCommand}"
+	                        CommandParameter="{Binding LinkDto}"
+	                        Header="Open thumbnail" />
                         <Separator />
                         <MenuItem Command="{Binding AddLinkCommand}" Header="Add..." />
                     </ContextMenu>

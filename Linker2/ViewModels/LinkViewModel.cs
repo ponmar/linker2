@@ -1,8 +1,11 @@
-﻿using Avalonia.Media.Imaging;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Linker2.Model;
 using Linker2.Validators;
+using Linker2.Views;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -171,5 +174,21 @@ public partial class LinkViewModel : ObservableObject
     private void RemoveLink(LinkDto link)
     {
         Messenger.Send(new StartRemoveLink(link));
+    }
+
+    [RelayCommand]
+    private void OpenLinkThumbnail(LinkDto link)
+    {
+        if (ThumbnailImage is null)
+        {
+            return;
+        }
+
+        var viewModel = new ImageViewModel(ThumbnailImage);
+        var openLinkThumbnailWindow = new ImageWindow(viewModel);
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            openLinkThumbnailWindow.ShowDialog(desktop.MainWindow!);
+        }
     }
 }
