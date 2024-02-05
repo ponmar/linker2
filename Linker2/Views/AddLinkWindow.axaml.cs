@@ -12,9 +12,6 @@ namespace Linker2.Views
 
             DataContext = viewModel;
 
-            // TODO
-            //UrlTextBox.Focus();
-
             this.RegisterForEvent<SessionStopped>((x) => Close());
             this.RegisterForEvent<CloseDialog>((x) => Close());
         }
