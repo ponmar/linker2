@@ -13,6 +13,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Icon="/Assets/link.ico"
+    PointerMoved="Window_PointerMoved"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Window.Resources>
@@ -190,7 +191,7 @@
             <Button
                 Margin="5"
                 Classes="Normal"
-                Click="Button_Click"
+                Click="Cancel_Click"
                 IsCancel="True">
                 Cancel
             </Button>

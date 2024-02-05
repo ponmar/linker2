@@ -6,6 +6,8 @@ namespace Linker2.Views
 {
     public partial class PasswordWindow : Window
     {
+        private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
+
         public PasswordWindow()
         {
             InitializeComponent();
@@ -15,9 +17,14 @@ namespace Linker2.Views
             this.RegisterForEvent<CloseDialog>((x) => Close());
         }
 
-        private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Window_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
+        {
+            sessionUtils.ResetSessionTime();
         }
     }
 }

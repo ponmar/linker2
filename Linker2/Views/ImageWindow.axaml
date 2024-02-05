@@ -10,6 +10,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Icon="/Assets/link.ico"
+    PointerMoved="Window_PointerMoved"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid>
