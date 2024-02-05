@@ -24,16 +24,15 @@ public partial class App : Application
         Process proc = Process.GetCurrentProcess();
         var count = Process.GetProcesses().Where(p => p.ProcessName == proc.ProcessName).Count();
 
+        Bootstrapper.Bootstrap();
+
         if (count > 1)
         {
-            // TODO
-            //MessageBox.Show("This application is already running...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //App.Current.Shutdown();
+            var dialogs = ServiceLocator.Resolve<IDialogs>();
+            dialogs.ShowErrorDialog("This application is already running...");
         }
         else
         {
-            Bootstrapper.Bootstrap();
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow();
