@@ -81,7 +81,7 @@ public partial class AddLinkViewModel : ObservableObject
         get
         {
             var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
-            return index > 1;
+            return index > 0;
         }
     }
 
