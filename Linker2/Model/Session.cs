@@ -16,10 +16,19 @@ public class Session
 
     public string FilePath { get; }
     private SecureString password;
-    public DataDto Data { get; set; }
+    public DataDto Data
+    {
+        get => data;
+        set
+        {
+            data = value;
+            timeout = TimeSpan.FromSeconds(data.Settings.LockAfterSeconds);
+        }
+    }
+    private DataDto data;
 
     public DateTime StartedAt = DateTime.Now;
-    private readonly TimeSpan timeout;
+    private TimeSpan timeout;
 
     private bool TimedOut => DateTime.Now > StartedAt + timeout;
     public TimeSpan TimeLeft => StartedAt + timeout - DateTime.Now;
@@ -41,16 +50,16 @@ public class Session
 
     private readonly DispatcherTimer sessionTimer = new();
 
-    public Session(IFileSystem fileSystem, string filePath, SecureString password, DataDto configuration)
+    public Session(IFileSystem fileSystem, string filePath, SecureString password, DataDto data)
     {
         this.fileSystem = fileSystem;
         FilePath = filePath;
         this.password = password;
-        Data = configuration;
+        Data = data;
 
         var cacheDir = Path.Combine(Path.GetDirectoryName(filePath)!, "Cache", Path.GetFileNameWithoutExtension(filePath));
         ImageCache = new(fileSystem, cacheDir, AesUtils.PasswordToKey(password));
-        timeout = TimeSpan.FromSeconds(configuration.Settings.LockAfterSeconds);
+        timeout = TimeSpan.FromSeconds(data.Settings.LockAfterSeconds);
 
         sessionTimer.Interval = TimeSpan.FromSeconds(1);
         sessionTimer.Tick += SessionTimer_Tick;

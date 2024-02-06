@@ -66,7 +66,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     public Model()
     {
-        this.RegisterForEvent<SessionStopped>((x) => CleanupSession());
+        this.RegisterForEvent<SessionStopped>(x => CleanupSession());
     }
 
     public bool SaveSession()
@@ -78,7 +78,6 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
     {
         var data = new DataDto(settings, session!.Data.Links, session!.Data.Filters, session!.Data.SelectedUrl);
         SaveData(data);
-
         Messenger.Send<SettingsUpdated>();
     }
 
