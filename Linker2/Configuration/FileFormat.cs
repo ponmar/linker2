@@ -10,6 +10,7 @@ public enum OrderBy
     Title,
     Random,
     Views,
+    Tags,
 }
 
 public record SettingsDto(

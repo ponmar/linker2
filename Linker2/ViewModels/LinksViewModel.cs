@@ -457,6 +457,11 @@ public partial class LinksViewModel : ObservableObject
                     ThenByDescending(x => x.LinkDto.Rating).
                     ThenBy(x => x.LongTitle).ToList();
                 break;
+
+            case OrderBy.Tags:
+                sortedLinks = sortedLinks.OrderBy(x => x.LinkDto.Tags.FirstOrDefault()).
+                    ThenBy(x => x.LongTitle).ToList();
+                break;
         }
 
         if (ReversedOrder)
