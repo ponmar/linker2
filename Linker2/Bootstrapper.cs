@@ -21,7 +21,7 @@ public static class Bootstrapper
             typeof(ILinkModification),
             typeof(ISessionSaver),
             typeof(ISessionUtils),
-            typeof(IUrlDataFetcher)).ImplementedBy<Model.Model>());
+            typeof(IWebPageScrapersRepo)).ImplementedBy<Model.Model>());
 
         Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
         Container.Register(Component.For<CreateViewModel>().ImplementedBy<CreateViewModel>().LifestyleTransient());

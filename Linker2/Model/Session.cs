@@ -33,7 +33,8 @@ public class Session
     private bool TimedOut => DateTime.Now > StartedAt + timeout;
     public TimeSpan TimeLeft => StartedAt + timeout - DateTime.Now;
 
-    public IWebPageScraper? webPageScraper = null;
+    public IWebPageScraper? Firefox { get; set; } = null;
+    public IWebPageScraper HtmlAgilityPack { get; } = new HtmlAgilityPackWebPageScraper();
 
     public ImageCache ImageCache { get; }
 
@@ -92,38 +93,6 @@ public class Session
         SessionTimer_Tick(null, EventArgs.Empty);
     }
 
-    private void InitWebPageScraper()
-    {
-        if (webPageScraper is null)
-        {
-            if (!string.IsNullOrEmpty(Data.Settings.GeckoDriverPath))
-            {
-                try
-                {
-                    webPageScraper = new FirefoxWebPageScraper(Data.Settings.GeckoDriverPath, true);
-                }
-                catch (Exception e)
-                {
-                    var dialogs = ServiceLocator.Resolve<IDialogs>();
-                    dialogs.ShowErrorDialog($"Reverting to default web page scraper due to exception when creating FirefoxWebPageScraper: {e.Message}");
-                }
-            }
-            
-            if (webPageScraper is null)
-            {
-                webPageScraper = new HtmlAgilityPackWebPageScraper();
-            }
-        }
-    }
-
-    public void LoadDataFromUrl(string url, out string? title, out List<string> thumbnailUrl)
-    {
-        InitWebPageScraper();
-        webPageScraper!.Load(url);
-        title = webPageScraper!.PageTitle;
-        thumbnailUrl = webPageScraper!.GetImageSrcs(Data.Settings.ThumbnailImageIds);
-    }
-
     public void Stop()
     {
         if (!sessionTimer.IsEnabled)
@@ -133,7 +102,9 @@ public class Session
         }
 
         sessionTimer.Stop();
-        webPageScraper?.Close();
+        
+        Firefox?.Close();
+        HtmlAgilityPack.Close();
 
         Messenger.Send(new SessionStopped(Data.Settings));
     }

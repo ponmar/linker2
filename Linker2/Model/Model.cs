@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Linker2.Configuration;
+using Linker2.HttpHelpers;
 using Linker2.Validators;
 using Newtonsoft.Json;
 using System;
@@ -49,12 +50,14 @@ public interface ISessionUtils
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
 
-public interface IUrlDataFetcher
+public interface IWebPageScrapersRepo
 {
-    void LoadDataFromUrl(string url, out string? title, out List<string> thumbnailUrls);
+    public IWebPageScraper? Firefox { get; set; }
+
+    public IWebPageScraper HtmlAgilityPack { get; }
 }
 
-public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISessionUtils, IUrlDataFetcher, ISettingsRepository
+public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISessionUtils, IWebPageScrapersRepo, ISettingsRepository
 {
     private Session? session = null;
 
@@ -301,8 +304,15 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         }
     }
 
-    public void LoadDataFromUrl(string url, out string? title, out List<string> thumbnailUrls)
+    public IWebPageScraper? Firefox
     {
-        session!.LoadDataFromUrl(url, out title, out thumbnailUrls);
+        get => session!.Firefox;
+        set
+        {
+            session!.Firefox = value;
+        }
     }
+
+    public IWebPageScraper HtmlAgilityPack => session!.HtmlAgilityPack;
+
 }

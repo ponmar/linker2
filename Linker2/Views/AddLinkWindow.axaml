@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title}"
-    Width="450"
+    Width="500"
     Height="500"
     MinWidth="350"
     MinHeight="300"
@@ -36,16 +36,27 @@
             VerticalAlignment="Center"
             IsReadOnly="{Binding EditingLink}"
             Text="{Binding LinkUrl}" />
-        <Button
+
+        <StackPanel
             Grid.Row="0"
             Grid.Column="2"
-            Margin="5"
             VerticalAlignment="Center"
-            Classes="Normal"
-            Command="{Binding FetchLinkDataCommand}"
-            Content="Fetch"
-            IsEnabled="{Binding HasLinkUrl}"
-            ToolTip.Tip="Fetch data from URL" />
+            Orientation="Horizontal">
+            <Button
+                Margin="5"
+                Classes="Normal"
+                Command="{Binding FetchLinkDataViaFirefoxCommand}"
+                Content="Fetch"
+                IsEnabled="{Binding HasLinkUrl}"
+                ToolTip.Tip="Fetch URL data via Firefox" />
+            <Button
+                Margin="5"
+                Classes="Normal"
+                Command="{Binding FetchLinkDataViaHtmlAgilityPackCommand}"
+                Content="Fetch"
+                IsEnabled="{Binding HasLinkUrl}"
+                ToolTip.Tip="Fetch URL data via HtmlAgilityPack" />
+        </StackPanel>
 
         <TextBlock
             Grid.Row="1"

@@ -54,10 +54,9 @@ public partial class MainViewModel : ObservableObject
     private readonly IFileUtils fileUtils;
     private readonly ILinkModification linkModification;
     private readonly ILinkRepository linkRepository;
-    private readonly IUrlDataFetcher urlDataFetcher;
     private readonly ISettingsRepository settingsRepo;
 
-    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification, ILinkRepository linkRepository, IUrlDataFetcher urlDataFetcher, ISettingsRepository settingsRepo)
+    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification, ILinkRepository linkRepository, ISettingsRepository settingsRepo)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
@@ -65,7 +64,6 @@ public partial class MainViewModel : ObservableObject
         this.fileUtils = fileUtils;
         this.linkModification = linkModification;
         this.linkRepository = linkRepository;
-        this.urlDataFetcher = urlDataFetcher;
         this.settingsRepo = settingsRepo;
 
         UpdateAvailabelConfigFiles();

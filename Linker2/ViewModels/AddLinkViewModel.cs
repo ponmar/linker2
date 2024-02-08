@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using Avalonia.Media.Imaging;
 using System.Threading.Tasks;
+using Linker2.HttpHelpers;
 
 namespace Linker2.ViewModels;
 
@@ -108,15 +109,15 @@ public partial class AddLinkViewModel : ObservableObject
     private readonly IDialogs dialogs;
     private readonly ILinkModification linkModification;
     private readonly ILinkRepository linkRepository;
-    private readonly IUrlDataFetcher urlDataFetcher;
+    private readonly IWebPageScrapersRepo webPageScrapersRepo;
     private readonly ISettingsRepository settingsRepo;
 
-    public AddLinkViewModel(IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IUrlDataFetcher urlDataFetcher, ISettingsRepository settingsRepo, LinkDto? linkToEdit = null)
+    public AddLinkViewModel(IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScrapersRepo webPageScrapersRepo, ISettingsRepository settingsRepo, LinkDto? linkToEdit = null)
     {
         this.dialogs = dialogs;
         this.linkModification = linkModification;
         this.linkRepository = linkRepository;
-        this.urlDataFetcher = urlDataFetcher;
+        this.webPageScrapersRepo = webPageScrapersRepo;
         this.settingsRepo = settingsRepo;
         this.linkToEdit = linkToEdit;
 
@@ -172,7 +173,39 @@ public partial class AddLinkViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void FetchLinkData()
+    private void FetchLinkDataViaFirefox()
+    {
+        if (string.IsNullOrEmpty(settingsRepo.Settings.GeckoDriverPath))
+        {
+            var dialogs = ServiceLocator.Resolve<IDialogs>();
+            dialogs.ShowErrorDialog($"{nameof(settingsRepo.Settings.GeckoDriverPath)} not configured");
+            return;
+        }
+
+        if (webPageScrapersRepo.Firefox is null)
+        {
+            try
+            {
+                webPageScrapersRepo.Firefox = new FirefoxWebPageScraper(settingsRepo.Settings.GeckoDriverPath, true);
+            }
+            catch (Exception e)
+            {
+                var dialogs = ServiceLocator.Resolve<IDialogs>();
+                dialogs.ShowErrorDialog($"Reverting to default web page scraper due to exception when creating FirefoxWebPageScraper: {e.Message}");
+                return;
+            }
+        }
+
+        FetchLinkData(webPageScrapersRepo.Firefox);
+    }
+
+    [RelayCommand]
+    private void FetchLinkDataViaHtmlAgilityPack()
+    {
+        FetchLinkData(webPageScrapersRepo.HtmlAgilityPack);
+    }
+
+    private void FetchLinkData(IWebPageScraper webPageScraper)
     {
         TrimInput();
 
@@ -182,7 +215,14 @@ public partial class AddLinkViewModel : ObservableObject
             return;
         }
 
-        urlDataFetcher.LoadDataFromUrl(LinkUrl, out var loadedTitle, out var loadedThumbnailUrls);
+        if (!webPageScraper.Load(LinkUrl))
+        {
+            dialogs.ShowErrorDialog("Load error");
+            return;
+        }
+
+        var loadedTitle = webPageScraper!.PageTitle;
+        var loadedThumbnailUrls = webPageScraper.GetImageSrcs(settingsRepo.Settings.ThumbnailImageIds);    
         if (loadedTitle is not null)
         {
             LinkTitle = loadedTitle;
