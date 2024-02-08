@@ -42,13 +42,19 @@
                 Command="{Binding OpenCommand}"
                 Content="Open"
                 IsDefault="True"
-                IsEnabled="{Binding !SessionStarted}" />
+                IsEnabled="{Binding SessionClosedAndFileSelected}" />
             <Button
                 Margin="3"
                 Classes="Normal"
                 Command="{Binding BackupCommand}"
                 Content="Backup"
-                IsEnabled="{Binding !SessionStarted}" />
+                IsEnabled="{Binding SessionClosedAndFileSelected}" />
+            <Button
+                Margin="3"
+                Classes="Normal"
+                Command="{Binding LocateCommand}"
+                Content="Locate"
+                IsEnabled="{Binding SessionClosedAndFileSelected}" />
         </StackPanel>
     </WrapPanel>
 </UserControl>

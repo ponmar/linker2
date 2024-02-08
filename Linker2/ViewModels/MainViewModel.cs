@@ -24,14 +24,18 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SessionStarted))]
+    [NotifyPropertyChangedFor(nameof(SessionClosedAndFileSelected))]
     [NotifyPropertyChangedFor(nameof(UnsavedChanges))]
     private Session? session;
 
     public bool SessionStarted => Session is not null;
 
+    public bool SessionClosedAndFileSelected => Session is null && SelectedFilename is not null;
+
     public bool UnsavedChanges => Session is not null && Session.DataUpdated;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SessionClosedAndFileSelected))]
     private string? selectedFilename = null;
 
     public ObservableCollection<string> Filenames { get; } = [];
@@ -249,21 +253,21 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Backup()
     {
-        if (string.IsNullOrEmpty(SelectedFilename))
-        {
-            dialogs.ShowErrorDialog("No filename specified");
-            return;
-        }
-
         try
         {
-            fileUtils.BackupConfigFile(SelectedFilename);
+            fileUtils.BackupConfigFile(SelectedFilename!);
             dialogs.ShowInfoDialogAsync("Backup file created");
         }
         catch (Exception e)
         {
             dialogs.ShowErrorDialog($"Unable to backup file:\n{e.Message}");
         }
+    }
+
+    [RelayCommand]
+    private void Locate()
+    {
+        fileUtils.LocateConfigFile(SelectedFilename!);
     }
 
     [RelayCommand]

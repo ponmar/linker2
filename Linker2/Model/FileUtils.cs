@@ -3,6 +3,7 @@ using Linker2.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using System.Security;
@@ -14,6 +15,7 @@ public interface IFileUtils
     public IEnumerable<string> GetAvailableConfigFiles();
     void Create(string filename, SecureString password);
     void BackupConfigFile(string filename);
+    void LocateConfigFile(string filename);
     void Export(string filePath, DataDto data);
 }
 
@@ -51,12 +53,24 @@ public class FileUtils : IFileUtils
 
     public void BackupConfigFile(string filename)
     {
-        var appDataConfig = new EncryptedApplicationConfig<DataDto>(fileSystem, Constants.AppName, filename);
-        var destinationDir = Path.GetDirectoryName(appDataConfig.FilePath);
-        var destinationFilename = Path.GetFileNameWithoutExtension(appDataConfig.FilePath) + "_" + DateTime.Now.ToString(BackupFileTimestampFormat) + ".backup";
+        var filePath = GetConfigFilePath(filename);
+        var destinationDir = Path.GetDirectoryName(filePath);
+        var destinationFilename = Path.GetFileNameWithoutExtension(filePath) + "_" + DateTime.Now.ToString(BackupFileTimestampFormat) + ".backup";
         var destinationPath = Path.Combine(destinationDir!, destinationFilename);
 
-        fileSystem.File.Copy(appDataConfig.FilePath, destinationPath);
+        fileSystem.File.Copy(filePath, destinationPath);
+    }
+
+    private string GetConfigFilePath(string filename)
+    {
+        var appDataConfig = new EncryptedApplicationConfig<DataDto>(fileSystem, Constants.AppName, filename);
+        return appDataConfig.FilePath;
+    }
+
+    public void LocateConfigFile(string filename)
+    {
+        var filePath = GetConfigFilePath(filename);
+        Process.Start("explorer.exe", "/select, " + filePath);
     }
 
     public void Create(string filename, SecureString password)
