@@ -226,11 +226,6 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
             ClipboardService.SetText("");
         }
 
-        if (session.Data.Settings.DeselectFileWhenSessionTimeouts)
-        {
-            // TODO
-        }
-
         if (session.Data.Settings.QuitWhenSessionTimeouts)
         {
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopApp)
