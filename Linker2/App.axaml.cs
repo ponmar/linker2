@@ -29,7 +29,7 @@ public partial class App : Application
         if (count > 1)
         {
             var dialogs = ServiceLocator.Resolve<IDialogs>();
-            dialogs.ShowErrorDialog("This application is already running...");
+            dialogs.ShowErrorDialogAsync("This application is already running...");
         }
         else
         {

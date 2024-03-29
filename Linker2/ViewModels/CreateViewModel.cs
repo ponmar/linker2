@@ -55,7 +55,7 @@ public partial class CreateViewModel : ObservableObject
 
         if (fileSystem.File.Exists(filePath))
         {
-            dialogs.ShowErrorDialog("File already exists");
+            await dialogs.ShowErrorDialogAsync("File already exists");
             return;
         }
 
@@ -63,7 +63,7 @@ public partial class CreateViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Create()
+    private async Task CreateAsync()
     {
         try
         {
@@ -72,11 +72,11 @@ public partial class CreateViewModel : ObservableObject
         }
         catch (ValidationException e)
         {
-            dialogs.ShowErrorDialog(e.Result);
+            await dialogs.ShowErrorDialogAsync(e.Result);
         }
         catch (Exception e)
         {
-            dialogs.ShowErrorDialog($"Unable to create {Filename}: {e.Message}");
+            await dialogs.ShowErrorDialogAsync($"Unable to create {Filename}: {e.Message}");
         }
     }
 }

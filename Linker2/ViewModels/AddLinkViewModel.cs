@@ -178,7 +178,7 @@ public partial class AddLinkViewModel : ObservableObject
         if (string.IsNullOrEmpty(settingsRepo.Settings.GeckoDriverPath))
         {
             var dialogs = ServiceLocator.Resolve<IDialogs>();
-            dialogs.ShowErrorDialog($"{nameof(settingsRepo.Settings.GeckoDriverPath)} not configured");
+            dialogs.ShowErrorDialogAsync($"{nameof(settingsRepo.Settings.GeckoDriverPath)} not configured");
             return;
         }
 
@@ -191,7 +191,7 @@ public partial class AddLinkViewModel : ObservableObject
             catch (Exception e)
             {
                 var dialogs = ServiceLocator.Resolve<IDialogs>();
-                dialogs.ShowErrorDialog($"Reverting to default web page scraper due to exception when creating FirefoxWebPageScraper: {e.Message}");
+                dialogs.ShowErrorDialogAsync($"Reverting to default web page scraper due to exception when creating FirefoxWebPageScraper: {e.Message}");
                 return;
             }
         }
@@ -211,13 +211,13 @@ public partial class AddLinkViewModel : ObservableObject
 
         if (!EditingLink && linkRepository.Links.Any(x => x.Url == LinkUrl))
         {
-            dialogs.ShowErrorDialog("Link already added");
+            dialogs.ShowErrorDialogAsync("Link already added");
             return;
         }
 
         if (!webPageScraper.Load(LinkUrl))
         {
-            dialogs.ShowErrorDialog("Load error");
+            dialogs.ShowErrorDialogAsync("Load error");
             return;
         }
 
@@ -283,7 +283,7 @@ public partial class AddLinkViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void SaveLink()
+    private async Task SaveLink()
     {
         TrimInput();
 
@@ -291,13 +291,13 @@ public partial class AddLinkViewModel : ObservableObject
         var validationResult = ValidateInput();
         if (!validationResult.IsValid)
         {
-            dialogs.ShowErrorDialog(validationResult);
+            await dialogs.ShowErrorDialogAsync(validationResult);
             return;
         }
 
         if (!EditingLink && linkRepository.Links.Any(x => x.Url == LinkUrl))
         {
-            dialogs.ShowErrorDialog("Link already added");
+            await dialogs.ShowErrorDialogAsync("Link already added");
             return;
         }
 

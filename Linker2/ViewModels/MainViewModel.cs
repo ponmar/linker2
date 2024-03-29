@@ -178,7 +178,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (SelectedLink is null)
         {
-            dialogs.ShowErrorDialog("No link selected");
+            await dialogs.ShowErrorDialogAsync("No link selected");
             return;
         }
 
@@ -187,7 +187,7 @@ public partial class MainViewModel : ObservableObject
 
     private async Task RemoveLinkAsync(LinkDto link)
     {
-        var removeConfirmed = await dialogs.ShowConfirmDialog($"Remove link '{link.Title ?? link.Url}'?");
+        var removeConfirmed = await dialogs.ShowConfirmDialogAsync($"Remove link '{link.Title ?? link.Url}'?");
         if (!removeConfirmed)
         {
             return;
@@ -208,17 +208,17 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Open()
+    private async Task OpenAsync()
     {
         if (string.IsNullOrEmpty(SelectedFilename))
         {
-            dialogs.ShowErrorDialog("No filename specified");
+            await dialogs.ShowErrorDialogAsync("No filename specified");
             return;
         }
 
         if (string.IsNullOrEmpty(Password))
         {
-            dialogs.ShowErrorDialog("No password specified.");
+            await dialogs.ShowErrorDialogAsync("No password specified.");
             return;
         }
 
@@ -230,11 +230,11 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Validators.ValidationException e)
         {
-            dialogs.ShowErrorDialog(e.Result);
+            await dialogs.ShowErrorDialogAsync(e.Result);
         }
         catch (Exception e)
         {
-            dialogs.ShowErrorDialog(e.Message);
+            await dialogs.ShowErrorDialogAsync(e.Message);
         }
     }
 
@@ -260,7 +260,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            dialogs.ShowErrorDialog($"Unable to backup file:\n{e.Message}");
+            dialogs.ShowErrorDialogAsync($"Unable to backup file:\n{e.Message}");
         }
     }
 
@@ -326,7 +326,7 @@ public partial class MainViewModel : ObservableObject
         {
             if (fileSystem.File.Exists(exportFilePath))
             {
-                dialogs.ShowErrorDialog($"File already exists: {exportFilePath}");
+                await dialogs.ShowErrorDialogAsync($"File already exists: {exportFilePath}");
                 return;
             }
 
@@ -337,7 +337,7 @@ public partial class MainViewModel : ObservableObject
             }
             catch (Exception e)
             {
-                dialogs.ShowErrorDialog($"Unable to export links to {exportFilePath}:\n{e.Message}");
+                await dialogs.ShowErrorDialogAsync($"Unable to export links to {exportFilePath}:\n{e.Message}");
             }            
         }
     }
@@ -362,19 +362,19 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var includeLinks = await dialogs.ShowConfirmDialog($"Import links from {filePath}?");
-        var includeFilters = await dialogs.ShowConfirmDialog($"Import filters from {filePath}?");
-        var includeSettings = await dialogs.ShowConfirmDialog($"Import settings from {filePath}?");
+        var includeLinks = await dialogs.ShowConfirmDialogAsync($"Import links from {filePath}?");
+        var includeFilters = await dialogs.ShowConfirmDialogAsync($"Import filters from {filePath}?");
+        var includeSettings = await dialogs.ShowConfirmDialogAsync($"Import settings from {filePath}?");
         var importSettings = new ImportSettings(filePath, includeLinks, includeFilters, includeSettings);
 
         try
         {
             sessionUtils.Import(importSettings);
-            dialogs.ShowInfoDialogAsync("Import finished successfully!");
+            await dialogs.ShowInfoDialogAsync("Import finished successfully!");
         }
         catch (Exception e)
         {
-            dialogs.ShowErrorDialog($"Import error: {e.Message}");
+            await dialogs.ShowErrorDialogAsync($"Import error: {e.Message}");
         }
     }
 }

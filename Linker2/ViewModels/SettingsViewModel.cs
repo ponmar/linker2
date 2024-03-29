@@ -89,11 +89,11 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Save()
+    private async Task SaveAsync()
     {
         if (!int.TryParse(LockAfterSeconds, out var lockAfterSecondsInt))
         {
-            dialogs.ShowErrorDialog($"Invalid lock after seconds value");
+            await dialogs.ShowErrorDialogAsync($"Invalid lock after seconds value");
             return;
         }
 
@@ -116,7 +116,7 @@ public partial class SettingsViewModel : ObservableObject
         var validationResult = settingsValidator.Validate(settings);
         if (!validationResult.IsValid)
         {
-            dialogs.ShowErrorDialog(validationResult);
+            await dialogs.ShowErrorDialogAsync(validationResult);
             return;
         }
 

@@ -15,12 +15,12 @@ namespace Linker2;
 
 public interface IDialogs
 {
-    void ShowInfoDialogAsync(string message);
-    void ShowWarningDialog(string message);
-    void ShowErrorDialog(string message);
-    void ShowErrorDialog(IEnumerable<string> messages);
-    void ShowErrorDialog(ValidationResult validationResult);
-    Task<bool> ShowConfirmDialog(string question);
+    Task ShowInfoDialogAsync(string message);
+    Task ShowWarningDialogAsync(string message);
+    Task ShowErrorDialogAsync(string message);
+    Task ShowErrorDialogAsync(IEnumerable<string> messages);
+    Task ShowErrorDialogAsync(ValidationResult validationResult);
+    Task<bool> ShowConfirmDialogAsync(string question);
     Task<string?> SelectNewFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
     Task<string?> BrowseExistingFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
     Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title);
@@ -30,35 +30,35 @@ public interface IDialogs
 
 public class Dialogs : IDialogs
 {
-    public async void ShowInfoDialogAsync(string message)
+    public async Task ShowInfoDialogAsync(string message)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Info);
-        var result = await box.ShowAsync();
+        await box.ShowAsync();
     }
 
-    public async void ShowWarningDialog(string message)
+    public async Task ShowWarningDialogAsync(string message)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Warning);
-        var result = await box.ShowAsync();
+        await box.ShowAsync();
     }
 
-    public async void ShowErrorDialog(string message)
+    public async Task ShowErrorDialogAsync(string message)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Error);
-        var result = await box.ShowAsync();
+        await box.ShowAsync();
     }
 
-    public void ShowErrorDialog(IEnumerable<string> messages)
+    public async Task ShowErrorDialogAsync(IEnumerable<string> messages)
     {
-        ShowErrorDialog(string.Join("\n", messages));
+        await ShowErrorDialogAsync(string.Join("\n", messages));
     }
 
-    public void ShowErrorDialog(ValidationResult validationResult)
+    public async Task ShowErrorDialogAsync(ValidationResult validationResult)
     {
-        ShowErrorDialog(validationResult.Errors.Select(x => x.ErrorMessage));
+        await ShowErrorDialogAsync(validationResult.Errors.Select(x => x.ErrorMessage));
     }
 
-    public async Task<bool> ShowConfirmDialog(string question)
+    public async Task<bool> ShowConfirmDialogAsync(string question)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, question, ButtonEnum.YesNo, Icon.Question);
         var result = await box.ShowAsync();

@@ -4,6 +4,7 @@ using Linker2.Model;
 using System;
 using Linker2.Validators;
 using Linker2.Cryptography;
+using System.Threading.Tasks;
 
 namespace Linker2.ViewModels;
 
@@ -29,7 +30,7 @@ public partial class PasswordViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Save()
+    private async Task SaveAsync()
     {
         try
         {
@@ -38,11 +39,11 @@ public partial class PasswordViewModel : ObservableObject
         }
         catch (ValidationException e)
         {
-            dialogs.ShowErrorDialog(e.Result);
+            await dialogs.ShowErrorDialogAsync(e.Result);
         }
         catch (Exception e)
         {
-            dialogs.ShowErrorDialog(e.Message);
+            await dialogs.ShowErrorDialogAsync(e.Message);
         }        
     }
 }
