@@ -30,8 +30,8 @@
 				<MenuItem Header="_Save Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" HotKey="Ctrl+S"/>
 				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
 			</MenuItem>
-			<MenuItem Header="Link">
-				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}" IsEnabled="{Binding SessionStarted}"/>
+			<MenuItem Header="Link" IsEnabled="{Binding SessionStarted}">
+				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}"/>
 				<Separator/>
 				<MenuItem Header="_Open" Command="{Binding OpenLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 				<MenuItem Header="_Edit..." Command="{Binding OpenEditLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
