@@ -12,12 +12,12 @@
         <converters:RatingToTextConverter x:Key="RatingToTextConverter" />
 
         <DataTemplate x:Key="LinkTemplate">
-            <!--  Note: transparent background to be able to open the context menu from everywhere  -->
+            <!--  Note: transparent background to be able to open the context menu and double click from everywhere on that row  -->
             <Grid Background="Transparent" DoubleTapped="Grid_DoubleTapped">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="TagsColumn" />
+                    <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
-                    <ColumnDefinition Width="*" SharedSizeGroup="LinkColumn" />
+                    <ColumnDefinition Width="600" SharedSizeGroup="LinkColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="DateAndCounterColumn" />
                 </Grid.ColumnDefinitions>
@@ -47,7 +47,7 @@
                         <MenuItem Command="{Binding AddLinkCommand}" Header="Add..." />
                     </ContextMenu>
                 </Grid.ContextMenu>
-
+				
                 <ItemsControl
                     Grid.Row="0"
                     Grid.Column="0"
@@ -59,8 +59,10 @@
                                 Margin="2"
                                 Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterByNameCommand}"
                                 CommandParameter="{Binding}"
-                                Content="{Binding Name}"
-                                IsChecked="{Binding IsChecked}" />
+                                IsChecked="{Binding IsChecked}"
+								ToolTip.Tip="{Binding Name}">
+								<TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+							</ToggleButton>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -98,7 +100,6 @@
                         ToolTip.Tip="{Binding LongTitle}" />
 
                     <TextBlock
-                        MaxWidth="600"
                         Margin="5"
                         Foreground="Blue"
                         IsVisible="{Binding ShowDetails}"
@@ -143,10 +144,11 @@
     </UserControl.Resources>
 
     <Grid ColumnDefinitions="*" RowDefinitions="*">
-        <ListBox
+		<ListBox
             Grid.Row="0"
             Grid.Column="0"
             BorderThickness="0"
+			HorizontalAlignment="Stretch"
             Grid.IsSharedSizeScope="True"
             ItemTemplate="{StaticResource LinkTemplate}"
             ItemsSource="{Binding Links}"

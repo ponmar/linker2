@@ -43,18 +43,20 @@
                 Content="Open"
                 IsDefault="True"
                 IsEnabled="{Binding SessionClosedAndFileSelected}" />
-            <Button
-                Margin="3"
-                Classes="Normal"
-                Command="{Binding BackupCommand}"
-                Content="Backup"
-                IsEnabled="{Binding SessionClosedAndFileSelected}" />
-            <Button
-                Margin="3"
-                Classes="Normal"
-                Command="{Binding LocateCommand}"
-                Content="Locate"
-                IsEnabled="{Binding SessionClosedAndFileSelected}" />
         </StackPanel>
+		<StackPanel Margin="5" Orientation="Horizontal">
+			<Button
+                Margin="3"
+                Command="{Binding BackupCommand}"
+                Content="&#x2398;"
+				ToolTip.Tip="Backup selected file"
+                IsEnabled="{Binding SessionClosedAndFileSelected}" />
+			<Button
+                Margin="3"
+                Command="{Binding LocateCommand}"
+                Content="&#x1F4C2;"
+				ToolTip.Tip="Locate the selected file in Explorer"
+                IsEnabled="{Binding SessionClosedAndFileSelected}" />
+		</StackPanel>
     </WrapPanel>
 </UserControl>
