@@ -57,7 +57,6 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<string> SiteFilteringValues { get; } = [];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasSiteFilter))]
     private string? selectedSiteFiltering;
 
     partial void OnSelectedSiteFilteringChanged(string? value)
@@ -68,7 +67,6 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<string> RatingFilteringValues { get; } = [];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasRatingFilter))]
     private string? selectedRatingFiltering;
 
     partial void OnSelectedRatingFilteringChanged(string? value)
@@ -88,7 +86,6 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasTextFilter))]
     private string filterText = string.Empty;
 
     partial void OnFilterTextChanged(string value)
@@ -97,21 +94,12 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasHiddenTagsText))]
     private string hiddenTagsText = string.Empty;
 
     partial void OnHiddenTagsTextChanged(string value)
     {
         UpdateLinks();
     }
-
-    public bool HasTextFilter => !string.IsNullOrEmpty(FilterText);
-
-    public bool HasSiteFilter => SelectedSiteFiltering is not null;
-
-    public bool HasRatingFilter => SelectedRatingFiltering is not null;
-
-    public bool HasHiddenTagsText => !string.IsNullOrEmpty(HiddenTagsText);
 
     [ObservableProperty]
     private string filtersHeading = string.Empty;

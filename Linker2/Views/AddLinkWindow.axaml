@@ -47,14 +47,14 @@
                 Classes="Normal"
                 Command="{Binding FetchLinkDataViaFirefoxCommand}"
                 Content="Fetch"
-                IsEnabled="{Binding HasLinkUrl}"
+                IsEnabled="{Binding LinkUrl, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                 ToolTip.Tip="Fetch URL data via Firefox" />
             <Button
                 Margin="5"
                 Classes="Normal"
                 Command="{Binding FetchLinkDataViaHtmlAgilityPackCommand}"
                 Content="Fetch"
-                IsEnabled="{Binding HasLinkUrl}"
+                IsEnabled="{Binding LinkUrl, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                 ToolTip.Tip="Fetch URL data via HtmlAgilityPack" />
         </StackPanel>
 
@@ -137,7 +137,7 @@
                 Margin="5"
                 Classes="Clear"
                 Command="{Binding ClearRatingCommand}"
-                IsEnabled="{Binding ClearRatingEnabled}"
+                IsEnabled="{Binding LinkRating, Converter={x:Static ObjectConverters.IsNotNull}}"
                 ToolTip.Tip="Clear rating" />
         </StackPanel>
 

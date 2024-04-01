@@ -121,6 +121,6 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         sessionSaver.SaveSettings(settings);
-        Messenger.Send(new CloseDialog());
+        Messenger.Send<CloseDialog>();
     }
 }

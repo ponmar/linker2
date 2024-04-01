@@ -72,40 +72,13 @@ public partial class MainViewModel : ObservableObject
 
         UpdateAvailabelConfigFiles();
 
-        this.RegisterForEvent<StartEditLink>((m) =>
-        {
-            AddOrEditLink(m.Link);
-        });
-
-        this.RegisterForEvent<StartAddLink>((m) =>
-        {
-            AddOrEditLink(null);
-        });
-
-        this.RegisterForEvent<OpenLink>((m) =>
-        {
-            sessionUtils.OpenLinkWithExternalProgram(m.Url);
-        });
-
-        this.RegisterForEvent<StartRemoveLink>(async (m) =>
-        {
-            await RemoveLinkAsync(m.Link);
-        });
-
-        this.RegisterForEvent<LinkSelected>((m) =>
-        {
-            SelectedLink = m.Link;
-        });
-
-        this.RegisterForEvent<LinkDeselected>((m) =>
-        {
-            SelectedLink = null;
-        });
-
-        this.RegisterForEvent<DataUpdatedChanged>((m) =>
-        {
-            OnPropertyChanged(nameof(UnsavedChanges));
-        });
+        this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
+        this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
+        this.RegisterForEvent<OpenLink>((m) => sessionUtils.OpenLinkWithExternalProgram(m.Url));
+        this.RegisterForEvent<StartRemoveLink>(async (m) => await RemoveLinkAsync(m.Link));
+        this.RegisterForEvent<LinkSelected>((m) => SelectedLink = m.Link);
+        this.RegisterForEvent<LinkDeselected>((m) => SelectedLink = null);
+        this.RegisterForEvent<DataUpdatedChanged>((m) => OnPropertyChanged(nameof(UnsavedChanges)));
 
         this.RegisterForEvent<SessionStarted>((m) =>
         {
@@ -156,7 +129,7 @@ public partial class MainViewModel : ObservableObject
         AddOrEditLink(SelectedLink);
     }
 
-    private void AddOrEditLink(LinkDto? link)
+    private static void AddOrEditLink(LinkDto? link)
     {
         var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
         var addLinkWindow = new AddLinkWindow(addLinkViewModel);

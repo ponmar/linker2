@@ -32,13 +32,8 @@ public partial class AddLinkViewModel : ObservableObject
             LinkTags = settingsRepo.Settings.DefaultTag;
         }
 
-        HasLinkUrl = LinkDtoValidator.IsUrl(value);
-
         ValidateInput();
     }
-
-    [ObservableProperty]
-    private bool hasLinkUrl;
 
     [ObservableProperty]
     private string linkTitle = string.Empty;
@@ -94,10 +89,7 @@ public partial class AddLinkViewModel : ObservableObject
         ValidateInput();
     }
 
-    public bool ClearRatingEnabled => LinkRating is not null;
-
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ClearRatingEnabled))]
     private int? linkRating;
 
     public bool EditingLink => linkToEdit is not null;
@@ -315,7 +307,7 @@ public partial class AddLinkViewModel : ObservableObject
             linkModification.AddLink(link);
         }
 
-        Messenger.Send(new CloseDialog());
+        Messenger.Send<CloseDialog>();
     }
 
     private LinkDto InputToDto(List<string> tags)

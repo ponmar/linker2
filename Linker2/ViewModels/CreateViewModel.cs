@@ -45,7 +45,7 @@ public partial class CreateViewModel : ObservableObject
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
         var linkerFileType = new FilePickerFileType("All Linker files")
         {
-            Patterns = new[] { "*.linker" },
+            Patterns = ["*.linker"],
         };
         string? filePath = await dialogs.SelectNewFileDialogAsync("New File", initialDirectory, linkerFileType);
         if (filePath is null)
@@ -68,7 +68,7 @@ public partial class CreateViewModel : ObservableObject
         try
         {
             fileUtils.Create(Filename, AesUtils.StringToSecureString(Password));
-            Messenger.Send(new CloseDialog());
+            Messenger.Send<CloseDialog>();
         }
         catch (ValidationException e)
         {

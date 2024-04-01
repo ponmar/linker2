@@ -29,7 +29,7 @@
                         VerticalContentAlignment="Center"
                         Classes="Clear"
                         Command="{Binding ClearTextFilterCommand}"
-                        IsEnabled="{Binding HasTextFilter}" />
+                        IsEnabled="{Binding FilterText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </StackPanel>
 
                 <StackPanel Margin="5" Orientation="Horizontal">
@@ -48,7 +48,7 @@
                         VerticalContentAlignment="Center"
                         Classes="Clear"
                         Command="{Binding ClearRatingFilterCommand}"
-                        IsEnabled="{Binding HasRatingFilter}" />
+                        IsEnabled="{Binding SelectedRatingFiltering, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </StackPanel>
 
                 <StackPanel Margin="5" Orientation="Horizontal">
@@ -67,7 +67,7 @@
                         VerticalContentAlignment="Center"
                         Classes="Clear"
                         Command="{Binding ClearSiteFilterCommand}"
-                        IsEnabled="{Binding HasSiteFilter}" />
+                        IsEnabled="{Binding SelectedSiteFiltering, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </StackPanel>
 
                 <StackPanel Margin="5" Orientation="Horizontal">
@@ -85,7 +85,7 @@
                         VerticalContentAlignment="Center"
                         Classes="Clear"
                         Command="{Binding ClearHiddenTagsTextCommand}"
-                        IsEnabled="{Binding HasHiddenTagsText}" />
+                        IsEnabled="{Binding HiddenTagsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </StackPanel>
             </WrapPanel>
 

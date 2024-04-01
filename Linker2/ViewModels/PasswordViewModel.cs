@@ -35,7 +35,7 @@ public partial class PasswordViewModel : ObservableObject
         try
         {
             sessionUtils.ChangePassword(AesUtils.StringToSecureString(CurrentPassword), AesUtils.StringToSecureString(NewPassword));
-            Messenger.Send(new CloseDialog());
+            Messenger.Send<CloseDialog>();
         }
         catch (ValidationException e)
         {
