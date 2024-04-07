@@ -18,4 +18,9 @@ public partial class MainWindow : Window
     {
         sessionUtils.StopSession();
     }
+
+    private void Window_Activated(object? sender, System.EventArgs e)
+    {
+        sessionUtils.ResetSessionTime();
+    }
 }
