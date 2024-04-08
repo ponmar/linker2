@@ -22,6 +22,7 @@ public static class Bootstrapper
             typeof(ISessionSaver),
             typeof(ISessionUtils),
             typeof(IWebPageScrapersRepo)).ImplementedBy<Model.Model>());
+        Container.Register(Component.For<IClipboardService>().ImplementedBy<ClipboardService>());
 
         Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
         Container.Register(Component.For<CreateViewModel>().ImplementedBy<CreateViewModel>().LifestyleTransient());

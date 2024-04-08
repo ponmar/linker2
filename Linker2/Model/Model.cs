@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
-using TextCopy;
 
 namespace Linker2.Model;
 
@@ -65,10 +64,13 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     public SettingsDto Settings => session!.Data.Settings;
 
-    private readonly IFileSystem fileSystem = ServiceLocator.Resolve<IFileSystem>();
+    private readonly IFileSystem fileSystem;
+    private readonly IClipboardService clipboardService;
 
-    public Model()
+    public Model(IFileSystem fileSystem, IClipboardService clipboardService)
     {
+        this.fileSystem = fileSystem;
+        this.clipboardService = clipboardService;
         this.RegisterForEvent<SessionStopped>(x => CleanupSession());
     }
 
@@ -223,7 +225,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
         if (session.Data.Settings.ClearClipboardWhenSessionStops)
         {
-            ClipboardService.SetText("");
+            clipboardService.ClearAsync();
         }
 
         if (session.Data.Settings.QuitWhenSessionTimeouts)
