@@ -10,6 +10,7 @@ using FluentValidation.Results;
 using Avalonia.Media.Imaging;
 using System.Threading.Tasks;
 using Linker2.HttpHelpers;
+using System.Collections.ObjectModel;
 
 namespace Linker2.ViewModels;
 
@@ -54,12 +55,12 @@ public partial class AddLinkViewModel : ObservableObject
     [ObservableProperty]
     private string linkThumbnailUrlIndexText = string.Empty;
 
-    private List<string> linkThumbnailUrls = [];
+    public ObservableCollection<string> LinkThumbnailUrls { get; } = [];
 
     partial void OnLinkThumbnailUrlChanged(string value)
     {
-        var index = linkThumbnailUrls.IndexOf(value);
-        LinkThumbnailUrlIndexText = index == -1 ? "" : $"{index + 1}/{linkThumbnailUrls.Count}";
+        var index = LinkThumbnailUrls.IndexOf(value);
+        LinkThumbnailUrlIndexText = index == -1 ? "" : $"{index + 1}/{LinkThumbnailUrls.Count}";
         ValidateInput();
     }
 
@@ -67,8 +68,8 @@ public partial class AddLinkViewModel : ObservableObject
     {
         get
         {
-            var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
-            return index != -1 && index < linkThumbnailUrls.Count - 1;
+            var index = LinkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+            return index != -1 && index < LinkThumbnailUrls.Count - 1;
         }
     }
 
@@ -76,7 +77,7 @@ public partial class AddLinkViewModel : ObservableObject
     {
         get
         {
-            var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+            var index = LinkThumbnailUrls.IndexOf(LinkThumbnailUrl);
             return index > 0;
         }
     }
@@ -221,7 +222,8 @@ public partial class AddLinkViewModel : ObservableObject
         }
         if (loadedThumbnailUrls.Count > 0)
         {
-            linkThumbnailUrls = loadedThumbnailUrls;
+            LinkThumbnailUrls.Clear();
+            loadedThumbnailUrls.ForEach(x => LinkThumbnailUrls.Add(x));
             LinkThumbnailUrl = loadedThumbnailUrls.First();
         }
         else
@@ -320,22 +322,22 @@ public partial class AddLinkViewModel : ObservableObject
     [RelayCommand]
     private void NextThumbnailUrl()
     {
-        var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
-        if (index != -1 && index < linkThumbnailUrls.Count - 1)
+        var index = LinkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+        if (index != -1 && index < LinkThumbnailUrls.Count - 1)
         {
             index++;
-            LinkThumbnailUrl = linkThumbnailUrls[index];
+            LinkThumbnailUrl = LinkThumbnailUrls[index];
         }
     }
 
     [RelayCommand]
     private void PreviousThumbnailUrl()
     {
-        var index = linkThumbnailUrls.IndexOf(LinkThumbnailUrl);
+        var index = LinkThumbnailUrls.IndexOf(LinkThumbnailUrl);
         if (index > 0)
         {
             index--;
-            LinkThumbnailUrl = linkThumbnailUrls[index];
+            LinkThumbnailUrl = LinkThumbnailUrls[index];
         }
     }
 }

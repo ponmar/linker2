@@ -132,7 +132,7 @@ public partial class MainViewModel : ObservableObject
     private static void AddOrEditLink(LinkDto? link)
     {
         var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
-        var addLinkWindow = new AddLinkWindow(addLinkViewModel);
+        var addLinkWindow = new AddLinkWindow() { DataContext = addLinkViewModel };
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

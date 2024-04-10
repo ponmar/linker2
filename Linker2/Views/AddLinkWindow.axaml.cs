@@ -8,11 +8,9 @@ namespace Linker2.Views
     {
         private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
 
-        public AddLinkWindow(AddLinkViewModel viewModel)
+        public AddLinkWindow()
         {
             InitializeComponent();
-
-            DataContext = viewModel;
 
             this.RegisterForEvent<SessionStopped>((x) => Close());
             this.RegisterForEvent<CloseDialog>((x) => Close());
