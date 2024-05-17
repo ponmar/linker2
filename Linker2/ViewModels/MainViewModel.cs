@@ -57,19 +57,15 @@ public partial class MainViewModel : ObservableObject
     private readonly ISessionUtils sessionUtils;
     private readonly IFileUtils fileUtils;
     private readonly ILinkModification linkModification;
-    private readonly ILinkRepository linkRepository;
-    private readonly ISettingsRepository settingsRepo;
 
-    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification, ILinkRepository linkRepository, ISettingsRepository settingsRepo)
+    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
         this.sessionUtils = sessionUtils;
         this.fileUtils = fileUtils;
         this.linkModification = linkModification;
-        this.linkRepository = linkRepository;
-        this.settingsRepo = settingsRepo;
-
+    
         UpdateAvailabelConfigFiles();
 
         this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
@@ -118,7 +114,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenAddLink()
+    private static void OpenAddLink()
     {
         AddOrEditLink(null);
     }
@@ -276,7 +272,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenChangePassword()
+    private static void OpenChangePassword()
     {
         var passwordWindow = new PasswordWindow();
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -291,7 +287,7 @@ public partial class MainViewModel : ObservableObject
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
         var jsonFileType = new FilePickerFileType("Json files")
         {
-            Patterns = new[] { "*.json" },
+            Patterns = ["*.json"],
         };
         var exportFilePath = await dialogs.SelectNewFileDialogAsync("Export", initialDirectory, jsonFileType);
 
@@ -327,7 +323,7 @@ public partial class MainViewModel : ObservableObject
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
         var exportedFileType = new FilePickerFileType("Linker exported file (.json)")
         {
-            Patterns = new[] { "*.json" },
+            Patterns = ["*.json"],
         };
         var filePath = await dialogs.BrowseExistingFileDialogAsync("Select file to import", initialDirectory, exportedFileType);
         if (filePath is null)

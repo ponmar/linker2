@@ -130,7 +130,7 @@ public partial class LinkViewModel : ObservableObject
         }
         else
         {
-            ShortTitle = LinkDto.Title.Substring(0, ShortTitleLength) + "...";
+            ShortTitle = LinkDto.Title[..ShortTitleLength] + "...";
         }
     }
 

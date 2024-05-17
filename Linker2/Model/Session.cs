@@ -56,7 +56,7 @@ public class Session
         this.fileSystem = fileSystem;
         FilePath = filePath;
         this.password = password;
-        Data = data;
+        this.data = data;
 
         var cacheDir = Path.Combine(Path.GetDirectoryName(filePath)!, "Cache", Path.GetFileNameWithoutExtension(filePath));
         ImageCache = new(fileSystem, cacheDir, AesUtils.PasswordToKey(password));

@@ -73,13 +73,13 @@ public class Dialogs : IDialogs
         }
 
         var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
-        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+        var suggestedStartLocation = await topLevel!.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
 
         var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = title,
             SuggestedStartLocation = suggestedStartLocation,
-            FileTypeChoices = new [] { fileType, },
+            FileTypeChoices = [fileType],
         });
 
         return file?.Path.AbsolutePath;
@@ -93,14 +93,14 @@ public class Dialogs : IDialogs
         }
 
         var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
-        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+        var suggestedStartLocation = await topLevel!.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
 
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = title,
             SuggestedStartLocation = suggestedStartLocation,
             AllowMultiple = false,
-            FileTypeFilter = new[] { fileType, },
+            FileTypeFilter = [fileType],
         });
 
         return files.Count > 0 ? files[0].Path.AbsolutePath : null;
@@ -119,7 +119,7 @@ public class Dialogs : IDialogs
         }
 
         var topLevel = TopLevel.GetTopLevel(desktopApp.MainWindow);
-        var suggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+        var suggestedStartLocation = await topLevel!.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
 
         var files = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
