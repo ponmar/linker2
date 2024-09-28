@@ -242,10 +242,12 @@ public partial class LinksViewModel : ObservableObject
             allLinks.RemoveAll(x => x.Url == m.Link.Url);
 
             // Not always a hit because removed link may be filtered
+            int selectedLinkIndex = -1;
             foreach (var link in Links)
             {
                 if (link.LinkDto.Url == m.Link.Url)
                 {
+                    selectedLinkIndex = Links.IndexOf(link);
                     Links.Remove(link);
                     break;
                 }
@@ -256,6 +258,12 @@ public partial class LinksViewModel : ObservableObject
             ReloadAvailableTags();
 
             UpdateLinks();
+
+            // Select item after removed item in list
+            if (selectedLinkIndex != -1 && selectedLinkIndex < Links.Count)
+            {
+                SelectedLink = Links[selectedLinkIndex];
+            }
         });
 
         this.RegisterForEvent<SettingsUpdated>((m) =>

@@ -163,11 +163,6 @@ public partial class MainViewModel : ObservableObject
         }
 
         linkModification.RemoveLink(link.Url);
-
-        if (SelectedLink is not null && SelectedLink.Url == link.Url)
-        {
-            SelectedLink = null;
-        }
     }
 
     [RelayCommand]
