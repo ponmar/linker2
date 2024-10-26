@@ -417,10 +417,7 @@ public partial class LinksViewModel : ObservableObject
             }
             else
             {
-                if (Links.Contains(link))
-                {
-                    Links.Remove(link);
-                }
+                Links.Remove(link);
             }
         }
     }
@@ -465,8 +462,10 @@ public partial class LinksViewModel : ObservableObject
             sortedLinks.Reverse();
         }
 
+        var preSelectedLink = SelectedLink;
         Links.Clear();
         sortedLinks.ForEach(x => Links.Add(x));
+        SelectedLink = preSelectedLink;
     }
 
     [RelayCommand]
