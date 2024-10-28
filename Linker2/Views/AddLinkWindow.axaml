@@ -103,32 +103,31 @@
             Orientation="Horizontal">
 
             <Button
-                Classes="Icon"
+                Classes="RatingIcon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="1"
-                ToolTip.Tip="Rating 1/5">
-                <TextBlock Text="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=1}" />
-            </Button>
+                Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=1}"
+				ToolTip.Tip="Rating 1/5"/>
             <Button
-                Classes="Icon"
+                Classes="RatingIcon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="2"
                 Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=2}"
                 ToolTip.Tip="Rating 2/5" />
             <Button
-                Classes="Icon"
+                Classes="RatingIcon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="3"
                 Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=3}"
                 ToolTip.Tip="Rating 3/5" />
             <Button
-                Classes="Icon"
+                Classes="RatingIcon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="4"
                 Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=4}"
                 ToolTip.Tip="Rating 4/5" />
             <Button
-                Classes="Icon"
+                Classes="RatingIcon"
                 Command="{Binding SetRatingCommand}"
                 CommandParameter="5"
                 Content="{Binding LinkRating, Converter={StaticResource RatingToCharConverter}, ConverterParameter=5}"

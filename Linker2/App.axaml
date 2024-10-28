@@ -22,7 +22,16 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
-        <Style Selector="Button.Clear">
+		<Style Selector="Button.RatingIcon">
+			<Setter Property="FontSize" Value="18" />
+			<Setter Property="Width" Value="35" />
+			<Setter Property="Height" Value="30" />
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="Foreground" Value="rgb(255, 153, 0)"/>
+		</Style>
+
+		<Style Selector="Button.Clear">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
