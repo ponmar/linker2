@@ -7,6 +7,6 @@ This is a GUI application for managing links. It started as en example applicati
 ## Features
 
 * Password protected link storage (encrypted JSON and thumnails)
-* Stored link data: URL, title, thumbnail URL, rating and open counter
-* Link meta-data (title and thumbnail) can be fetched automatically
+* Stored link data: URL, title, thumbnail URL, tags, rating, date and time added, open counter
+* Link title and thumbnail can be fetched automatically from link destination
 * Filters and sorting capabilities
