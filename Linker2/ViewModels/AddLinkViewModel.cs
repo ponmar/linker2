@@ -28,9 +28,9 @@ public partial class AddLinkViewModel : ObservableObject
     partial void OnLinkUrlChanged(string value)
     {
         if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(LinkTags) &&
-            !string.IsNullOrEmpty(settingsRepo.Settings.DefaultTag))
+            !string.IsNullOrEmpty(settingsProvider.Settings.DefaultTag))
         {
-            LinkTags = settingsRepo.Settings.DefaultTag;
+            LinkTags = settingsProvider.Settings.DefaultTag;
         }
 
         ValidateInput();
@@ -102,16 +102,16 @@ public partial class AddLinkViewModel : ObservableObject
     private readonly IDialogs dialogs;
     private readonly ILinkModification linkModification;
     private readonly ILinkRepository linkRepository;
-    private readonly IWebPageScrapersRepo webPageScrapersRepo;
-    private readonly ISettingsRepository settingsRepo;
+    private readonly IWebPageScraperProvider webPageScraperProvider;
+    private readonly ISettingsProvider settingsProvider;
 
-    public AddLinkViewModel(IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScrapersRepo webPageScrapersRepo, ISettingsRepository settingsRepo, LinkDto? linkToEdit = null)
+    public AddLinkViewModel(IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, LinkDto? linkToEdit = null)
     {
         this.dialogs = dialogs;
         this.linkModification = linkModification;
         this.linkRepository = linkRepository;
-        this.webPageScrapersRepo = webPageScrapersRepo;
-        this.settingsRepo = settingsRepo;
+        this.webPageScraperProvider = webPageScraperProvider;
+        this.settingsProvider = settingsProvider;
         this.linkToEdit = linkToEdit;
 
         if (linkToEdit is not null)
@@ -168,18 +168,18 @@ public partial class AddLinkViewModel : ObservableObject
     [RelayCommand]
     private void FetchLinkDataViaFirefox()
     {
-        if (string.IsNullOrEmpty(settingsRepo.Settings.GeckoDriverPath))
+        if (string.IsNullOrEmpty(settingsProvider.Settings.GeckoDriverPath))
         {
             var dialogs = ServiceLocator.Resolve<IDialogs>();
-            dialogs.ShowErrorDialogAsync($"{nameof(settingsRepo.Settings.GeckoDriverPath)} not configured");
+            dialogs.ShowErrorDialogAsync($"{nameof(settingsProvider.Settings.GeckoDriverPath)} not configured");
             return;
         }
 
-        if (webPageScrapersRepo.Firefox is null)
+        if (webPageScraperProvider.Firefox is null)
         {
             try
             {
-                webPageScrapersRepo.Firefox = new FirefoxWebPageScraper(settingsRepo.Settings.GeckoDriverPath, true);
+                webPageScraperProvider.Firefox = new FirefoxWebPageScraper(settingsProvider.Settings.GeckoDriverPath, true);
             }
             catch (Exception e)
             {
@@ -189,13 +189,13 @@ public partial class AddLinkViewModel : ObservableObject
             }
         }
 
-        FetchLinkData(webPageScrapersRepo.Firefox);
+        FetchLinkData(webPageScraperProvider.Firefox);
     }
 
     [RelayCommand]
     private void FetchLinkDataViaHtmlAgilityPack()
     {
-        FetchLinkData(webPageScrapersRepo.HtmlAgilityPack);
+        FetchLinkData(webPageScraperProvider.HtmlAgilityPack);
     }
 
     private void FetchLinkData(IWebPageScraper webPageScraper)
@@ -215,7 +215,7 @@ public partial class AddLinkViewModel : ObservableObject
         }
 
         var loadedTitle = webPageScraper!.PageTitle;
-        var loadedThumbnailUrls = webPageScraper.GetImageSrcs(settingsRepo.Settings.ThumbnailImageIds);    
+        var loadedThumbnailUrls = webPageScraper.GetImageSrcs(settingsProvider.Settings.ThumbnailImageIds);    
         if (loadedTitle is not null)
         {
             LinkTitle = loadedTitle;
@@ -235,10 +235,10 @@ public partial class AddLinkViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(LinkTags))
         {
-            LinkTags = settingsRepo.Settings.DefaultTag;
+            LinkTags = settingsProvider.Settings.DefaultTag;
         }
 
-        if (!EditingLink && LinkTags == settingsRepo.Settings.DefaultTag)
+        if (!EditingLink && LinkTags == settingsProvider.Settings.DefaultTag)
         {
             var tagsFromTitle = new List<string>();
             var existingTags = linkRepository.Links.SelectMany(x => x.Tags).Distinct();

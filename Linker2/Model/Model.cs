@@ -17,7 +17,7 @@ public interface ILinkRepository
     IEnumerable<LinkDto> Links { get; }
 }
 
-public interface ISettingsRepository
+public interface ISettingsProvider
 {
     SettingsDto Settings { get; }
 }
@@ -49,14 +49,14 @@ public interface ISessionUtils
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
 
-public interface IWebPageScrapersRepo
+public interface IWebPageScraperProvider
 {
     public IWebPageScraper? Firefox { get; set; }
 
     public IWebPageScraper HtmlAgilityPack { get; }
 }
 
-public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISessionUtils, IWebPageScrapersRepo, ISettingsRepository
+public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISessionUtils, IWebPageScraperProvider, ISettingsProvider
 {
     private Session? session = null;
 

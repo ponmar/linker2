@@ -17,11 +17,11 @@ public static class Bootstrapper
         Container.Register(Component.For<IDialogs>().ImplementedBy<Dialogs>());
         Container.Register(Component.For(
             typeof(ILinkRepository),
-            typeof(ISettingsRepository),
+            typeof(ISettingsProvider),
             typeof(ILinkModification),
             typeof(ISessionSaver),
             typeof(ISessionUtils),
-            typeof(IWebPageScrapersRepo)).ImplementedBy<Model.Model>());
+            typeof(IWebPageScraperProvider)).ImplementedBy<Model.Model>());
         Container.Register(Component.For<IClipboardService>().ImplementedBy<ClipboardService>());
 
         Container.Register(Component.For<AddLinkViewModel>().ImplementedBy<AddLinkViewModel>().LifestyleTransient());
