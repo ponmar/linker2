@@ -86,7 +86,7 @@ public class FirefoxWebPageScraper : IWebPageScraper
         try
         {
             var imgTag = driver.FindElement(By.Id(imageId));
-            return imgTag.GetAttribute("src");
+            return imgTag.GetDomAttribute("src");
         }
         catch (InvalidSelectorException)
         {
