@@ -44,12 +44,13 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IDialogs dialogs;
     private readonly ISessionSaver sessionSaver;
 
-    public SettingsViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionSaver sessionSaver, SettingsDto settings)
+    public SettingsViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionSaver sessionSaver, ISettingsProvider settingsProvider)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
         this.sessionSaver = sessionSaver;
 
+        var settings = settingsProvider.Settings;
         showDetails = settings.ShowDetails;
         clearClipboardWhenSessionStops = settings.ClearClipboardWhenSessionStops;
         openLinkCommand = settings.OpenLinkCommand;

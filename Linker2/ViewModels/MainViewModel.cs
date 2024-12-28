@@ -257,9 +257,9 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenSettings()
+    private static void OpenSettings()
     {
-        var settingsWindow = new SettingsWindow(Session!.Data.Settings);
+        var settingsWindow = new SettingsWindow();
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             settingsWindow.ShowDialog(desktop.MainWindow!);

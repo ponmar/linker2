@@ -9,10 +9,10 @@ namespace Linker2.Views
     {
         private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
 
-        public SettingsWindow(SettingsDto settings)
+        public SettingsWindow()
         {
             InitializeComponent();
-            DataContext = new SettingsViewModel(ServiceLocator.Resolve<IFileSystem>(), ServiceLocator.Resolve<IDialogs>(), ServiceLocator.Resolve<ISessionSaver>(), settings);
+            DataContext = ServiceLocator.Resolve<SettingsViewModel>();
 
             this.RegisterForEvent<SessionStopped>((x) => Close());
             this.RegisterForEvent<CloseDialog>((x) => Close());
