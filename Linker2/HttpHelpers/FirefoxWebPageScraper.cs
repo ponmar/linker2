@@ -52,7 +52,7 @@ public class FirefoxWebPageScraper : IWebPageScraper
                 var title = driver.Title;
                 if (title.Contains(" - ") && title.EndsWith(".com"))
                 {
-                    return title.Substring(0, title.LastIndexOf(" - "));
+                    return title[..title.LastIndexOf(" - ")];
                 }
                 return title;
             }
