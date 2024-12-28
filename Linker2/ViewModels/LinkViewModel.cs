@@ -172,8 +172,9 @@ public partial class LinkViewModel : ObservableObject
             return;
         }
 
-        var viewModel = new ImageViewModel(ThumbnailImage);
-        var openLinkThumbnailWindow = new ImageWindow(viewModel);
+        var openLinkThumbnailWindow = new ImageWindow();
+        openLinkThumbnailWindow.SetImage(ThumbnailImage);
+
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             openLinkThumbnailWindow.ShowDialog(desktop.MainWindow!);

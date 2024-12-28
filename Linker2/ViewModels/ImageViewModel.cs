@@ -6,13 +6,8 @@ namespace Linker2.ViewModels;
 public partial class ImageViewModel : ObservableObject
 {
     [ObservableProperty]
-    private Bitmap imageBitmap;
+    private Bitmap? imageBitmap;
 
-    public int ImageWidth => ImageBitmap.PixelSize.Width;
-    public int ImageHeight => ImageBitmap.PixelSize.Height;
-
-    public ImageViewModel(Bitmap image)
-    {
-        ImageBitmap = image;
-    }
+    public int ImageWidth => ImageBitmap is null ? 0 : ImageBitmap.PixelSize.Width;
+    public int ImageHeight => ImageBitmap is null ? 0 : ImageBitmap.PixelSize.Height;
 }

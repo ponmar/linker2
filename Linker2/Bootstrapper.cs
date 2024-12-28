@@ -25,6 +25,7 @@ public static class Bootstrapper
         ServiceLocator.RegisterTransient<AddLinkViewModel>();
         ServiceLocator.RegisterTransient<CreateViewModel>();
         ServiceLocator.RegisterTransient<PasswordViewModel>();
+        ServiceLocator.RegisterTransient<ImageViewModel>();
 
         ServiceLocator.RegisterSingleton<MainViewModel>();
         ServiceLocator.RegisterSingleton<LinksViewModel>();
