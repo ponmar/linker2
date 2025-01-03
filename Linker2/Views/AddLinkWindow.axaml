@@ -5,6 +5,8 @@
     xmlns:converters="clr-namespace:Linker2.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Linker2.ViewModels"
+    x:DataType="vm:AddLinkViewModel"
     Title="{Binding Title}"
     Width="500"
     Height="500"

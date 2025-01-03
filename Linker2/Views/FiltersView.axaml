@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Linker2.ViewModels"
+    x:DataType="vm:LinksViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -103,7 +105,7 @@
                         <DataTemplate>
                             <ToggleButton
                                 Margin="2"
-                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterCommand}"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=((vm:LinksViewModel)DataContext).ToggleTagFilterCommand}"
                                 CommandParameter="{Binding}"
                                 Content="{Binding Name}"
                                 IsChecked="{Binding IsChecked}" />

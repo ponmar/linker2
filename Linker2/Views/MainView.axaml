@@ -6,7 +6,9 @@
 			 xmlns:views="clr-namespace:Linker2.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Linker2.Views.MainView"
-             x:DataType="vm:MainViewModel" PointerMoved="UserControl_PointerMoved" KeyDown="UserControl_KeyDown">
+             x:DataType="vm:MainViewModel"
+             PointerMoved="UserControl_PointerMoved"
+             KeyDown="UserControl_KeyDown">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->

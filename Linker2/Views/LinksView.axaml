@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Linker2.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="clr-namespace:Linker2.ViewModels"
+    x:DataType="vm:LinksViewModel"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -11,7 +13,7 @@
     <UserControl.Resources>
         <converters:RatingToTextConverter x:Key="RatingToTextConverter" />
 
-        <DataTemplate x:Key="LinkTemplate">
+        <DataTemplate x:Key="LinkTemplate" x:DataType="vm:LinkViewModel">
             <!--  Note: transparent background to be able to open the context menu and double click from everywhere on that row  -->
             <Grid Background="Transparent" DoubleTapped="Grid_DoubleTapped">
                 <Grid.ColumnDefinitions>
@@ -57,7 +59,7 @@
                         <DataTemplate>
                             <ToggleButton
                                 Margin="2"
-                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ToggleTagFilterByNameCommand}"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=((vm:LinksViewModel)DataContext).ToggleTagFilterByNameCommand}"
                                 CommandParameter="{Binding}"
                                 IsChecked="{Binding IsChecked}"
 								ToolTip.Tip="{Binding Name}">
