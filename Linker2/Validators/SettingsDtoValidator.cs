@@ -8,7 +8,7 @@ public class SettingsDtoValidator : AbstractValidator<SettingsDto>
 {
     public const string UrlReplaceString = "%URL%";
 
-    public SettingsDtoValidator(IFileSystem fileSystem)
+    public SettingsDtoValidator()
     {
         RuleFor(x => x.OpenLinkCommand)
             .NotNull();
@@ -18,11 +18,6 @@ public class SettingsDtoValidator : AbstractValidator<SettingsDto>
             .Must(x => x!.Contains(UrlReplaceString));
 
         RuleFor(x => x.LockAfterSeconds).GreaterThan(10);
-
-        When(x => x.GeckoDriverPath is not null, () =>
-        {
-            RuleFor(x => x.GeckoDriverPath).Must(x => fileSystem.Directory.Exists(x));
-        });
 
         RuleFor(x => x.ThumbnailImageIds).NotNull();
     }

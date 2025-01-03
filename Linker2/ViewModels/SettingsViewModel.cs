@@ -113,7 +113,7 @@ public partial class SettingsViewModel : ObservableObject
             QuitWhenSessionTimeouts,
             DeselectFileWhenSessionTimeouts);
 
-        var settingsValidator = new SettingsDtoValidator(fileSystem);
+        var settingsValidator = new SettingsDtoValidator();
         var validationResult = settingsValidator.Validate(settings);
         if (!validationResult.IsValid)
         {

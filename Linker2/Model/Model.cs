@@ -100,7 +100,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     private void SaveData(DataDto data)
     {
-        var validator = new DataDtoValidator(fileSystem);
+        var validator = new DataDtoValidator();
         var result = validator.Validate(data);
         if (!result.IsValid)
         {
@@ -199,11 +199,11 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         var appDataConfig = new EncryptedApplicationConfig<DataDto>(fileSystem, Constants.AppName, filename);
         var config = appDataConfig.Read(password);
 
-        var configValidator = new DataDtoValidator(fileSystem);
-        var configValidatorResult = configValidator.Validate(config!);
-        if (!configValidatorResult.IsValid)
+        var dataDtoValidator = new DataDtoValidator();
+        var dataDtoValidatorResult = dataDtoValidator.Validate(config!);
+        if (!dataDtoValidatorResult.IsValid)
         {
-            throw new ValidationException(configValidatorResult);
+            throw new ValidationException(dataDtoValidatorResult);
         }
 
         session = new Session(fileSystem, appDataConfig.FilePath, password, config);

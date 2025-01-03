@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using Linker2.Model;
-using System.IO.Abstractions;
 
 namespace Linker2.Validators;
 
 public class DataDtoValidator : AbstractValidator<DataDto>
 {
-    public DataDtoValidator(IFileSystem fileSystem)
+    public DataDtoValidator()
     {
         RuleForEach(x => x.Links)
             .NotNull()
@@ -14,7 +13,7 @@ public class DataDtoValidator : AbstractValidator<DataDto>
 
         RuleFor(x => x.Settings)
             .NotNull()
-            .SetValidator(new SettingsDtoValidator(fileSystem));
+            .SetValidator(new SettingsDtoValidator());
 
         RuleFor(x => x.Filters)
             .NotNull()
