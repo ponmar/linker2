@@ -231,7 +231,14 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Locate()
     {
-        fileUtils.LocateConfigFile(SelectedFilename!);
+        try
+        {
+            fileUtils.LocateConfigFile(SelectedFilename!);
+        }
+        catch
+        {
+            // Windows only - ignore in Linux
+        }
     }
 
     [RelayCommand]
@@ -297,19 +304,21 @@ public partial class MainViewModel : ObservableObject
             try
             {
                 fileUtils.Export(exportFilePath, Session!.Data);
-                SelectFileInExplorer(exportFilePath);
             }
             catch (Exception e)
             {
                 await dialogs.ShowErrorDialogAsync($"Unable to export links to {exportFilePath}:\n{e.Message}");
-            }            
-        }
-    }
+            }
 
-    public static void SelectFileInExplorer(string path)
-    {
-        var explorerPath = path.Replace("/", @"\");
-        Process.Start("explorer.exe", "/select, " + explorerPath);
+            try
+            {
+                fileUtils.SelectFileInExplorer(exportFilePath);
+            }
+            catch
+            {
+                // Windows only - ignore in Linux
+            }
+        }
     }
 
     [RelayCommand]

@@ -16,6 +16,7 @@ public interface IFileUtils
     void Create(string filename, SecureString password);
     void BackupConfigFile(string filename);
     void LocateConfigFile(string filename);
+    void SelectFileInExplorer(string path);
     void Export(string filePath, DataDto data);
 }
 
@@ -71,6 +72,12 @@ public class FileUtils : IFileUtils
     {
         var filePath = GetConfigFilePath(filename);
         Process.Start("explorer.exe", "/select, " + filePath);
+    }
+
+    public void SelectFileInExplorer(string path)
+    {
+        var explorerPath = path.Replace("/", @"\");
+        Process.Start("explorer.exe", "/select, " + explorerPath);
     }
 
     public void Create(string filename, SecureString password)

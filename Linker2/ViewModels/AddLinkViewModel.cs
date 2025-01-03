@@ -11,6 +11,7 @@ using Avalonia.Media.Imaging;
 using System.Threading.Tasks;
 using Linker2.HttpHelpers;
 using System.Collections.ObjectModel;
+using System.IO.Abstractions;
 
 namespace Linker2.ViewModels;
 
@@ -99,14 +100,16 @@ public partial class AddLinkViewModel : ObservableObject
     [ObservableProperty]
     private bool savePossible;
 
+    private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;
     private readonly ILinkModification linkModification;
     private readonly ILinkRepository linkRepository;
     private readonly IWebPageScraperProvider webPageScraperProvider;
     private readonly ISettingsProvider settingsProvider;
 
-    public AddLinkViewModel(IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, LinkDto? linkToEdit = null)
+    public AddLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, LinkDto? linkToEdit = null)
     {
+        this.fileSystem = fileSystem;
         this.dialogs = dialogs;
         this.linkModification = linkModification;
         this.linkRepository = linkRepository;
@@ -170,8 +173,13 @@ public partial class AddLinkViewModel : ObservableObject
     {
         if (string.IsNullOrEmpty(settingsProvider.Settings.GeckoDriverPath))
         {
-            var dialogs = ServiceLocator.Resolve<IDialogs>();
-            dialogs.ShowErrorDialogAsync($"{nameof(settingsProvider.Settings.GeckoDriverPath)} not configured");
+            dialogs.ShowErrorDialogAsync($"Geckor driver directory not configured");
+            return;
+        }
+
+        if (!fileSystem.Directory.Exists(settingsProvider.Settings.GeckoDriverPath))
+        {
+            dialogs.ShowErrorDialogAsync($"Gecko driver directory not found: {settingsProvider.Settings.GeckoDriverPath}");
             return;
         }
 
@@ -183,7 +191,6 @@ public partial class AddLinkViewModel : ObservableObject
             }
             catch (Exception e)
             {
-                var dialogs = ServiceLocator.Resolve<IDialogs>();
                 dialogs.ShowErrorDialogAsync($"Reverting to default web page scraper due to exception when creating FirefoxWebPageScraper: {e.Message}");
                 return;
             }
