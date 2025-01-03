@@ -11,8 +11,7 @@ public class SettingsDtoValidator : AbstractValidator<SettingsDto>
     public SettingsDtoValidator(IFileSystem fileSystem)
     {
         RuleFor(x => x.OpenLinkCommand)
-            .NotNull()
-            .Must(x => fileSystem.File.Exists(x));
+            .NotNull();
 
         RuleFor(x => x.OpenLinkArguments)
             .NotNull()
