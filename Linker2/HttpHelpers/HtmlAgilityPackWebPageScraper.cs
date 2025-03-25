@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Linker2.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,10 +45,11 @@ public class HtmlAgilityPackWebPageScraper : IWebPageScraper
 
         foreach (var imageId in preferredImageIds)
         {
-            var imageSrc = GetAttributeValue(imageId, "src");
-            if (imageSrc is not null)
+            var element = htmlDoc!.GetElementbyId(imageId);
+            var imageSrc = element?.GetAttributeValue("src", string.Empty);
+            if (imageSrc.HasContent())
             {
-                result.Add(imageSrc);
+                result.Add(imageSrc!);
             }
         }
 
@@ -57,12 +59,6 @@ public class HtmlAgilityPackWebPageScraper : IWebPageScraper
         return result.Distinct().ToList();
     }
 
-    private string? GetAttributeValue(string elementId, string attributeName)
-    {
-        var element = htmlDoc!.GetElementbyId(elementId);
-        return element?.GetAttributeValue(attributeName, null);
-    }
-
     private List<string> GetAllImageSrcs()
     {
         if (htmlDoc is null)
@@ -70,7 +66,7 @@ public class HtmlAgilityPackWebPageScraper : IWebPageScraper
             return [];
         }
         return htmlDoc.DocumentNode.Descendants("img")
-            .Select(e => e.GetAttributeValue("src", null))
-            .Where(s => !string.IsNullOrEmpty(s) && (s.StartsWith("https://") || s.StartsWith("http://")) && !s.Contains("svg")).ToList();
+            .Select(e => e.GetAttributeValue("src", string.Empty))
+            .Where(s => s.HasContent() && (s.StartsWith("https://") || s.StartsWith("http://")) && !s.Contains("svg")).ToList();
     }
 }
