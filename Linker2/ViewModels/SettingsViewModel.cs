@@ -17,7 +17,7 @@ public partial class SettingsViewModel : ObservableObject
     private bool clearClipboardWhenSessionStops;
 
     [ObservableProperty]
-    private string openLinkCommand;
+    private string openLinkCommands;
 
     [ObservableProperty]
     private string openLinkArguments;
@@ -53,7 +53,7 @@ public partial class SettingsViewModel : ObservableObject
         var settings = settingsProvider.Settings;
         showDetails = settings.ShowDetails;
         clearClipboardWhenSessionStops = settings.ClearClipboardWhenSessionStops;
-        openLinkCommand = settings.OpenLinkCommand;
+        openLinkCommands = settings.OpenLinkCommand;
         openLinkArguments = settings.OpenLinkArguments;
         lockAfterSeconds = settings.LockAfterSeconds.ToString();
         defaultTag = settings.DefaultTag;
@@ -102,7 +102,7 @@ public partial class SettingsViewModel : ObservableObject
         var thumbnailImageIdList = thumbnailImageIdParts.Select(x => x.Trim()).ToList();
 
         var settings = new SettingsDto(
-            OpenLinkCommand,
+            OpenLinkCommands,
             OpenLinkArguments,
             DefaultTag,
             lockAfterSecondsInt,

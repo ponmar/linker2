@@ -32,8 +32,8 @@
 			<TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Default tag (set to be able to find new links):" VerticalAlignment="Center"/>
 			<TextBox Margin="5" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding DefaultTag}" VerticalAlignment="Center"/>
 
-			<TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Open link command:" VerticalAlignment="Center"/>
-			<TextBox Margin="5" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkCommand}" VerticalAlignment="Center"/>
+			<TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Open link commands (simicolon separated list):" VerticalAlignment="Center"/>
+			<TextBox Margin="5" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkCommands}" VerticalAlignment="Center"/>
 
 			<TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Command arguments (must contain %URL%):" VerticalAlignment="Center"/>
 			<TextBox Margin="5" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkArguments}" VerticalAlignment="Center"/>

@@ -471,7 +471,7 @@ public partial class LinksViewModel : ObservableObject
     [RelayCommand]
     private void OpenLink(string urlToOpen)
     {
-        sessionUtils.OpenLinkWithExternalProgram(urlToOpen);
+        sessionUtils.OpenLinkWithExternalProgramAsync(urlToOpen);
     }
 
     [RelayCommand]

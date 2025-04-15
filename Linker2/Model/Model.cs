@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
+using System.Threading.Tasks;
 
 namespace Linker2.Model;
 
@@ -44,7 +45,7 @@ public interface ISessionUtils
     void StopSession();
     bool SaveSession();
     void ResetSessionTime();
-    void OpenLinkWithExternalProgram(string url);
+    Task OpenLinkWithExternalProgramAsync(string url);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
@@ -66,11 +67,13 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     private readonly IFileSystem fileSystem;
     private readonly IClipboardService clipboardService;
+    private readonly IDialogs dialogs;
 
-    public Model(IFileSystem fileSystem, IClipboardService clipboardService)
+    public Model(IFileSystem fileSystem, IClipboardService clipboardService, IDialogs dialogs)
     {
         this.fileSystem = fileSystem;
         this.clipboardService = clipboardService;
+        this.dialogs = dialogs;
         this.RegisterForEvent<SessionStopped>(x => CleanupSession());
     }
 
@@ -174,7 +177,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         session?.ResetTime();
     }
 
-    public void OpenLinkWithExternalProgram(string url)
+    public async Task OpenLinkWithExternalProgramAsync(string url)
     {
         if (session is not null)
         {
@@ -189,7 +192,15 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
             Messenger.Send(new LinkUpdated(session, updatedLink));
 
             var args = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, url);
-            ProcessRunner.Start(session.Data.Settings.OpenLinkCommand, args);
+            foreach (var openLinkCommand in session.Data.Settings.OpenLinkCommand.Split(";"))
+            {
+                if (fileSystem.File.Exists(openLinkCommand))
+                {
+                    ProcessRunner.Start(openLinkCommand, args);
+                    return;
+                }
+            }
+            await dialogs.ShowErrorDialogAsync("No link command found");
         }
     }
 
