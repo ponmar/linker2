@@ -43,5 +43,11 @@
 		<Style Selector="TextBlock.Rating">
 			<Setter Property="Foreground" Value="rgb(255, 153, 0)"/>
 		</Style>
+
+		<Style Selector="ToggleButton">
+			<Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="rgb(255, 153, 0)"/>
+			</Style>
+		</Style>
     </Application.Styles>
 </Application>
