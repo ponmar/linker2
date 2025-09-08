@@ -9,6 +9,7 @@ namespace Linker2;
 public interface IClipboardService
 {
     Task SetTextAsync(string text);
+    Task<string?> GetTextAsync();
     Task ClearAsync();
 }
 
@@ -17,6 +18,11 @@ public class ClipboardService : IClipboardService
     public async Task SetTextAsync(string text)
     {
         await Clipboard.SetTextAsync(text);
+    }
+
+    public async Task<string?> GetTextAsync()
+    {
+        return await Clipboard.GetTextAsync();
     }
 
     public async Task ClearAsync()

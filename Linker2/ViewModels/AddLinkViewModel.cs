@@ -107,7 +107,7 @@ public partial class AddLinkViewModel : ObservableObject
     private readonly IWebPageScraperProvider webPageScraperProvider;
     private readonly ISettingsProvider settingsProvider;
 
-    public AddLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, LinkDto? linkToEdit = null)
+    public AddLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, IClipboardService clipboardService, LinkDto? linkToEdit = null)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
@@ -130,6 +130,19 @@ public partial class AddLinkViewModel : ObservableObject
         {
             title = "Add link";
             LinkUrl = string.Empty;
+            try
+            {
+                var clipboardText = clipboardService.GetTextAsync().Result;
+                if (clipboardText is not null)
+                {
+                    _ = new Uri(clipboardText);
+                    LinkUrl = clipboardText;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
             LinkTags = string.Empty;
             LinkTitle = string.Empty;
             LinkRating = null;
