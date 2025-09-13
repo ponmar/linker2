@@ -94,7 +94,9 @@
 	                Grid.Column="2"
 	                Margin="5"
 	                VerticalAlignment="Center"
-	                Text="Cached"
+	                Text="&#9205;"
+					Classes="CachedFile"
+					ToolTip.Tip="File available locally"
 					IsVisible="{Binding IsCached}"/>
 
 				<StackPanel
