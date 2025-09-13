@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Linker2.Configuration;
 using Linker2.Model;
 using Linker2.Validators;
 using Linker2.Views;
@@ -153,7 +154,7 @@ public partial class LinkViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void OpenLink(LinkDto link) => Messenger.Send(new OpenLink(link.Url));
+    private static void OpenLink(LinkDto link) => Messenger.Send(new OpenLink(link));
 
     [RelayCommand]
     private static void AddLink() => Messenger.Send<StartAddLink>();

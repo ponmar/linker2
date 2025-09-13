@@ -1,4 +1,4 @@
-﻿using Linker2.Model;
+﻿using Linker2.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

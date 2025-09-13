@@ -1,4 +1,4 @@
-﻿using Linker2.Model;
+﻿using Linker2.Configuration;
 using System.Collections.Generic;
 
 namespace Linker2.Filters;

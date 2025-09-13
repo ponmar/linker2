@@ -70,7 +70,7 @@ public partial class MainViewModel : ObservableObject
 
         this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
         this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
-        this.RegisterForEvent<OpenLink>((m) => sessionUtils.OpenLinkWithExternalProgramAsync(m.Url));
+        this.RegisterForEvent<OpenLink>((m) => sessionUtils.OpenLinkWithExternalProgramAsync(m.Link));
         this.RegisterForEvent<StartRemoveLink>(async (m) => await RemoveLinkAsync(m.Link));
         this.RegisterForEvent<LinkSelected>((m) => SelectedLink = m.Link);
         this.RegisterForEvent<LinkDeselected>((m) => SelectedLink = null);
@@ -139,7 +139,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void OpenLink()
     {
-        sessionUtils.OpenLinkWithExternalProgramAsync(SelectedLink!.Url);
+        sessionUtils.OpenLinkWithExternalProgramAsync(SelectedLink!);
     }
 
     [RelayCommand]

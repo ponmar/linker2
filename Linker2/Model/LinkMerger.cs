@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System;
+using Linker2.Configuration;
 
 namespace Linker2.Model;
 

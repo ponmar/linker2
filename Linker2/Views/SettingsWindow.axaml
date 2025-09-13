@@ -28,7 +28,7 @@
 		</Grid>
 
 		<TextBlock Margin="5" FontWeight="Bold">Link</TextBlock>
-		<Grid Margin="5" ColumnDefinitions="auto,320,auto" RowDefinitions="auto,auto,auto">
+		<Grid Margin="5" ColumnDefinitions="auto,320,auto" RowDefinitions="auto,auto,auto,auto">
 			<TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Default tag (set to be able to find new links):" VerticalAlignment="Center"/>
 			<TextBox Margin="5" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding DefaultTag}" VerticalAlignment="Center"/>
 
@@ -37,6 +37,9 @@
 
 			<TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Command arguments (must contain %URL%):" VerticalAlignment="Center"/>
 			<TextBox Margin="5" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkArguments}" VerticalAlignment="Center"/>
+
+			<TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Optional: Link file cache directory:" VerticalAlignment="Center"/>
+			<TextBox Margin="5" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CachedFileDirectoryPath}" VerticalAlignment="Center"/>
 		</Grid>
 
 		<TextBlock Margin="5" FontWeight="Bold">Link Metadata Download</TextBlock>

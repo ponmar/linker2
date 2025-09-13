@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Linker2.Model;
+using Linker2.Configuration;
 using System;
 
 namespace Linker2.Validators;

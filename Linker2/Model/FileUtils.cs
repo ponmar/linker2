@@ -37,7 +37,8 @@ public class FileUtils : IFileUtils
             ShowDetails: true,
             ClearClipboardWhenSessionStops: true,
             QuitWhenSessionTimeouts: false,
-            DeselectFileWhenSessionTimeouts: false),
+            DeselectFileWhenSessionTimeouts: false,
+            CachedFileDirectoryPath: null),
         Links: [],
         Filters: new(null, null, null, [], false, null, OrderBy.Time, false),
         SelectedUrl: null);

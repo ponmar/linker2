@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Linker2.Model;
+namespace Linker2.Configuration;
 
 public enum OrderBy
 {
@@ -23,7 +23,8 @@ public record SettingsDto(
     bool ShowDetails,
     bool ClearClipboardWhenSessionStops,
     bool QuitWhenSessionTimeouts,
-    bool DeselectFileWhenSessionTimeouts);
+    bool DeselectFileWhenSessionTimeouts,
+    string? CachedFileDirectoryPath);
 
 public record LinkDto(
     string? Title,

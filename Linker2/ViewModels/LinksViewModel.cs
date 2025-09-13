@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Linker2.Configuration;
 using Linker2.Filters;
 using Linker2.Model;
 using Linker2.Validators;
@@ -469,9 +470,9 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenLink(string urlToOpen)
+    private void OpenLink(LinkDto linkToOpen)
     {
-        sessionUtils.OpenLinkWithExternalProgramAsync(urlToOpen);
+        sessionUtils.OpenLinkWithExternalProgramAsync(linkToOpen);
     }
 
     [RelayCommand]

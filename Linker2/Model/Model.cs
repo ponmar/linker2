@@ -1,11 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Linker2.Configuration;
+using Linker2.Extensions;
 using Linker2.HttpHelpers;
 using Linker2.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
@@ -45,7 +47,7 @@ public interface ISessionUtils
     void StopSession();
     bool SaveSession();
     void ResetSessionTime();
-    Task OpenLinkWithExternalProgramAsync(string url);
+    Task OpenLinkWithExternalProgramAsync(LinkDto link);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
@@ -177,11 +179,10 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         session?.ResetTime();
     }
 
-    public async Task OpenLinkWithExternalProgramAsync(string url)
+    public async Task OpenLinkWithExternalProgramAsync(LinkDto link)
     {
         if (session is not null)
         {
-            var link = session.Data.Links.First(x => x.Url == url);
             var linkIndex = session.Data.Links.IndexOf(link);
             var openCounter = link.OpenCounter == long.MaxValue ? 0 : link.OpenCounter + 1;
             var updatedLink = new LinkDto(link.Title, link.Tags, link.Url, link.DateTime, link.Rating, link.ThumbnailUrl, openCounter);
@@ -191,16 +192,31 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
             Messenger.Send(new LinkUpdated(session, updatedLink));
 
-            var args = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, url);
-            foreach (var openLinkCommand in session.Data.Settings.OpenLinkCommand.Split(";"))
+            // Find open command
+            var openLinkCommand = session.Data.Settings.OpenLinkCommand.Split(";").FirstOrDefault(x => fileSystem.File.Exists(x));
+            if (openLinkCommand is null)
             {
-                if (fileSystem.File.Exists(openLinkCommand))
+                await dialogs.ShowErrorDialogAsync("No link command found");
+                return;
+            }
+
+            // Open cached file if exists
+            var cachedFileDirectoryPath = session.Data.Settings.CachedFileDirectoryPath;
+            if (cachedFileDirectoryPath.HasContent() && link.Title.HasContent())
+            {
+                var cachedFilePathWithoutExtension = Path.Combine(cachedFileDirectoryPath!, link.Title!);
+                var cachedFilePath = fileSystem.Directory.EnumerateFiles(cachedFileDirectoryPath!, link.Title + ".*").FirstOrDefault();
+                if (cachedFilePath is not null)
                 {
-                    ProcessRunner.Start(openLinkCommand, args);
+                    var openCachedFileArgs = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + cachedFilePath + '"');
+                    ProcessRunner.Start(openLinkCommand, openCachedFileArgs);
                     return;
                 }
             }
-            await dialogs.ShowErrorDialogAsync("No link command found");
+
+            // Open link
+            var openLinkUrlArgs = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url);
+            ProcessRunner.Start(openLinkCommand, openLinkUrlArgs);
         }
     }
 
