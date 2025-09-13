@@ -44,6 +44,16 @@ public partial class LinksViewModel : ObservableObject
         SortLinks();
     }
 
+    public ObservableCollection<Cached> CachedValues { get; } = [];
+
+    [ObservableProperty]
+    private Cached? selectedCachedValue;
+
+    partial void OnSelectedCachedValueChanged(Cached? value)
+    {
+        UpdateLinks();
+    }
+
     [ObservableProperty]
     private bool combineTagFilters;
 
@@ -150,6 +160,11 @@ public partial class LinksViewModel : ObservableObject
             OrderByValues.Add(orderByValue);
         }
 
+        foreach (var cachedValue in Enum.GetValues<Cached>())
+        {
+            CachedValues.Add(cachedValue);
+        }
+
         this.RegisterForEvent<SessionStarted>((x) =>
         {
             Session = x.Session;
@@ -173,7 +188,7 @@ public partial class LinksViewModel : ObservableObject
             var tags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name).ToList();
             var text = string.IsNullOrEmpty(filterText) ? null : filterText;
             var hideTags = string.IsNullOrEmpty(hiddenTagsText) ? null : hiddenTagsText;
-            var filters = new FiltersDto(text, SelectedRatingFiltering, SelectedSiteFiltering, tags, combineTagFilters, hideTags, SelectedOrderBy, ReversedOrder);
+            var filters = new FiltersDto(text, SelectedRatingFiltering, SelectedSiteFiltering, tags, combineTagFilters, hideTags, SelectedOrderBy, ReversedOrder, SelectedCachedValue);
 
             var prevFiltersJson = JsonConvert.SerializeObject(Session!.Data.Filters);
             var filtersJson = JsonConvert.SerializeObject(filters);
@@ -388,6 +403,7 @@ public partial class LinksViewModel : ObservableObject
             new NoRatingFilter() { Enabled = SelectedRatingFiltering == Constants.NotRatedFilterText },
             new SiteFilter() { Site = SelectedSiteFiltering },
             new TextFilter() { Text = FilterText.Trim() },
+            new CachedFileAvailableFilter() { CachedValue = SelectedCachedValue, SessionUtils = sessionUtils },
         };
 
         var filterdLinks = allLinks.Select(x => x.LinkDto);
@@ -508,6 +524,12 @@ public partial class LinksViewModel : ObservableObject
     private void ClearSiteFilter()
     {
         SelectedSiteFiltering = null;
+    }
+
+    [RelayCommand]
+    private void ClearCachedValueFilter()
+    {
+        SelectedCachedValue = null;
     }
 
     [RelayCommand]

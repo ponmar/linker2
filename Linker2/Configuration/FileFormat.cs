@@ -13,6 +13,12 @@ public enum OrderBy
     Tags,
 }
 
+public enum Cached
+{
+    Cached,
+    NotCached,
+}
+
 public record SettingsDto(
     string OpenLinkCommand,
     string OpenLinkArguments,
@@ -43,7 +49,8 @@ public record FiltersDto(
     bool CombineTags,
     string? HideTags,
     OrderBy OrderBy,
-    bool ReversedOrder);
+    bool ReversedOrder,
+    Cached? Cached);
 
 public record DataDto(
     SettingsDto Settings,

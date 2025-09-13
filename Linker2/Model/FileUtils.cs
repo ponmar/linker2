@@ -40,7 +40,7 @@ public class FileUtils : IFileUtils
             DeselectFileWhenSessionTimeouts: false,
             CachedFileDirectoryPath: null),
         Links: [],
-        Filters: new(null, null, null, [], false, null, OrderBy.Time, false),
+        Filters: new(null, null, null, [], false, null, OrderBy.Time, false, null),
         SelectedUrl: null);
 
     public FileUtils(IFileSystem fileSystem)

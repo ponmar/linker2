@@ -72,7 +72,26 @@
                         IsEnabled="{Binding SelectedSiteFiltering, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </StackPanel>
 
-                <StackPanel Margin="5" Orientation="Horizontal">
+				<StackPanel Margin="5" Orientation="Horizontal">
+					<TextBlock
+                        Margin="2"
+                        VerticalAlignment="Center"
+                        Text="Cached:" />
+					<ComboBox
+                        MinWidth="75"
+                        Margin="2"
+                        VerticalAlignment="Center"
+                        IsEnabled="{Binding SessionOngoing}"
+                        ItemsSource="{Binding CachedValues}"
+                        SelectedItem="{Binding SelectedCachedValue}" />
+					<Button
+                        VerticalContentAlignment="Center"
+                        Classes="Clear"
+                        Command="{Binding ClearCachedValueFilterCommand}"
+                        IsEnabled="{Binding SelectedCachedValue, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+				</StackPanel>
+
+				<StackPanel Margin="5" Orientation="Horizontal">
                     <TextBlock
                         Margin="2"
                         VerticalAlignment="Center"
