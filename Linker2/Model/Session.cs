@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Security;
 using Avalonia.Threading;
 using Linker2.Configuration;
 using Linker2.Cryptography;
+using Linker2.Extensions;
 using Linker2.HttpHelpers;
 
 namespace Linker2.Model;
@@ -48,6 +50,8 @@ public class Session
     }
     private bool dataUpdated;
 
+    private readonly List<string> cachedFiles = [];
+
     private readonly DispatcherTimer sessionTimer = new();
 
     public Session(IFileSystem fileSystem, string filePath, SecureString password, DataDto data)
@@ -60,6 +64,8 @@ public class Session
         var cacheDir = Path.Combine(Path.GetDirectoryName(filePath)!, "Cache", Path.GetFileNameWithoutExtension(filePath));
         ImageCache = new(fileSystem, cacheDir, AesUtils.PasswordToKey(password));
         timeout = TimeSpan.FromSeconds(data.Settings.LockAfterSeconds);
+
+        UpdateAvailableCacheFiles();
 
         sessionTimer.Interval = TimeSpan.FromSeconds(1);
         sessionTimer.Tick += SessionTimer_Tick;
@@ -138,5 +144,36 @@ public class Session
         {
             return false;
         }
+    }
+
+    public void UpdateAvailableCacheFiles()
+    {
+        cachedFiles.Clear();
+
+        var dirPath = Data.Settings.CachedFileDirectoryPath;
+        if (dirPath.HasContent() && fileSystem.Directory.Exists(dirPath))
+        {
+            foreach (var file in fileSystem.Directory.GetFiles(dirPath!))
+            {
+                cachedFiles.Add(file);
+            }
+        }
+    }
+
+    public string? GetCachedFileForLink(LinkDto link)
+    {
+        if (link.Title.HasContent())
+        {
+            var expectedFilenameWithoutExtension = string.Join("_", link.Title!.Split(Path.GetInvalidFileNameChars()));
+            foreach (var cachedFile in cachedFiles)
+            {
+                if (expectedFilenameWithoutExtension == Path.GetFileNameWithoutExtension(cachedFile))
+                {
+                    return cachedFile;
+                }
+            }
+        }
+
+        return null;
     }
 }

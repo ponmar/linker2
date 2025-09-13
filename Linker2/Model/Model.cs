@@ -1,13 +1,11 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Linker2.Configuration;
-using Linker2.Extensions;
 using Linker2.HttpHelpers;
 using Linker2.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
@@ -211,20 +209,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
     public string? GetCachedFileForLink(LinkDto link)
     {
-        if (session is null)
-        {
-            return null;
-        }
-
-        var cachedFileDirectoryPath = session!.Data.Settings.CachedFileDirectoryPath;
-        if (cachedFileDirectoryPath.HasContent() && link.Title.HasContent())
-        {
-            var filenameWithoutExtension = string.Join("_", link.Title!.Split(Path.GetInvalidFileNameChars()));
-            var cachedFilePath = fileSystem.Directory.EnumerateFiles(cachedFileDirectoryPath!, filenameWithoutExtension + ".*").FirstOrDefault();
-            return cachedFilePath;
-        }
-
-        return null;
+        return session?.GetCachedFileForLink(link);
     }
 
     // Throws on errors
@@ -346,5 +331,4 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
     }
 
     public IWebPageScraper HtmlAgilityPack => session!.HtmlAgilityPack;
-
 }

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Linker2.Configuration;
-using System.IO.Abstractions;
 
 namespace Linker2.Validators;
 

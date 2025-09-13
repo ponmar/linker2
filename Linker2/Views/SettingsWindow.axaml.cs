@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Linker2.Model;
 using Linker2.ViewModels;
-using System.IO.Abstractions;
 
 namespace Linker2.Views
 {

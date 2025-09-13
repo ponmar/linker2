@@ -9,7 +9,6 @@ using Linker2.Model;
 using Linker2.Views;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
