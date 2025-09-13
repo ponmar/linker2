@@ -19,6 +19,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
+					<ColumnDefinition Width="auto" SharedSizeGroup="CachedFileIndicatorColumn" />
                     <ColumnDefinition Width="600" SharedSizeGroup="LinkColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="DateAndCounterColumn" />
@@ -88,9 +89,17 @@
                         UseLayoutRounding="True" />
                 </Border>
 
-                <StackPanel
+				<TextBlock
+	                Grid.Row="0"
+	                Grid.Column="2"
+	                Margin="5"
+	                VerticalAlignment="Center"
+	                Text="Cached"
+					IsVisible="{Binding IsCached}"/>
+
+				<StackPanel
                     Grid.Row="0"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Margin="5"
                     VerticalAlignment="Center"
                     Orientation="Vertical">
@@ -117,10 +126,10 @@
                         Text="{Binding Rating, Converter={StaticResource RatingToTextConverter}}"
                         ToolTip.Tip="{Binding RatingDescription}" />
                 </StackPanel>
-
+				
                 <TextBlock
                     Grid.Row="0"
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Margin="5"
                     VerticalAlignment="Center"
 					Classes="Rating"
@@ -131,7 +140,7 @@
 
 				<StackPanel Orientation="Vertical"
 							Grid.Row="0"
-                            Grid.Column="4"
+                            Grid.Column="5"
                             Margin="5"
 							VerticalAlignment="Center"
 							IsVisible="{Binding ShowDetails}">

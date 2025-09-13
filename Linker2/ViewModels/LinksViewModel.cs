@@ -213,7 +213,7 @@ public partial class LinksViewModel : ObservableObject
         {
             var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             var minimize = session!.Data.Settings.ShowDetails;
-            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache));
+            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache, sessionUtils.GetCachedFileForLink(m.Link) != null));
             ReloadAvailableTags();
             UpdateLinks();
 
@@ -319,7 +319,7 @@ public partial class LinksViewModel : ObservableObject
     {
         var selectedTags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name);
         var minimize = session!.Data.Settings.ShowDetails;
-        allLinks = new(session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache)));
+        allLinks = session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache, sessionUtils.GetCachedFileForLink(x) != null)).ToList();
 
         foreach (var linkVm in allLinks)
         {

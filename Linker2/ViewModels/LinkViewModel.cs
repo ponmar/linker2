@@ -45,6 +45,9 @@ public partial class LinkViewModel : ObservableObject
 
     public int ThumbnailHeight => ShowDetails ? OriginalImageHeight / 3 : OriginalImageHeight;
 
+    [ObservableProperty]
+    private bool isCached;
+
     public int FontSize => ShowDetails ? 12 : 18;
     public int RatingFontSize => ShowDetails ? 20 : 30;
 
@@ -88,13 +91,14 @@ public partial class LinkViewModel : ObservableObject
 
     private readonly ImageCache imageCache;
 
-    public LinkViewModel(LinkDto linkDto, IEnumerable<string> selectedTags, bool showDetails, ImageCache imageCache)
+    public LinkViewModel(LinkDto linkDto, IEnumerable<string> selectedTags, bool showDetails, ImageCache imageCache, bool isCached)
     {
         this.imageCache = imageCache;
         this.linkDto = linkDto;
         OnLinkDtoChanged(linkDto);
 
         ShowDetails = showDetails;
+        IsCached = isCached;
 
         UpdateThumbnailImage();
         UpdateSelectedTags(selectedTags);

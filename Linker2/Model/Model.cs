@@ -48,6 +48,7 @@ public interface ISessionUtils
     bool SaveSession();
     void ResetSessionTime();
     Task OpenLinkWithExternalProgramAsync(LinkDto link);
+    string? GetCachedFileForLink(LinkDto link);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
@@ -192,32 +193,38 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
             Messenger.Send(new LinkUpdated(session, updatedLink));
 
-            // Find open command
             var openLinkCommand = session.Data.Settings.OpenLinkCommand.Split(";").FirstOrDefault(x => fileSystem.File.Exists(x));
             if (openLinkCommand is null)
             {
-                await dialogs.ShowErrorDialogAsync("No link command found");
+                await dialogs.ShowErrorDialogAsync("No link command setting");
                 return;
             }
 
-            // Open cached file if exists
-            var cachedFileDirectoryPath = session.Data.Settings.CachedFileDirectoryPath;
-            if (cachedFileDirectoryPath.HasContent() && link.Title.HasContent())
-            {
-                var cachedFilePathWithoutExtension = Path.Combine(cachedFileDirectoryPath!, link.Title!);
-                var cachedFilePath = fileSystem.Directory.EnumerateFiles(cachedFileDirectoryPath!, link.Title + ".*").FirstOrDefault();
-                if (cachedFilePath is not null)
-                {
-                    var openCachedFileArgs = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + cachedFilePath + '"');
-                    ProcessRunner.Start(openLinkCommand, openCachedFileArgs);
-                    return;
-                }
-            }
+            var cachedFilePath = GetCachedFileForLink(link);
+            var openLinkArgs = cachedFilePath is null ?
+                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url) :
+                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + cachedFilePath + '"');
 
-            // Open link
-            var openLinkUrlArgs = session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url);
-            ProcessRunner.Start(openLinkCommand, openLinkUrlArgs);
+            ProcessRunner.Start(openLinkCommand, openLinkArgs);
         }
+    }
+
+    public string? GetCachedFileForLink(LinkDto link)
+    {
+        if (session is null)
+        {
+            return null;
+        }
+
+        var cachedFileDirectoryPath = session!.Data.Settings.CachedFileDirectoryPath;
+        if (cachedFileDirectoryPath.HasContent() && link.Title.HasContent())
+        {
+            var filenameWithoutExtension = string.Join("_", link.Title!.Split(Path.GetInvalidFileNameChars()));
+            var cachedFilePath = fileSystem.Directory.EnumerateFiles(cachedFileDirectoryPath!, filenameWithoutExtension + ".*").FirstOrDefault();
+            return cachedFilePath;
+        }
+
+        return null;
     }
 
     // Throws on errors
@@ -234,6 +241,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         }
 
         session = new Session(fileSystem, appDataConfig.FilePath, password, config);
+        session.Start();
     }
 
     public void StopSession()

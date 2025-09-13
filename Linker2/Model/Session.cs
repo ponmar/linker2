@@ -63,10 +63,13 @@ public class Session
 
         sessionTimer.Interval = TimeSpan.FromSeconds(1);
         sessionTimer.Tick += SessionTimer_Tick;
-        sessionTimer.Start();
+    }
 
+    public void Start()
+    {
         Messenger.Send(new SessionStarted(this));
         SessionTimer_Tick(null, EventArgs.Empty);
+        sessionTimer.Start();
     }
 
     public bool HasPassword(SecureString password)
