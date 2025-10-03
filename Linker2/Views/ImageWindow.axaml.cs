@@ -9,16 +9,19 @@ namespace Linker2.Views
     {
         private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
 
+        private readonly ImageViewModel viewModel;
+
         public ImageWindow()
         {
             InitializeComponent();
-            DataContext = ServiceLocator.Resolve<ImageViewModel>();
+            viewModel = ServiceLocator.Resolve<ImageViewModel>();
+            DataContext = viewModel;
             this.RegisterForEvent<SessionStopped>((x) => Close());
         }
 
         public void SetImage(Bitmap image)
         {
-            ((ImageViewModel)DataContext!).ImageBitmap = image;
+            viewModel.ImageBitmap = image;
         }
 
         private void Window_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
