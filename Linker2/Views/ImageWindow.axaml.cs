@@ -3,30 +3,29 @@ using Avalonia.Media.Imaging;
 using Linker2.Model;
 using Linker2.ViewModels;
 
-namespace Linker2.Views
+namespace Linker2.Views;
+
+public partial class ImageWindow : Window
 {
-    public partial class ImageWindow : Window
+    private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
+
+    private readonly ImageViewModel viewModel;
+
+    public ImageWindow()
     {
-        private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
+        InitializeComponent();
+        viewModel = ServiceLocator.Resolve<ImageViewModel>();
+        DataContext = viewModel;
+        this.RegisterForEvent<SessionStopped>((x) => Close());
+    }
 
-        private readonly ImageViewModel viewModel;
+    public void SetImage(Bitmap image)
+    {
+        viewModel.ImageBitmap = image;
+    }
 
-        public ImageWindow()
-        {
-            InitializeComponent();
-            viewModel = ServiceLocator.Resolve<ImageViewModel>();
-            DataContext = viewModel;
-            this.RegisterForEvent<SessionStopped>((x) => Close());
-        }
-
-        public void SetImage(Bitmap image)
-        {
-            viewModel.ImageBitmap = image;
-        }
-
-        private void Window_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
-        {
-            sessionUtils.ResetSessionTime();
-        }
+    private void Window_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
+    {
+        sessionUtils.ResetSessionTime();
     }
 }
