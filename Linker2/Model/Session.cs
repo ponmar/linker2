@@ -150,7 +150,7 @@ public class Session
     public void UpdateAvailableLinkFiles()
     {
         var linkFilePaths = new List<string>();
-        var dirPath = Data.Settings.CachedFileDirectoryPath;
+        var dirPath = Data.Settings.LinkFilesDirectoryPath;
         if (dirPath.HasContent() && fileSystem.Directory.Exists(dirPath))
         {
             foreach (var linkFilePath in fileSystem.Directory.GetFiles(dirPath!))

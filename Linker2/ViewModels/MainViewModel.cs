@@ -46,9 +46,11 @@ public partial class MainViewModel : ObservableObject
     private string backgroundText = Constants.AppName;
 
     public bool LinkIsSelected => SelectedLink is not null;
+    public bool LinkFileExists => SelectedLink is not null && linkFileRepo.LinkFileExists(SelectedLink);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LinkIsSelected))]
+    [NotifyPropertyChangedFor(nameof(LinkFileExists))]
     private LinkDto? selectedLink = null;
 
     private readonly IFileSystem fileSystem;
@@ -75,6 +77,7 @@ public partial class MainViewModel : ObservableObject
         this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
         this.RegisterForEvent<OpenLink>((m) => OpenLink(m.Link));
         this.RegisterForEvent<LocateLinkFile>(async (m) => await LocateFileForLinkAsync(m.Link));
+        this.RegisterForEvent<CopyLinkFilePath>((m) => CopyLinkFilePath(m.Link));
         this.RegisterForEvent<CopyLinkUrl>((m) => CopyLinkUrl(m.Link));
         this.RegisterForEvent<CopyLinkTitle>((m) => CopyLinkTitle(m.Link));
         this.RegisterForEvent<StartRemoveLink>(async (m) => await RemoveLinkAsync(m.Link));
@@ -189,6 +192,27 @@ public partial class MainViewModel : ObservableObject
             catch
             {
                 // Windows only - ignore in Linux
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void CopySelectedLinkFilePath()
+    {
+        if (SelectedLink is not null)
+        {
+            CopyLinkFilePath(SelectedLink);
+        }
+    }
+
+    private void CopyLinkFilePath(LinkDto linkDto)
+    {
+        if (Session is not null)
+        {
+            var filePath = linkFileRepo.GetLinkFilePath(linkDto);
+            if (filePath is not null)
+            {
+                clipboardService.SetTextAsync(filePath);
             }
         }
     }
@@ -363,6 +387,50 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportFilteredLinks()
+    {
+        var filteredLinks = ServiceLocator.Resolve<LinksViewModel>().Links.Select(x => x.LinkDto);
+        if (!filteredLinks.Any())
+        {
+            await dialogs.ShowErrorDialogAsync($"No links to export");
+            return;
+        }
+
+        var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
+        var txtFileType = new FilePickerFileType("Text files")
+        {
+            Patterns = ["*.txt"],
+        };
+        var exportFilePath = await dialogs.SelectNewFileDialogAsync("Export links", initialDirectory, txtFileType);
+
+        if (exportFilePath is not null)
+        {
+            if (fileSystem.File.Exists(exportFilePath))
+            {
+                await dialogs.ShowErrorDialogAsync($"File already exists: {exportFilePath}");
+                return;
+            }
+
+            try
+            {
+                fileUtils.ExportLinks(exportFilePath, filteredLinks);
+                try
+                {
+                    fileUtils.SelectFileInExplorer(exportFilePath);
+                }
+                catch
+                {
+                    // Windows only - ignore in Linux
+                }
+            }
+            catch (Exception e)
+            {
+                await dialogs.ShowErrorDialogAsync($"Unable to export links to {exportFilePath}:\n{e.Message}");
+            }
+        }
+    }
+
+    [RelayCommand]
     private async Task ExportAsync()
     {
         var initialDirectory = EncryptedApplicationConfig<DataDto>.GetDirectory(Constants.AppName);
@@ -370,7 +438,7 @@ public partial class MainViewModel : ObservableObject
         {
             Patterns = ["*.json"],
         };
-        var exportFilePath = await dialogs.SelectNewFileDialogAsync("Export", initialDirectory, jsonFileType);
+        var exportFilePath = await dialogs.SelectNewFileDialogAsync("Export session", initialDirectory, jsonFileType);
 
         if (exportFilePath is not null)
         {
@@ -383,19 +451,18 @@ public partial class MainViewModel : ObservableObject
             try
             {
                 fileUtils.Export(exportFilePath, Session!.Data);
+                try
+                {
+                    fileUtils.SelectFileInExplorer(exportFilePath);
+                }
+                catch
+                {
+                    // Windows only - ignore in Linux
+                }
             }
             catch (Exception e)
             {
                 await dialogs.ShowErrorDialogAsync($"Unable to export links to {exportFilePath}:\n{e.Message}");
-            }
-
-            try
-            {
-                fileUtils.SelectFileInExplorer(exportFilePath);
-            }
-            catch
-            {
-                // Windows only - ignore in Linux
             }
         }
     }

@@ -15,11 +15,11 @@ public class LinkFileAvailableFilter : ILinkFilter
     {
         if (CachedValue == LinkFileAvailability.Available)
         {
-            return links.Where(x => LinkFileRepo.GetLinkFilePath(x) != null);
+            return links.Where(x => LinkFileRepo.LinkFileExists(x));
         }
         else if (CachedValue == LinkFileAvailability.NotAvailable)
         {
-            return links.Where(x => LinkFileRepo.GetLinkFilePath(x) == null);
+            return links.Where(x => !LinkFileRepo.LinkFileExists(x));
         }
         return links;        
     }

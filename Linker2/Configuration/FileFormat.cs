@@ -30,7 +30,7 @@ public record SettingsDto(
     bool ClearClipboardWhenSessionStops,
     bool QuitWhenSessionTimeouts,
     bool DeselectFileWhenSessionTimeouts,
-    string? CachedFileDirectoryPath);
+    string? LinkFilesDirectoryPath);
 
 public record LinkDto(
     string? Title,
@@ -50,7 +50,7 @@ public record FiltersDto(
     string? HideTags,
     OrderBy OrderBy,
     bool ReversedOrder,
-    LinkFileAvailability? Cached);
+    LinkFileAvailability? LinkFileAvailability);
 
 public record DataDto(
     SettingsDto Settings,

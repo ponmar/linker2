@@ -19,7 +19,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
-                    <ColumnDefinition Width="auto" SharedSizeGroup="CachedFileIndicatorColumn" />
+                    <ColumnDefinition Width="auto" SharedSizeGroup="FileAvailableIndicatorColumn" />
                     <ColumnDefinition Width="600" SharedSizeGroup="LinkColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="DateAndCounterColumn" />
@@ -37,6 +37,7 @@
                         <MenuItem
                             Command="{Binding LocateLinkFileCommand}"
                             CommandParameter="{Binding LinkDto}"
+							IsEnabled="{Binding FileExists}"
                             Header="Locate" />
                         <MenuItem
                             Command="{Binding CopyLinkUrlCommand}"
@@ -46,6 +47,11 @@
                             Command="{Binding CopyLinkTitleCommand}"
                             CommandParameter="{Binding LinkDto}"
                             Header="Copy title" />
+						<MenuItem
+                            Command="{Binding CopyFilePathCommand}"
+                            CommandParameter="{Binding LinkDto}"
+							IsEnabled="{Binding FileExists}"
+                            Header="Copy file path" />
                         <MenuItem
                             Command="{Binding OpenLinkThumbnailCommand}"
                             CommandParameter="{Binding LinkDto}"

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Security;
 
 namespace Linker2.Model;
@@ -17,6 +18,7 @@ public interface IFileUtils
     void BackupConfigFile(string filename);
     void LocateConfigFile(string filename);
     void SelectFileInExplorer(string path);
+    void ExportLinks(string filePath, IEnumerable<LinkDto> links);
     void Export(string filePath, DataDto data);
 }
 
@@ -38,7 +40,7 @@ public class FileUtils : IFileUtils
             ClearClipboardWhenSessionStops: true,
             QuitWhenSessionTimeouts: false,
             DeselectFileWhenSessionTimeouts: false,
-            CachedFileDirectoryPath: null),
+            LinkFilesDirectoryPath: null),
         Links: [],
         Filters: new(null, null, null, [], false, null, OrderBy.Time, false, null),
         SelectedUrl: null);
@@ -97,6 +99,12 @@ public class FileUtils : IFileUtils
         }
 
         appDataConfig.Write(DefaultConfig, password);
+    }
+
+    public void ExportLinks(string filePath, IEnumerable<LinkDto> links)
+    {
+        var content = string.Join('\n', links.Select(x => x.Url));
+        fileSystem.File.WriteAllText(filePath, content);
     }
 
     public void Export(string filePath, DataDto data)

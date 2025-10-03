@@ -201,20 +201,20 @@
             Margin="10"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
-            <Button
-                Margin="5"
-                Classes="Normal"
-                Click="Cancel_Click"
-                IsCancel="True">
-                Cancel
-            </Button>
-            <Button
+			<Button
                 Margin="5"
                 Classes="Normal"
                 Command="{Binding SaveLinkCommand}"
                 IsDefault="True"
                 IsEnabled="{Binding SavePossible}">
-                Ok
+				Ok
+			</Button>
+			<Button
+                Margin="5"
+                Classes="Normal"
+                Click="Cancel_Click"
+                IsCancel="True">
+                Cancel
             </Button>
         </StackPanel>
     </Grid>

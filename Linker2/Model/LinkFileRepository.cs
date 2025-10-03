@@ -8,6 +8,7 @@ namespace Linker2.Model;
 public interface ILinkFileRepository
 {
     IEnumerable<string> LinkFilePaths { get; }
+    bool LinkFileExists(LinkDto link);
     string? GetLinkFilePath(LinkDto link);
     void Update(IEnumerable<string> newLinkFiles);
     void Clear();
@@ -18,6 +19,8 @@ public class LinkFileRepository : ILinkFileRepository
     public IEnumerable<string> LinkFilePaths => linkFiles;
 
     private readonly List<string> linkFiles = [];
+
+    public bool LinkFileExists(LinkDto link) => GetLinkFilePath(link) is not null;
 
     public string? GetLinkFilePath(LinkDto link)
     {

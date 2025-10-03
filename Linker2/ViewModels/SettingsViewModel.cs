@@ -42,7 +42,7 @@ public partial class SettingsViewModel : ObservableObject
     private bool deselectFileWhenSessionTimeouts;
 
     [ObservableProperty]
-    private string cachedFileDirectoryPath;
+    private string linkFilesDirectoryPath;
 
     private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;
@@ -65,7 +65,7 @@ public partial class SettingsViewModel : ObservableObject
         thumbnailImageIds = string.Join(',', settings.ThumbnailImageIds);
         quitWhenSessionTimeouts = settings.QuitWhenSessionTimeouts;
         DeselectFileWhenSessionTimeouts = settings.DeselectFileWhenSessionTimeouts;
-        CachedFileDirectoryPath = settings.CachedFileDirectoryPath ?? string.Empty;
+        LinkFilesDirectoryPath = settings.LinkFilesDirectoryPath ?? string.Empty;
     }
 
     [RelayCommand]
@@ -117,7 +117,7 @@ public partial class SettingsViewModel : ObservableObject
             ClearClipboardWhenSessionStops,
             QuitWhenSessionTimeouts,
             DeselectFileWhenSessionTimeouts,
-            string.IsNullOrEmpty(CachedFileDirectoryPath) ? null : CachedFileDirectoryPath);
+            string.IsNullOrEmpty(LinkFilesDirectoryPath) ? null : LinkFilesDirectoryPath);
 
         var settingsValidator = new SettingsDtoValidator();
         var validationResult = settingsValidator.Validate(settings);

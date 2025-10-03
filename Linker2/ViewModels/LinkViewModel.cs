@@ -163,6 +163,9 @@ public partial class LinkViewModel : ObservableObject
     private static void LocateLinkFile(LinkDto link) => Messenger.Send(new LocateLinkFile(link));
 
     [RelayCommand]
+    private static void CopyFilePath(LinkDto link) => Messenger.Send(new CopyLinkFilePath(link));
+
+    [RelayCommand]
     private static void CopyLinkUrl(LinkDto link) => Messenger.Send(new CopyLinkUrl(link));
 
     [RelayCommand]

@@ -38,8 +38,8 @@
 			<TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Command arguments (must contain %URL%):" VerticalAlignment="Center"/>
 			<TextBox Margin="5" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OpenLinkArguments}" VerticalAlignment="Center"/>
 
-			<TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Optional: Link file cache directory:" VerticalAlignment="Center"/>
-			<TextBox Margin="5" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CachedFileDirectoryPath}" VerticalAlignment="Center"/>
+			<TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Optional: Link files directory:" VerticalAlignment="Center"/>
+			<TextBox Margin="5" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LinkFilesDirectoryPath}" VerticalAlignment="Center"/>
 		</Grid>
 
 		<TextBlock Margin="5" FontWeight="Bold">Link Metadata Download</TextBlock>
@@ -60,8 +60,8 @@
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-			<Button Classes="Normal" IsCancel="True" Margin="5" Click="Cancel_Click">Cancel</Button>
 			<Button Classes="Normal" IsDefault="True" Margin="5" Command="{Binding SaveCommand}">Save</Button>
+			<Button Classes="Normal" IsCancel="True" Margin="5" Click="Cancel_Click">Cancel</Button>
 		</StackPanel>
 	</StackPanel>
 </Window>

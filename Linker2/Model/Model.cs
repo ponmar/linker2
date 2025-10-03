@@ -199,10 +199,10 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
                 return;
             }
 
-            var cachedFilePath = linkFileRepo.GetLinkFilePath(link);
-            var openLinkArgs = cachedFilePath is null ?
+            var linkFilePath = linkFileRepo.GetLinkFilePath(link);
+            var openLinkArgs = linkFilePath is null ?
                 session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url) :
-                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + cachedFilePath + '"');
+                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + linkFilePath + '"');
 
             ProcessRunner.Start(openLinkCommand, openLinkArgs);
         }

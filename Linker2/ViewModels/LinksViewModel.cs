@@ -230,7 +230,7 @@ public partial class LinksViewModel : ObservableObject
         {
             var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             var minimize = session!.Data.Settings.ShowDetails;
-            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.GetLinkFilePath(m.Link) != null });
+            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.LinkFileExists(m.Link) });
             ReloadAvailableTags();
             UpdateLinks();
 
@@ -291,7 +291,7 @@ public partial class LinksViewModel : ObservableObject
 
         this.RegisterForEvent<LinkFileRepositoryUpdated>((m) =>
         {
-            allLinks.ForEach(x => x.FileExists = linkFileRepo.GetLinkFilePath(x.LinkDto) != null);
+            allLinks.ForEach(x => x.FileExists = linkFileRepo.LinkFileExists(x.LinkDto));
         });
 
         UpdateLinks();
@@ -341,7 +341,7 @@ public partial class LinksViewModel : ObservableObject
     {
         var selectedTags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name);
         var minimize = session!.Data.Settings.ShowDetails;
-        allLinks = session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.GetLinkFilePath(x) != null }).ToList();
+        allLinks = session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.LinkFileExists(x) }).ToList();
 
         foreach (var linkVm in allLinks)
         {
