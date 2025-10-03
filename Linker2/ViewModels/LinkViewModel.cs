@@ -181,19 +181,5 @@ public partial class LinkViewModel : ObservableObject
     private static void RemoveLink(LinkDto link) => Messenger.Send(new StartRemoveLink(link));
 
     [RelayCommand]
-    private void OpenLinkThumbnail(LinkDto link)
-    {
-        if (ThumbnailImage is null)
-        {
-            return;
-        }
-
-        var openLinkThumbnailWindow = new ImageWindow();
-        openLinkThumbnailWindow.SetImage(ThumbnailImage);
-
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            openLinkThumbnailWindow.ShowDialog(desktop.MainWindow!);
-        }
-    }
+    private void OpenLinkThumbnail(LinkDto link) => Messenger.Send(new OpenLinkThumbnail(link));
 }

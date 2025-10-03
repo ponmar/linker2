@@ -47,10 +47,12 @@ public partial class MainViewModel : ObservableObject
 
     public bool LinkIsSelected => SelectedLink is not null;
     public bool LinkFileExists => SelectedLink is not null && linkFileRepo.LinkFileExists(SelectedLink);
+    public bool LinkHasThumbnail => SelectedLink is not null && !string.IsNullOrEmpty(SelectedLink.ThumbnailUrl);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LinkIsSelected))]
     [NotifyPropertyChangedFor(nameof(LinkFileExists))]
+    [NotifyPropertyChangedFor(nameof(LinkHasThumbnail))]
     private LinkDto? selectedLink = null;
 
     private readonly IFileSystem fileSystem;
@@ -76,6 +78,7 @@ public partial class MainViewModel : ObservableObject
         this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
         this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
         this.RegisterForEvent<OpenLink>((m) => OpenLink(m.Link));
+        this.RegisterForEvent<OpenLinkThumbnail>((m) => OpenLinkThumbnail(m.Link));
         this.RegisterForEvent<LocateLinkFile>(async (m) => await LocateFileForLinkAsync(m.Link));
         this.RegisterForEvent<CopyLinkFilePath>((m) => CopyLinkFilePath(m.Link));
         this.RegisterForEvent<CopyLinkUrl>((m) => CopyLinkUrl(m.Link));
@@ -157,6 +160,33 @@ public partial class MainViewModel : ObservableObject
     private void OpenLink(LinkDto linkDto)
     {
         sessionUtils.OpenLinkWithExternalProgramAsync(linkDto);
+    }
+
+    [RelayCommand]
+    private void OpenSelectedLinkThumbnail()
+    {
+        if (SelectedLink is not null)
+        {
+            OpenLinkThumbnail(SelectedLink);
+        }
+    }
+
+    private void OpenLinkThumbnail(LinkDto linkDto)
+    {
+        if (Session is not null && !string.IsNullOrEmpty(linkDto.ThumbnailUrl))
+        {
+            var linkVm = ServiceLocator.Resolve<LinksViewModel>().Links.FirstOrDefault(x => x.LinkDto == linkDto);
+            if (linkVm?.ThumbnailImage is not null)
+            {
+                var openLinkThumbnailWindow = new ImageWindow();
+                openLinkThumbnailWindow.SetImage(linkVm.ThumbnailImage);
+
+                if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                {
+                    openLinkThumbnailWindow.ShowDialog(desktop.MainWindow!);
+                }
+            }
+        }
     }
 
     [RelayCommand]

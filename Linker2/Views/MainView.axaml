@@ -42,6 +42,7 @@
 				<MenuItem Header="_Copy URL" Command="{Binding CopySelectedLinkUrlCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 				<MenuItem Header="_Copy title" Command="{Binding CopySelectedLinkTitleCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 				<MenuItem Header="_Copy file path" Command="{Binding CopySelectedLinkFilePathCommand}" IsEnabled="{Binding LinkFileExists}"/>
+				<MenuItem Header="_Open thumbnail" Command="{Binding OpenSelectedLinkThumbnailCommand}" IsEnabled="{Binding LinkHasThumbnail}" />
 				<Separator/>
 				<MenuItem Header="_Edit..." Command="{Binding OpenEditLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 				<MenuItem Header="_Remove..." Command="{Binding RemoveSelectedLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>

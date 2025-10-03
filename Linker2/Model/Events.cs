@@ -18,6 +18,7 @@ public record LinkRemoved(Session Session, LinkDto Link);
 public record LinkSelected(LinkDto Link);
 public record LinkDeselected;
 public record OpenLink(LinkDto Link);
+public record OpenLinkThumbnail(LinkDto Link);
 public record LocateLinkFile(LinkDto Link);
 public record CopyLinkFilePath(LinkDto Link);
 public record CopyLinkUrl(LinkDto Link);
