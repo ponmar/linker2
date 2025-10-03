@@ -14,6 +14,7 @@ namespace Linker2.Model;
 public class Session
 {
     private readonly IFileSystem fileSystem;
+    private readonly ILinkFileRepository linkFileRepo;
 
     public string FilePath { get; }
     private SecureString password;
@@ -50,13 +51,12 @@ public class Session
     }
     private bool dataUpdated;
 
-    private readonly List<string> cachedFiles = [];
-
     private readonly DispatcherTimer sessionTimer = new();
 
-    public Session(IFileSystem fileSystem, string filePath, SecureString password, DataDto data)
+    public Session(IFileSystem fileSystem, ILinkFileRepository linkFileRepo, string filePath, SecureString password, DataDto data)
     {
         this.fileSystem = fileSystem;
+        this.linkFileRepo = linkFileRepo;
         FilePath = filePath;
         this.password = password;
         this.data = data;
@@ -65,7 +65,7 @@ public class Session
         ImageCache = new(fileSystem, cacheDir, AesUtils.PasswordToKey(password));
         timeout = TimeSpan.FromSeconds(data.Settings.LockAfterSeconds);
 
-        UpdateAvailableCacheFiles();
+        UpdateAvailableLinkFiles();
 
         sessionTimer.Interval = TimeSpan.FromSeconds(1);
         sessionTimer.Tick += SessionTimer_Tick;
@@ -109,6 +109,7 @@ public class Session
             return;
         }
 
+        linkFileRepo.Clear();
         sessionTimer.Stop();
         
         Firefox?.Close();
@@ -146,34 +147,17 @@ public class Session
         }
     }
 
-    public void UpdateAvailableCacheFiles()
+    public void UpdateAvailableLinkFiles()
     {
-        cachedFiles.Clear();
-
+        var linkFilePaths = new List<string>();
         var dirPath = Data.Settings.CachedFileDirectoryPath;
         if (dirPath.HasContent() && fileSystem.Directory.Exists(dirPath))
         {
-            foreach (var file in fileSystem.Directory.GetFiles(dirPath!))
+            foreach (var linkFilePath in fileSystem.Directory.GetFiles(dirPath!))
             {
-                cachedFiles.Add(file);
+                linkFilePaths.Add(linkFilePath);
             }
         }
-    }
-
-    public string? GetCachedFileForLink(LinkDto link)
-    {
-        if (link.Title.HasContent())
-        {
-            var expectedFilenameWithoutExtension = string.Join("_", link.Title!.Split(Path.GetInvalidFileNameChars()));
-            foreach (var cachedFile in cachedFiles)
-            {
-                if (expectedFilenameWithoutExtension == Path.GetFileNameWithoutExtension(cachedFile))
-                {
-                    return cachedFile;
-                }
-            }
-        }
-
-        return null;
+        linkFileRepo.Update(linkFilePaths);
     }
 }

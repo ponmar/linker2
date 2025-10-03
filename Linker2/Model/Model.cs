@@ -46,7 +46,6 @@ public interface ISessionUtils
     bool SaveSession();
     void ResetSessionTime();
     Task OpenLinkWithExternalProgramAsync(LinkDto link);
-    string? GetCachedFileForLink(LinkDto link);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
@@ -69,12 +68,14 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
     private readonly IFileSystem fileSystem;
     private readonly IClipboardService clipboardService;
     private readonly IDialogs dialogs;
+    private readonly ILinkFileRepository linkFileRepo;
 
-    public Model(IFileSystem fileSystem, IClipboardService clipboardService, IDialogs dialogs)
+    public Model(IFileSystem fileSystem, IClipboardService clipboardService, IDialogs dialogs, ILinkFileRepository linkFileRepo)
     {
         this.fileSystem = fileSystem;
         this.clipboardService = clipboardService;
         this.dialogs = dialogs;
+        this.linkFileRepo = linkFileRepo;
         this.RegisterForEvent<SessionStopped>(x => CleanupSession());
     }
 
@@ -198,18 +199,13 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
                 return;
             }
 
-            var cachedFilePath = GetCachedFileForLink(link);
+            var cachedFilePath = linkFileRepo.GetLinkFilePath(link);
             var openLinkArgs = cachedFilePath is null ?
                 session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url) :
                 session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + cachedFilePath + '"');
 
             ProcessRunner.Start(openLinkCommand, openLinkArgs);
         }
-    }
-
-    public string? GetCachedFileForLink(LinkDto link)
-    {
-        return session?.GetCachedFileForLink(link);
     }
 
     // Throws on errors
@@ -225,7 +221,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
             throw new ValidationException(dataDtoValidatorResult);
         }
 
-        session = new Session(fileSystem, appDataConfig.FilePath, password, config);
+        session = new Session(fileSystem, linkFileRepo, appDataConfig.FilePath, password, config);
         session.Start();
     }
 

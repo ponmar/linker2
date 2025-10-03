@@ -21,6 +21,7 @@ public static class Bootstrapper
             typeof(IWebPageScraperProvider)]);
 
         ServiceLocator.RegisterSingleton<IClipboardService, ClipboardService>();
+        ServiceLocator.RegisterSingleton<ILinkFileRepository, LinkFileRepository>();
 
         ServiceLocator.RegisterTransient<AddLinkViewModel>();
         ServiceLocator.RegisterTransient<CreateViewModel>();

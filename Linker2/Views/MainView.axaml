@@ -30,12 +30,17 @@
 				<MenuItem Header="_Export..." Command="{Binding ExportCommand}" />
 				<Separator />
 				<MenuItem Header="_Save Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" HotKey="Ctrl+S"/>
+				<MenuItem Header="_Update link files" Command="{Binding UpdateLinkFilesCommand}"/>
 				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
 			</MenuItem>
 			<MenuItem Header="Link" IsEnabled="{Binding SessionStarted}">
 				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}"/>
 				<Separator/>
-				<MenuItem Header="_Open" Command="{Binding OpenLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Open" Command="{Binding OpenSelectedLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Locate" Command="{Binding LocateFileForSelectedLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Copy URL" Command="{Binding CopySelectedLinkUrlCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<MenuItem Header="_Copy title" Command="{Binding CopySelectedLinkTitleCommand}" IsEnabled="{Binding LinkIsSelected}"/>
+				<Separator/>
 				<MenuItem Header="_Edit..." Command="{Binding OpenEditLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 				<MenuItem Header="_Remove..." Command="{Binding RemoveSelectedLinkCommand}" IsEnabled="{Binding LinkIsSelected}"/>
 			</MenuItem>

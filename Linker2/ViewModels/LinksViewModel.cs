@@ -44,12 +44,12 @@ public partial class LinksViewModel : ObservableObject
         SortLinks();
     }
 
-    public ObservableCollection<Cached> CachedValues { get; } = [];
+    public ObservableCollection<LinkFileAvailability> CachedValues { get; } = [];
 
     [ObservableProperty]
-    private Cached? selectedCachedValue;
+    private LinkFileAvailability? selectedCachedValue;
 
-    partial void OnSelectedCachedValueChanged(Cached? value)
+    partial void OnSelectedCachedValueChanged(LinkFileAvailability? value)
     {
         UpdateLinks();
     }
@@ -149,18 +149,20 @@ public partial class LinksViewModel : ObservableObject
 
     private readonly ISessionSaver sessionSaver;
     private readonly ISessionUtils sessionUtils;
+    private readonly ILinkFileRepository linkFileRepo;
 
-    public LinksViewModel(ISessionSaver sessionSaver, ISessionUtils sessionUtils)
+    public LinksViewModel(ISessionSaver sessionSaver, ISessionUtils sessionUtils, ILinkFileRepository linkFileRepo)
     {
         this.sessionSaver = sessionSaver;
         this.sessionUtils = sessionUtils;
+        this.linkFileRepo = linkFileRepo;
 
         foreach (var orderByValue in Enum.GetValues<OrderBy>())
         {
             OrderByValues.Add(orderByValue);
         }
 
-        foreach (var cachedValue in Enum.GetValues<Cached>())
+        foreach (var cachedValue in Enum.GetValues<LinkFileAvailability>())
         {
             CachedValues.Add(cachedValue);
         }
@@ -228,7 +230,7 @@ public partial class LinksViewModel : ObservableObject
         {
             var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             var minimize = session!.Data.Settings.ShowDetails;
-            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache, sessionUtils.GetCachedFileForLink(m.Link) != null));
+            allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.GetLinkFilePath(m.Link) != null });
             ReloadAvailableTags();
             UpdateLinks();
 
@@ -287,6 +289,11 @@ public partial class LinksViewModel : ObservableObject
             allLinks.ForEach(x => x.ShowDetails = session!.Data.Settings.ShowDetails);
         });
 
+        this.RegisterForEvent<LinkFileRepositoryUpdated>((m) =>
+        {
+            allLinks.ForEach(x => x.FileExists = linkFileRepo.GetLinkFilePath(x.LinkDto) != null);
+        });
+
         UpdateLinks();
     }
 
@@ -334,7 +341,7 @@ public partial class LinksViewModel : ObservableObject
     {
         var selectedTags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name);
         var minimize = session!.Data.Settings.ShowDetails;
-        allLinks = session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache, sessionUtils.GetCachedFileForLink(x) != null)).ToList();
+        allLinks = session!.Data.Links.Select(x => new LinkViewModel(x, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.GetLinkFilePath(x) != null }).ToList();
 
         foreach (var linkVm in allLinks)
         {
@@ -403,7 +410,7 @@ public partial class LinksViewModel : ObservableObject
             new NoRatingFilter() { Enabled = SelectedRatingFiltering == Constants.NotRatedFilterText },
             new SiteFilter() { Site = SelectedSiteFiltering },
             new TextFilter() { Text = FilterText.Trim() },
-            new CachedFileAvailableFilter() { CachedValue = SelectedCachedValue, SessionUtils = sessionUtils },
+            new LinkFileAvailableFilter() { CachedValue = SelectedCachedValue, LinkFileRepo = linkFileRepo },
         };
 
         var filterdLinks = allLinks.Select(x => x.LinkDto);
@@ -483,12 +490,6 @@ public partial class LinksViewModel : ObservableObject
         Links.Clear();
         sortedLinks.ForEach(x => Links.Add(x));
         SelectedLink = preSelectedLink;
-    }
-
-    [RelayCommand]
-    private void OpenLink(LinkDto linkToOpen)
-    {
-        sessionUtils.OpenLinkWithExternalProgramAsync(linkToOpen);
     }
 
     [RelayCommand]

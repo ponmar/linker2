@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Linker2.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:vm="clr-namespace:Linker2.ViewModels"
-    x:DataType="vm:LinksViewModel"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Linker2.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    x:DataType="vm:LinksViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:RatingToTextConverter x:Key="RatingToTextConverter" />
@@ -19,7 +19,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
-					<ColumnDefinition Width="auto" SharedSizeGroup="CachedFileIndicatorColumn" />
+                    <ColumnDefinition Width="auto" SharedSizeGroup="CachedFileIndicatorColumn" />
                     <ColumnDefinition Width="600" SharedSizeGroup="LinkColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="DateAndCounterColumn" />
@@ -35,6 +35,23 @@
                             CommandParameter="{Binding LinkDto}"
                             Header="Open" />
                         <MenuItem
+                            Command="{Binding LocateLinkFileCommand}"
+                            CommandParameter="{Binding LinkDto}"
+                            Header="Locate" />
+                        <MenuItem
+                            Command="{Binding CopyLinkUrlCommand}"
+                            CommandParameter="{Binding LinkDto}"
+                            Header="Copy URL" />
+                        <MenuItem
+                            Command="{Binding CopyLinkTitleCommand}"
+                            CommandParameter="{Binding LinkDto}"
+                            Header="Copy title" />
+                        <MenuItem
+                            Command="{Binding OpenLinkThumbnailCommand}"
+                            CommandParameter="{Binding LinkDto}"
+                            Header="Open thumbnail" />
+                        <Separator />
+                        <MenuItem
                             Command="{Binding EditLinkCommand}"
                             CommandParameter="{Binding LinkDto}"
                             Header="Edit..." />
@@ -42,19 +59,15 @@
                             Command="{Binding RemoveLinkCommand}"
                             CommandParameter="{Binding LinkDto}"
                             Header="Remove..." />
-						<MenuItem
-	                        Command="{Binding OpenLinkThumbnailCommand}"
-	                        CommandParameter="{Binding LinkDto}"
-	                        Header="Open thumbnail" />
                         <Separator />
                         <MenuItem Command="{Binding AddLinkCommand}" Header="Add..." />
                     </ContextMenu>
                 </Grid.ContextMenu>
-				
+
                 <ItemsControl
                     Grid.Row="0"
                     Grid.Column="0"
-					VerticalAlignment="Center"
+                    VerticalAlignment="Center"
                     ItemsSource="{Binding Tags}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -63,9 +76,9 @@
                                 Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=((vm:LinksViewModel)DataContext).ToggleTagFilterByNameCommand}"
                                 CommandParameter="{Binding}"
                                 IsChecked="{Binding IsChecked}"
-								ToolTip.Tip="{Binding Name}">
-								<TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-							</ToggleButton>
+                                ToolTip.Tip="{Binding Name}">
+                                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                            </ToggleButton>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -89,17 +102,17 @@
                         UseLayoutRounding="True" />
                 </Border>
 
-				<TextBlock
-	                Grid.Row="0"
-	                Grid.Column="2"
-	                Margin="5"
-	                VerticalAlignment="Center"
-	                Text="&#9205;"
-					Classes="CachedFile"
-					ToolTip.Tip="File available locally"
-					IsVisible="{Binding IsCached}"/>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Classes="CachedFile"
+                    IsVisible="{Binding FileExists}"
+                    Text="&#9205;"
+                    ToolTip.Tip="File available locally" />
 
-				<StackPanel
+                <StackPanel
                     Grid.Row="0"
                     Grid.Column="3"
                     Margin="5"
@@ -122,46 +135,47 @@
 
                     <TextBlock
                         Margin="5"
-						Classes="Rating"
+                        Classes="Rating"
                         FontSize="{Binding RatingFontSize}"
                         IsVisible="{Binding !ShowDetails}"
                         Text="{Binding Rating, Converter={StaticResource RatingToTextConverter}}"
                         ToolTip.Tip="{Binding RatingDescription}" />
                 </StackPanel>
-				
+
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="4"
                     Margin="5"
                     VerticalAlignment="Center"
-					Classes="Rating"
+                    Classes="Rating"
                     FontSize="{Binding RatingFontSize}"
                     IsVisible="{Binding ShowDetails}"
                     Text="{Binding Rating, Converter={StaticResource RatingToTextConverter}}"
                     ToolTip.Tip="{Binding RatingDescription}" />
 
-				<StackPanel Orientation="Vertical"
-							Grid.Row="0"
-                            Grid.Column="5"
-                            Margin="5"
-							VerticalAlignment="Center"
-							IsVisible="{Binding ShowDetails}">
-					<TextBlock Margin="5"
-						Text="{Binding VisualizedDateTime}" />
-					<TextBlock Margin="5"
-						Text="{Binding OpenCounter}"
-						ToolTip.Tip="Number of views" />
-				</StackPanel>
-			</Grid>
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.Column="5"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ShowDetails}"
+                    Orientation="Vertical">
+                    <TextBlock Margin="5" Text="{Binding VisualizedDateTime}" />
+                    <TextBlock
+                        Margin="5"
+                        Text="{Binding OpenCounter}"
+                        ToolTip.Tip="Number of views" />
+                </StackPanel>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid ColumnDefinitions="*" RowDefinitions="*">
-		<ListBox
+        <ListBox
             Grid.Row="0"
             Grid.Column="0"
+            HorizontalAlignment="Stretch"
             BorderThickness="0"
-			HorizontalAlignment="Stretch"
             Grid.IsSharedSizeScope="True"
             ItemTemplate="{StaticResource LinkTemplate}"
             ItemsSource="{Binding Links}"

@@ -56,20 +56,27 @@ public partial class MainViewModel : ObservableObject
     private readonly ISessionUtils sessionUtils;
     private readonly IFileUtils fileUtils;
     private readonly ILinkModification linkModification;
+    private readonly IClipboardService clipboardService;
+    private readonly ILinkFileRepository linkFileRepo;
 
-    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification)
+    public MainViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUtils sessionUtils, IFileUtils fileUtils, ILinkModification linkModification, IClipboardService clipboardService, ILinkFileRepository linkFileRepo)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
         this.sessionUtils = sessionUtils;
         this.fileUtils = fileUtils;
         this.linkModification = linkModification;
-    
+        this.clipboardService = clipboardService;
+        this.linkFileRepo = linkFileRepo;
+
         UpdateAvailabelConfigFiles();
 
         this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
         this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
-        this.RegisterForEvent<OpenLink>((m) => sessionUtils.OpenLinkWithExternalProgramAsync(m.Link));
+        this.RegisterForEvent<OpenLink>((m) => OpenLink(m.Link));
+        this.RegisterForEvent<LocateLinkFile>(async (m) => await LocateFileForLinkAsync(m.Link));
+        this.RegisterForEvent<CopyLinkUrl>((m) => CopyLinkUrl(m.Link));
+        this.RegisterForEvent<CopyLinkTitle>((m) => CopyLinkTitle(m.Link));
         this.RegisterForEvent<StartRemoveLink>(async (m) => await RemoveLinkAsync(m.Link));
         this.RegisterForEvent<LinkSelected>((m) => SelectedLink = m.Link);
         this.RegisterForEvent<LinkDeselected>((m) => SelectedLink = null);
@@ -136,9 +143,82 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenLink()
+    private void OpenSelectedLink()
     {
-        sessionUtils.OpenLinkWithExternalProgramAsync(SelectedLink!);
+        if (SelectedLink is not null)
+        {
+            OpenLink(SelectedLink);
+        }
+    }
+
+    private void OpenLink(LinkDto linkDto)
+    {
+        sessionUtils.OpenLinkWithExternalProgramAsync(linkDto);
+    }
+
+    [RelayCommand]
+    private async Task LocateFileForSelectedLinkAsync()
+    {
+        if (SelectedLink is not null)
+        {
+            await LocateFileForLinkAsync(SelectedLink);
+        }
+    }
+
+    private async Task LocateFileForLinkAsync(LinkDto linkDto)
+    {
+        if (Session is not null)
+        {
+            var filePath = linkFileRepo.GetLinkFilePath(linkDto);
+            if (filePath is null)
+            {
+                await dialogs.ShowErrorDialogAsync("No cached file for this link.");
+                return;
+            }
+
+            if (!fileSystem.File.Exists(filePath))
+            {
+                await dialogs.ShowErrorDialogAsync($"Cached file not found: {filePath}");
+                return;
+            }
+
+            try
+            {
+                fileUtils.SelectFileInExplorer(filePath);
+            }
+            catch
+            {
+                // Windows only - ignore in Linux
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void CopySelectedLinkUrl()
+    {
+        if (SelectedLink is not null)
+        {
+            CopyLinkUrl(SelectedLink);
+        }
+    }
+
+    private void CopyLinkUrl(LinkDto linkDto)
+    {
+        clipboardService.SetTextAsync(linkDto.Url);
+    }
+
+    [RelayCommand]
+    private void CopySelectedLinkTitle()
+    {
+        if (SelectedLink is not null)
+        {
+            CopyLinkTitle(SelectedLink);
+        }
+    }
+
+    private void CopyLinkTitle(LinkDto linkDto)
+    {
+        clipboardService.SetTextAsync(linkDto.Title ?? string.Empty);
     }
 
     [RelayCommand]
@@ -348,5 +428,12 @@ public partial class MainViewModel : ObservableObject
         {
             await dialogs.ShowErrorDialogAsync($"Import error: {e.Message}");
         }
+    }
+
+    [RelayCommand]
+    private void UpdateLinkFiles()
+    {
+        // TODO: how to notify that it changed? Each LinkViewModel must be updated
+        Session?.UpdateAvailableLinkFiles();
     }
 }

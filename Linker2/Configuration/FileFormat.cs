@@ -13,10 +13,10 @@ public enum OrderBy
     Tags,
 }
 
-public enum Cached
+public enum LinkFileAvailability
 {
-    Cached,
-    NotCached,
+    Available,
+    NotAvailable,
 }
 
 public record SettingsDto(
@@ -50,7 +50,7 @@ public record FiltersDto(
     string? HideTags,
     OrderBy OrderBy,
     bool ReversedOrder,
-    Cached? Cached);
+    LinkFileAvailability? Cached);
 
 public record DataDto(
     SettingsDto Settings,

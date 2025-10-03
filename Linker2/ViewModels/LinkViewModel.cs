@@ -46,7 +46,7 @@ public partial class LinkViewModel : ObservableObject
     public int ThumbnailHeight => ShowDetails ? OriginalImageHeight / 3 : OriginalImageHeight;
 
     [ObservableProperty]
-    private bool isCached;
+    private bool fileExists;
 
     public int FontSize => ShowDetails ? 12 : 18;
     public int RatingFontSize => ShowDetails ? 20 : 30;
@@ -91,14 +91,13 @@ public partial class LinkViewModel : ObservableObject
 
     private readonly ImageCache imageCache;
 
-    public LinkViewModel(LinkDto linkDto, IEnumerable<string> selectedTags, bool showDetails, ImageCache imageCache, bool isCached)
+    public LinkViewModel(LinkDto linkDto, IEnumerable<string> selectedTags, bool showDetails, ImageCache imageCache)
     {
         this.imageCache = imageCache;
         this.linkDto = linkDto;
         OnLinkDtoChanged(linkDto);
 
         ShowDetails = showDetails;
-        IsCached = isCached;
 
         UpdateThumbnailImage();
         UpdateSelectedTags(selectedTags);
@@ -159,6 +158,15 @@ public partial class LinkViewModel : ObservableObject
 
     [RelayCommand]
     private static void OpenLink(LinkDto link) => Messenger.Send(new OpenLink(link));
+
+    [RelayCommand]
+    private static void LocateLinkFile(LinkDto link) => Messenger.Send(new LocateLinkFile(link));
+
+    [RelayCommand]
+    private static void CopyLinkUrl(LinkDto link) => Messenger.Send(new CopyLinkUrl(link));
+
+    [RelayCommand]
+    private static void CopyLinkTitle(LinkDto link) => Messenger.Send(new CopyLinkTitle(link));
 
     [RelayCommand]
     private static void AddLink() => Messenger.Send<StartAddLink>();
