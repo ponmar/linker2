@@ -32,20 +32,17 @@ public class Dialogs : IDialogs
 {
     public async Task ShowInfoDialogAsync(string message)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Info);
-        await box.ShowAsync();
+        await ShowDialogAsync(message, ButtonEnum.Ok, Icon.Info);
     }
 
     public async Task ShowWarningDialogAsync(string message)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Warning);
-        await box.ShowAsync();
+        await ShowDialogAsync(message, ButtonEnum.Ok, Icon.Warning);
     }
 
     public async Task ShowErrorDialogAsync(string message)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, ButtonEnum.Ok, Icon.Error);
-        await box.ShowAsync();
+        await ShowDialogAsync(message, ButtonEnum.Ok, Icon.Error);
     }
 
     public async Task ShowErrorDialogAsync(IEnumerable<string> messages)
@@ -60,9 +57,28 @@ public class Dialogs : IDialogs
 
     public async Task<bool> ShowConfirmDialogAsync(string question)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, question, ButtonEnum.YesNo, Icon.Question);
-        var result = await box.ShowAsync();
+        var result = await ShowDialogAsync(question, ButtonEnum.YesNo, Icon.Question);
         return result == ButtonResult.Yes;
+    }
+
+    private async Task<ButtonResult> ShowDialogAsync(string message, ButtonEnum button, Icon icon)
+    {
+        var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, button, icon, windowStartupLocation: WindowStartupLocation.CenterOwner);
+        
+        var parent = GetParentWindow();
+        if (parent is not null)
+        {
+            return await box.ShowWindowDialogAsync(parent);
+        }
+        else
+        {
+            return await box.ShowWindowAsync();
+        }
+    }
+        
+    public static Window? GetParentWindow()
+    {
+        return Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopApp ? desktopApp.MainWindow : null;
     }
 
     public async Task<string?> SelectNewFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType)
