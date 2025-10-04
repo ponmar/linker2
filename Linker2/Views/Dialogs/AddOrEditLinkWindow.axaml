@@ -1,5 +1,5 @@
 <Window
-    x:Class="Linker2.Views.AddLinkWindow"
+    x:Class="Linker2.Views.Dialogs.AddOrEditLinkWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Linker2.Converters"

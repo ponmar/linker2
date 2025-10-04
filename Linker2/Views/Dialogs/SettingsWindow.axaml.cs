@@ -2,16 +2,16 @@ using Avalonia.Controls;
 using Linker2.Model;
 using Linker2.ViewModels;
 
-namespace Linker2.Views;
+namespace Linker2.Views.Dialogs;
 
-public partial class PasswordWindow : Window
+public partial class SettingsWindow : Window
 {
     private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
 
-    public PasswordWindow()
+    public SettingsWindow()
     {
         InitializeComponent();
-        DataContext = ServiceLocator.Resolve<PasswordViewModel>();
+        DataContext = ServiceLocator.Resolve<SettingsViewModel>();
 
         this.RegisterForEvent<SessionStopped>((x) => Close());
         this.RegisterForEvent<CloseDialog>((x) => Close());

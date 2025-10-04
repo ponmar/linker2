@@ -1,13 +1,13 @@
 using Avalonia.Controls;
 using Linker2.Model;
 
-namespace Linker2.Views;
+namespace Linker2.Views.Dialogs;
 
-public partial class AddLinkWindow : Window
+public partial class AddOrEditLinkWindow : Window
 {
     private readonly ISessionUtils sessionUtils = ServiceLocator.Resolve<ISessionUtils>();
 
-    public AddLinkWindow()
+    public AddOrEditLinkWindow()
     {
         InitializeComponent();
 

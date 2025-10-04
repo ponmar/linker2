@@ -5,7 +5,7 @@
         xmlns:vm="clr-namespace:Linker2.ViewModels"
         x:DataType="vm:CreateViewModel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Linker2.Views.CreateWindow"
+        x:Class="Linker2.Views.Dialogs.CreateWindow"
         Title="New..."
 		Icon="/Assets/link.ico"
 		SizeToContent="WidthAndHeight"

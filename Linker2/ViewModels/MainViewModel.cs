@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.Model;
-using Linker2.Views;
+using Linker2.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -140,7 +140,7 @@ public partial class MainViewModel : ObservableObject
     private static void AddOrEditLink(LinkDto? link)
     {
         var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
-        var addLinkWindow = new AddLinkWindow() { DataContext = addLinkViewModel };
+        var addLinkWindow = new AddOrEditLinkWindow() { DataContext = addLinkViewModel };
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
