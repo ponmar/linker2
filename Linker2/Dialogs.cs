@@ -1,15 +1,18 @@
-﻿using FluentValidation.Results;
-using MsBox.Avalonia.Enums;
-using MsBox.Avalonia;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Platform.Storage;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
-using System;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
+using FluentValidation.Results;
+using Linker2.Configuration;
+using Linker2.ViewModels;
+using Linker2.Views.Dialogs;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace Linker2;
 
@@ -25,6 +28,12 @@ public interface IDialogs
     Task<string?> BrowseExistingFileDialogAsync(string title, string initialDirectory, FilePickerFileType fileType);
     Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title);
     Task<string?> ShowBrowseExistingDirectoryDialogAsync(string title, string initialDirectory);
+    Task ShowAddLinkAsync();
+    Task ShowEditLinkAsync(LinkDto link);
+    Task ShowSettingsAsync();
+    Task ShowChangePasswordAsync();
+    Task ShowLinkThumbnailAsync(LinkDto linkDto);
+    Task ShowCreateAsync();
     void OpenUrlInDefaultBrowser(string url);
 }
 
@@ -145,6 +154,57 @@ public class Dialogs : IDialogs
         });
 
         return files.Count > 0 ? files[0].Path.AbsolutePath : null;
+    }
+
+    public async Task ShowAddLinkAsync()
+    {
+        await AddOrEditLink();
+    }
+
+    public async Task ShowEditLinkAsync(LinkDto link)
+    {
+        await AddOrEditLink(link);
+    }
+
+    private static async Task AddOrEditLink(LinkDto? link = null)
+    {
+        var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
+        var addLinkWindow = new AddOrEditLinkWindow() { DataContext = addLinkViewModel };
+        await ShowDesktopWindow(addLinkWindow);
+    }
+
+    public async Task ShowSettingsAsync()
+    {
+        await ShowDesktopWindow(new SettingsWindow());
+    }
+
+    public async Task ShowChangePasswordAsync()
+    {
+        await ShowDesktopWindow(new PasswordWindow());
+    }
+
+    public async Task ShowLinkThumbnailAsync(LinkDto linkDto)
+    {
+        var linkVm = ServiceLocator.Resolve<LinksViewModel>().Links.FirstOrDefault(x => x.LinkDto == linkDto);
+        if (linkVm?.ThumbnailImage is not null)
+        {
+            var openLinkThumbnailWindow = new ImageWindow();
+            openLinkThumbnailWindow.SetImage(linkVm.ThumbnailImage);
+            await ShowDesktopWindow(openLinkThumbnailWindow);
+        }
+    }
+
+    public async Task ShowCreateAsync()
+    {
+        await ShowDesktopWindow(new CreateWindow());
+    }
+
+    private static async Task ShowDesktopWindow(Window window)
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            await window.ShowDialog(desktop.MainWindow!);
+        }
     }
 
     public void OpenUrlInDefaultBrowser(string url)

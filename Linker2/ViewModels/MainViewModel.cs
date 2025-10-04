@@ -75,10 +75,10 @@ public partial class MainViewModel : ObservableObject
 
         UpdateAvailabelConfigFiles();
 
-        this.RegisterForEvent<StartEditLink>((m) => AddOrEditLink(m.Link));
-        this.RegisterForEvent<StartAddLink>((m) => AddOrEditLink(null));
+        this.RegisterForEvent<StartEditLink>(async (m) => await dialogs.ShowEditLinkAsync(m.Link));
+        this.RegisterForEvent<StartAddLink>(async (m) => await dialogs.ShowAddLinkAsync());
         this.RegisterForEvent<OpenLink>((m) => OpenLink(m.Link));
-        this.RegisterForEvent<OpenLinkThumbnail>((m) => OpenLinkThumbnail(m.Link));
+        this.RegisterForEvent<OpenLinkThumbnail>(async (m) => await OpenLinkThumbnailAsync(m.Link));
         this.RegisterForEvent<LocateLinkFile>(async (m) => await LocateFileForLinkAsync(m.Link));
         this.RegisterForEvent<CopyLinkFilePath>((m) => CopyLinkFilePath(m.Link));
         this.RegisterForEvent<CopyLinkUrl>((m) => CopyLinkUrl(m.Link));
@@ -126,25 +126,17 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void OpenAddLink()
+    private async Task OpenAddLinkAsync()
     {
-        AddOrEditLink(null);
+        await dialogs.ShowAddLinkAsync();
     }
 
     [RelayCommand]
-    private void OpenEditLink()
+    private async Task OpenEditLink()
     {
-        AddOrEditLink(SelectedLink);
-    }
-
-    private static void AddOrEditLink(LinkDto? link)
-    {
-        var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
-        var addLinkWindow = new AddOrEditLinkWindow() { DataContext = addLinkViewModel };
-
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (SelectedLink is not null)
         {
-            addLinkWindow.ShowDialog(desktop.MainWindow!);
+            await dialogs.ShowEditLinkAsync(SelectedLink);
         }
     }
 
@@ -163,29 +155,19 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenSelectedLinkThumbnail()
+    private async Task OpenSelectedLinkThumbnailAsync()
     {
         if (SelectedLink is not null)
         {
-            OpenLinkThumbnail(SelectedLink);
+            await OpenLinkThumbnailAsync(SelectedLink);
         }
     }
 
-    private void OpenLinkThumbnail(LinkDto linkDto)
+    private async Task OpenLinkThumbnailAsync(LinkDto linkDto)
     {
         if (Session is not null && !string.IsNullOrEmpty(linkDto.ThumbnailUrl))
         {
-            var linkVm = ServiceLocator.Resolve<LinksViewModel>().Links.FirstOrDefault(x => x.LinkDto == linkDto);
-            if (linkVm?.ThumbnailImage is not null)
-            {
-                var openLinkThumbnailWindow = new ImageWindow();
-                openLinkThumbnailWindow.SetImage(linkVm.ThumbnailImage);
-
-                if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-                {
-                    openLinkThumbnailWindow.ShowDialog(desktop.MainWindow!);
-                }
-            }
+            await dialogs.ShowLinkThumbnailAsync(linkDto);
         }
     }
 
@@ -338,13 +320,8 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task CreateAsync()
     {
-        var createWindow = new CreateWindow();
-
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            await createWindow.ShowDialog(desktop.MainWindow!);
-            UpdateAvailabelConfigFiles();
-        }
+        await dialogs.ShowCreateAsync();
+        UpdateAvailabelConfigFiles();
     }
 
     [RelayCommand]
@@ -397,23 +374,15 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void OpenSettings()
+    private async Task OpenSettingsAsync()
     {
-        var settingsWindow = new SettingsWindow();
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            settingsWindow.ShowDialog(desktop.MainWindow!);
-        }
+        await dialogs.ShowSettingsAsync();
     }
 
     [RelayCommand]
-    private static void OpenChangePassword()
+    private async Task OpenChangePassword()
     {
-        var passwordWindow = new PasswordWindow();
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            passwordWindow.ShowDialog(desktop.MainWindow!);
-        }
+        await dialogs.ShowChangePasswordAsync();
     }
 
     [RelayCommand]
