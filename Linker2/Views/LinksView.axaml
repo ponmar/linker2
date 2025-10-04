@@ -100,6 +100,9 @@
                     ClipToBounds="True"
                     CornerRadius="8"
                     IsVisible="{Binding HasThumbnailUrl}">
+					<ToolTip.Tip>
+						<Image Source="{Binding ThumbnailImage}" MaxHeight="500" MaxWidth="500" Stretch="Uniform"/>
+					</ToolTip.Tip>
                     <Image
                         IsVisible="{Binding ThumbnailImage, Converter={x:Static ObjectConverters.IsNotNull}}"
                         Source="{Binding ThumbnailImage}"
