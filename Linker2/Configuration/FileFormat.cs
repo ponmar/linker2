@@ -9,7 +9,6 @@ public enum OrderBy
     Time,
     Title,
     Random,
-    Views,
     Tags,
 }
 
@@ -38,8 +37,7 @@ public record LinkDto(
     string Url,
     DateTime DateTime,
     int? Rating,
-    string? ThumbnailUrl,
-    long OpenCounter);
+    string? ThumbnailUrl);
 
 public record FiltersDto(
     string? Text,

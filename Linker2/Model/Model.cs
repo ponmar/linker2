@@ -183,15 +183,6 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
     {
         if (session is not null)
         {
-            var linkIndex = session.Data.Links.IndexOf(link);
-            var openCounter = link.OpenCounter == long.MaxValue ? 0 : link.OpenCounter + 1;
-            var updatedLink = new LinkDto(link.Title, link.Tags, link.Url, link.DateTime, link.Rating, link.ThumbnailUrl, openCounter);
-
-            session.Data.Links[linkIndex] = updatedLink;
-            session.DataUpdated = true;
-
-            Messenger.Send(new LinkUpdated(session, updatedLink));
-
             var openLinkCommand = session.Data.Settings.OpenLinkCommand.Split(";").FirstOrDefault(x => fileSystem.File.Exists(x));
             if (openLinkCommand is null)
             {

@@ -70,7 +70,7 @@ public class Dialogs : IDialogs
         return result == ButtonResult.Yes;
     }
 
-    private async Task<ButtonResult> ShowDialogAsync(string message, ButtonEnum button, Icon icon)
+    private static async Task<ButtonResult> ShowDialogAsync(string message, ButtonEnum button, Icon icon)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(Constants.AppName, message, button, icon, windowStartupLocation: WindowStartupLocation.CenterOwner);
         

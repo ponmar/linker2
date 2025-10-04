@@ -335,9 +335,8 @@ public partial class AddLinkViewModel : ObservableObject
 
     private LinkDto InputToDto(List<string> tags)
     {
-        var openCounter = linkToEdit is not null ? linkToEdit.OpenCounter : 0;
         var dateTime = linkToEdit is not null ? linkToEdit.DateTime : DateTime.Now;
-        return new LinkDto(LinkTitle, tags, LinkUrl, dateTime, LinkRating, string.IsNullOrEmpty(LinkThumbnailUrl) ? null : LinkThumbnailUrl, openCounter);
+        return new LinkDto(LinkTitle, tags, LinkUrl, dateTime, LinkRating, string.IsNullOrEmpty(LinkThumbnailUrl) ? null : LinkThumbnailUrl);
     }
 
     [RelayCommand]

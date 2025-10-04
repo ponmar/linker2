@@ -469,12 +469,6 @@ public partial class LinksViewModel : ObservableObject
                 sortedLinks = sortedLinks.OrderBy(a => random.Next()).ToList();
                 break;
 
-            case OrderBy.Views:
-                sortedLinks = sortedLinks.OrderByDescending(x => x.LinkDto.OpenCounter).
-                    ThenByDescending(x => x.LinkDto.Rating).
-                    ThenBy(x => x.LongTitle).ToList();
-                break;
-
             case OrderBy.Tags:
                 sortedLinks = sortedLinks.OrderBy(x => x.LinkDto.Tags.FirstOrDefault()).
                     ThenBy(x => x.LongTitle).ToList();

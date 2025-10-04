@@ -60,7 +60,6 @@ public partial class LinkViewModel : ObservableObject
     public string VisualizedDateTime => LinkDto.DateTime.ToString("yyyy-MM-dd HH:mm");
     public string Url => LinkDto.Url;
     public int? Rating => LinkDto.Rating;
-    public long OpenCounter => LinkDto.OpenCounter;
     public string RatingDescription => LinkDto.Rating is null ? Constants.NotRatedFilterText : $"Rated {LinkDto.Rating} / {LinkDtoValidator.MaxLinkRating}";
     public string ThumbnailUrl => LinkDto.ThumbnailUrl ?? string.Empty;
     public bool HasThumbnailUrl => !string.IsNullOrEmpty(LinkDto.ThumbnailUrl);
@@ -76,7 +75,6 @@ public partial class LinkViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(VisualizedDateTime))]
     [NotifyPropertyChangedFor(nameof(Url))]
     [NotifyPropertyChangedFor(nameof(Rating))]
-    [NotifyPropertyChangedFor(nameof(OpenCounter))]
     [NotifyPropertyChangedFor(nameof(RatingDescription))]
     [NotifyPropertyChangedFor(nameof(ThumbnailUrl))]
     [NotifyPropertyChangedFor(nameof(HasThumbnailUrl))]
@@ -181,5 +179,5 @@ public partial class LinkViewModel : ObservableObject
     private static void RemoveLink(LinkDto link) => Messenger.Send(new StartRemoveLink(link));
 
     [RelayCommand]
-    private void OpenLinkThumbnail(LinkDto link) => Messenger.Send(new OpenLinkThumbnail(link));
+    private static void OpenLinkThumbnail(LinkDto link) => Messenger.Send(new OpenLinkThumbnail(link));
 }

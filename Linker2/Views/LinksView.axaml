@@ -167,10 +167,6 @@
                     IsVisible="{Binding ShowDetails}"
                     Orientation="Vertical">
                     <TextBlock Margin="5" Text="{Binding VisualizedDateTime}" />
-                    <TextBlock
-                        Margin="5"
-                        Text="{Binding OpenCounter}"
-                        ToolTip.Tip="Number of views" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

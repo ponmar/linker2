@@ -35,8 +35,6 @@ public class LinkDtoValidator : AbstractValidator<LinkDto>
         RuleForEach(x => x.Tags)
             .NotNull()
             .NotEmpty();
-
-        RuleFor(x => x.OpenCounter).GreaterThanOrEqualTo(0);
     }
 
     public static bool IsUrl(string url)
