@@ -32,7 +32,6 @@ public partial class LinkViewModel : ObservableObject
 {
     private const int OriginalImageWidth = 320;
     private const int OriginalImageHeight = 180;
-    private const int ShortTitleLength = 40;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ThumbnailWidth))]
@@ -52,10 +51,7 @@ public partial class LinkViewModel : ObservableObject
     public int RatingFontSize => ShowDetails ? 20 : 30;
 
     [ObservableProperty]
-    private string longTitle = string.Empty;
-
-    [ObservableProperty]
-    private string shortTitle = string.Empty;
+    private string title = string.Empty;
 
     public string VisualizedDateTime => LinkDto.DateTime.ToString("yyyy-MM-dd HH:mm");
     public string Url => LinkDto.Url;
@@ -120,20 +116,7 @@ public partial class LinkViewModel : ObservableObject
 
     private void UpdateTitles()
     {
-        LongTitle = LinkDto.Title ?? "-";
-
-        if (LinkDto.Title is null)
-        {
-            ShortTitle = "-";
-        }
-        else if (LinkDto.Title.Length < ShortTitleLength)
-        {
-            ShortTitle = LinkDto.Title;
-        }
-        else
-        {
-            ShortTitle = LinkDto.Title[..ShortTitleLength] + "...";
-        }
+        Title = LinkDto.Title ?? "-";
     }
 
     private void UpdateTags()

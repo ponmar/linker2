@@ -114,12 +114,19 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateAvailabelConfigFiles()
     {
+        var prevSelectedFilename = SelectedFilename;
+        
         Filenames.Clear();
         foreach (var configFile in fileUtils.GetAvailableConfigFiles())
         {
             Filenames.Add(configFile);
         }
-        if (Filenames.Count > 0)
+
+        if (prevSelectedFilename is not null && Filenames.Contains(prevSelectedFilename))
+        {
+            SelectedFilename = prevSelectedFilename;
+        }
+        else if (Filenames.Count > 0)
         {
             SelectedFilename = Filenames.First();
         }

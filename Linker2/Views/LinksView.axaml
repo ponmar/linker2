@@ -20,9 +20,9 @@
                     <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="FileAvailableIndicatorColumn" />
-                    <ColumnDefinition Width="600" SharedSizeGroup="LinkColumn" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
-                    <ColumnDefinition Width="auto" SharedSizeGroup="DateAndCounterColumn" />
+                    <ColumnDefinition Width="auto" SharedSizeGroup="DateColumn" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -99,8 +99,7 @@
                     BorderThickness="1"
                     ClipToBounds="True"
                     CornerRadius="8"
-                    IsVisible="{Binding HasThumbnailUrl}"
-                    ToolTip.Tip="{Binding LongTitle}">
+                    IsVisible="{Binding HasThumbnailUrl}">
                     <Image
                         IsVisible="{Binding ThumbnailImage, Converter={x:Static ObjectConverters.IsNotNull}}"
                         Source="{Binding ThumbnailImage}"
@@ -128,8 +127,8 @@
                     <TextBlock
                         Margin="5"
                         FontSize="{Binding FontSize}"
-                        Text="{Binding ShortTitle}"
-                        ToolTip.Tip="{Binding LongTitle}" />
+                        Text="{Binding Title}"
+						TextWrapping="Wrap" />
 
                     <TextBlock
                         Margin="5"

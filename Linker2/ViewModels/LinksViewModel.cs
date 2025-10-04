@@ -448,32 +448,15 @@ public partial class LinksViewModel : ObservableObject
 
     private void SortLinks()
     {
-        List<LinkViewModel> sortedLinks = new(Links);
-
-        switch (SelectedOrderBy)
+        var sortedLinks = SelectedOrderBy switch
         {
-            case OrderBy.Rating:
-                sortedLinks = sortedLinks.OrderByDescending(x => x.LinkDto.Rating).
-                    ThenBy(x => x.LongTitle).ToList();
-                break;
-
-            case OrderBy.Time:
-                sortedLinks = sortedLinks.OrderByDescending(x => x.LinkDto.DateTime).ToList();
-                break;
-
-            case OrderBy.Title:
-                sortedLinks = sortedLinks.OrderBy(x => x.LongTitle).ToList();
-                break;
-
-            case OrderBy.Random:
-                sortedLinks = sortedLinks.OrderBy(a => random.Next()).ToList();
-                break;
-
-            case OrderBy.Tags:
-                sortedLinks = sortedLinks.OrderBy(x => x.LinkDto.Tags.FirstOrDefault()).
-                    ThenBy(x => x.LongTitle).ToList();
-                break;
-        }
+            OrderBy.Rating => Links.OrderByDescending(x => x.LinkDto.Rating).ThenBy(x => x.Title).ToList(),
+            OrderBy.Time => Links.OrderByDescending(x => x.LinkDto.DateTime).ToList(),
+            OrderBy.Title => Links.OrderBy(x => x.Title).ToList(),
+            OrderBy.Random => Links.OrderBy(a => random.Next()).ToList(),
+            OrderBy.Tags => Links.OrderBy(x => x.LinkDto.Tags.FirstOrDefault()).ThenBy(x => x.Title).ToList(),
+            _ => throw new NotImplementedException()
+        };
 
         if (ReversedOrder)
         {
