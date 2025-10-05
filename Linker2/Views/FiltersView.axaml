@@ -5,10 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Linker2.ViewModels"
+	xmlns:converters="clr-namespace:Linker2.Converters"
     x:DataType="vm:LinksViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+	<UserControl.Resources>
+		<converters:LinkFileAvailabilityToTextConverter x:Key="LinkFileAvailabilityToTextConverter" />
+	</UserControl.Resources>
     <Grid ColumnDefinitions="*,auto" RowDefinitions="auto">
         <StackPanel
             Grid.Row="0"
@@ -83,7 +87,13 @@
                         VerticalAlignment="Center"
                         IsEnabled="{Binding SessionOngoing}"
                         ItemsSource="{Binding CachedValues}"
-                        SelectedItem="{Binding SelectedCachedValue}" />
+                        SelectedItem="{Binding SelectedCachedValue}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Converter={StaticResource LinkFileAvailabilityToTextConverter}}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
 					<Button
                         VerticalContentAlignment="Center"
                         Classes="Clear"
