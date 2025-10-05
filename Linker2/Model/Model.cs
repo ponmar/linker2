@@ -112,66 +112,24 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
             throw new Exception("This should not happen");
         }
 
+        // TODO: create update method?
         session!.Data = data;
         session.DataUpdated = true;
     }
 
     public void AddLink(LinkDto link)
     {
-        if (session is null)
-        {
-            throw new InvalidOperationException("Can not update link when session not running");
-        }
-
-        if (session.Data.Links.Any(x => x.Url == link.Url))
-        {
-            throw new ArgumentException("Link already exists");
-        }
-
-        session.Data.Links.Add(link);
-        session.DataUpdated = true;
-
-        Messenger.Send(new LinkAdded(session, link));
+        session?.AddLink(link);        
     }
 
     public void UpdateLink(LinkDto link)
     {
-        if (session is null)
-        {
-            throw new InvalidOperationException("Can not update link when session not running");
-        }
-
-        var currentLink = session.Data.Links.FirstOrDefault(x => x.Url == link.Url);
-        if (currentLink is null)
-        {
-            throw new ArgumentException("No such link to update");
-        }
-
-        var currentLinkIndex = session.Data.Links.IndexOf(currentLink);
-
-        session.Data.Links[currentLinkIndex] = link;
-        session.DataUpdated = true;
-
-        Messenger.Send(new LinkUpdated(session, link));
+        session?.UpdateLink(link);
     }
 
     public void RemoveLink(string url)
     {
-        if (session is null)
-        {
-            throw new InvalidOperationException("Can not update link when session not running");
-        }
-
-        var linkToRemove = session.Data.Links.First(x => x.Url == url);
-        session.Data.Links.Remove(linkToRemove);
-        session.DataUpdated = true;
-
-        Messenger.Send(new LinkRemoved(session, linkToRemove));
-
-        if (linkToRemove.ThumbnailUrl is not null)
-        {
-            session.ImageCache.Remove(linkToRemove.ThumbnailUrl);
-        }
+        session?.RemoveLink(url);
     }
 
     public void ResetSessionTime()

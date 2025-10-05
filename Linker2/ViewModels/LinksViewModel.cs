@@ -243,6 +243,7 @@ public partial class LinksViewModel : ObservableObject
 
             var updatedLink = allLinks.First(x => x.Url == m.Link.Url);
             updatedLink.LinkDto = m.Link;
+            updatedLink.FileExists = linkFileRepo.LinkFileExists(m.Link);
             var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             updatedLink.UpdateSelectedTags(selectedTags);
 

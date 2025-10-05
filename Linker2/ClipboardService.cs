@@ -22,7 +22,7 @@ public class ClipboardService : IClipboardService
 
     public async Task<string?> GetTextAsync()
     {
-        return await Clipboard.GetTextAsync();
+        return await Clipboard.TryGetTextAsync();
     }
 
     public async Task ClearAsync()

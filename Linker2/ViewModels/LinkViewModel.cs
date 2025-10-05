@@ -78,7 +78,7 @@ public partial class LinkViewModel : ObservableObject
 
     partial void OnLinkDtoChanged(LinkDto value)
     {
-        UpdateTitles();
+        UpdateTitle();
         UpdateTags();
         UpdateThumbnailImage();
     }
@@ -95,7 +95,7 @@ public partial class LinkViewModel : ObservableObject
 
         UpdateThumbnailImage();
         UpdateSelectedTags(selectedTags);
-        UpdateTitles();
+        UpdateTitle();
     }
 
     private void UpdateThumbnailImage()
@@ -114,7 +114,7 @@ public partial class LinkViewModel : ObservableObject
         ThumbnailImage = null;
     }
 
-    private void UpdateTitles()
+    private void UpdateTitle()
     {
         Title = LinkDto.Title ?? "-";
     }

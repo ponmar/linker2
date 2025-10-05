@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Security;
 using Avalonia.Threading;
 using Linker2.Configuration;
@@ -159,5 +160,48 @@ public class Session
             }
         }
         linkFileRepo.Update(linkFilePaths);
+    }
+
+    public void UpdateLink(LinkDto link)
+    {
+        var currentLink = Data.Links.FirstOrDefault(x => x.Url == link.Url);
+        if (currentLink is null)
+        {
+            throw new ArgumentException("No such link to update");
+        }
+
+        var currentLinkIndex = Data.Links.IndexOf(currentLink);
+
+        Data.Links[currentLinkIndex] = link;
+        DataUpdated = true;
+
+        Messenger.Send(new LinkUpdated(this, link));
+    }
+
+    public void AddLink(LinkDto link)
+    {
+        if (Data.Links.Any(x => x.Url == link.Url))
+        {
+            throw new ArgumentException("Link already exists");
+        }
+
+        Data.Links.Add(link);
+        DataUpdated = true;
+
+        Messenger.Send(new LinkAdded(this, link));
+    }
+
+    public void RemoveLink(string url)
+    {
+        var linkToRemove = Data.Links.First(x => x.Url == url);
+        Data.Links.Remove(linkToRemove);
+        DataUpdated = true;
+
+        Messenger.Send(new LinkRemoved(this, linkToRemove));
+
+        if (linkToRemove.ThumbnailUrl is not null)
+        {
+            ImageCache.Remove(linkToRemove.ThumbnailUrl);
+        }
     }
 }
