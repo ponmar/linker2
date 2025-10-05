@@ -292,6 +292,7 @@ public partial class LinksViewModel : ObservableObject
         this.RegisterForEvent<LinkFileRepositoryUpdated>((m) =>
         {
             allLinks.ForEach(x => x.FileExists = linkFileRepo.LinkFileExists(x.LinkDto));
+            UpdateLinks();
         });
 
         UpdateLinks();
