@@ -6,7 +6,7 @@ using Linker2.Validators;
 using Linker2.Cryptography;
 using System.Threading.Tasks;
 
-namespace Linker2.ViewModels;
+namespace Linker2.ViewModels.Dialogs;
 
 public partial class PasswordViewModel : ObservableObject
 {

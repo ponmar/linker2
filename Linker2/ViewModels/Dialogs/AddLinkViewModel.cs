@@ -14,9 +14,9 @@ using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using Linker2.Configuration;
 
-namespace Linker2.ViewModels;
+namespace Linker2.ViewModels.Dialogs;
 
-public partial class AddLinkViewModel : ObservableObject
+public partial class AddOrEditLinkViewModel : ObservableObject
 {
     [GeneratedRegex("[^a-zA-Z0-9 -]")]
     private static partial Regex TagRegex();
@@ -108,7 +108,7 @@ public partial class AddLinkViewModel : ObservableObject
     private readonly IWebPageScraperProvider webPageScraperProvider;
     private readonly ISettingsProvider settingsProvider;
 
-    public AddLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, IClipboardService clipboardService, LinkDto? linkToEdit = null)
+    public AddOrEditLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, IClipboardService clipboardService, LinkDto? linkToEdit = null)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;

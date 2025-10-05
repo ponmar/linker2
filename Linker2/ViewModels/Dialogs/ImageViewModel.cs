@@ -1,7 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Linker2.ViewModels;
+namespace Linker2.ViewModels.Dialogs;
 
 public partial class ImageViewModel : ObservableObject
 {

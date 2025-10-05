@@ -1,5 +1,6 @@
 ﻿using Linker2.Model;
 using Linker2.ViewModels;
+using Linker2.ViewModels.Dialogs;
 using System.IO.Abstractions;
 
 namespace Linker2;
@@ -23,7 +24,7 @@ public static class Bootstrapper
         ServiceLocator.RegisterSingleton<IClipboardService, ClipboardService>();
         ServiceLocator.RegisterSingleton<ILinkFileRepository, LinkFileRepository>();
 
-        ServiceLocator.RegisterTransient<AddLinkViewModel>();
+        ServiceLocator.RegisterTransient<AddOrEditLinkViewModel>();
         ServiceLocator.RegisterTransient<CreateViewModel>();
         ServiceLocator.RegisterTransient<PasswordViewModel>();
         ServiceLocator.RegisterTransient<ImageViewModel>();

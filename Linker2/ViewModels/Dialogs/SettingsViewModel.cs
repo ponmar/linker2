@@ -7,7 +7,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Linker2.ViewModels;
+namespace Linker2.ViewModels.Dialogs;
 
 public partial class SettingsViewModel : ObservableObject
 {

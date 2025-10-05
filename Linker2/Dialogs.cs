@@ -10,6 +10,7 @@ using Avalonia.Platform.Storage;
 using FluentValidation.Results;
 using Linker2.Configuration;
 using Linker2.ViewModels;
+using Linker2.ViewModels.Dialogs;
 using Linker2.Views.Dialogs;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -168,7 +169,7 @@ public class Dialogs : IDialogs
 
     private static async Task AddOrEditLink(LinkDto? link = null)
     {
-        var addLinkViewModel = ServiceLocator.Resolve<AddLinkViewModel>("linkToEdit", link);
+        var addLinkViewModel = ServiceLocator.Resolve<AddOrEditLinkViewModel>("linkToEdit", link);
         var addLinkWindow = new AddOrEditLinkWindow() { DataContext = addLinkViewModel };
         await ShowDesktopWindow(addLinkWindow);
     }

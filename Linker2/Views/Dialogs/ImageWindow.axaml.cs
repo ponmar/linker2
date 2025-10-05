@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Linker2.Model;
-using Linker2.ViewModels;
+using Linker2.ViewModels.Dialogs;
 
 namespace Linker2.Views.Dialogs;
 
