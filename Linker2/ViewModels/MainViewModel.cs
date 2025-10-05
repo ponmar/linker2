@@ -504,9 +504,24 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void LocateLinkFilesDirectory()
+    {
+        if (Session?.Data.Settings.LinkFilesDirectoryPath is not null)
+        {
+            try
+            {
+                fileUtils.SelectFileInExplorer(Session.Data.Settings.LinkFilesDirectoryPath);
+            }
+            catch
+            {
+                // Windows only - ignore in Linux
+            }
+        }
+    }
+
+    [RelayCommand]
     private void UpdateLinkFiles()
     {
-        // TODO: how to notify that it changed? Each LinkViewModel must be updated
         Session?.UpdateAvailableLinkFiles();
     }
 }

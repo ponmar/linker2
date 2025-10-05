@@ -25,6 +25,8 @@
 			<MenuItem Header="_Session" IsEnabled="{Binding SessionStarted}">
 				<MenuItem Header="_Settings..." Command="{Binding OpenSettingsCommand}" />
 				<MenuItem Header="_Change password..." Command="{Binding OpenChangePasswordCommand}" />
+				<Separator />
+				<MenuItem Header="_Locate link files directory" Command="{Binding LocateLinkFilesDirectoryCommand}"/>
 				<MenuItem Header="_Update link files" Command="{Binding UpdateLinkFilesCommand}"/>
 				<Separator />
 				<MenuItem Header="_Import..." Command="{Binding ImportCommand}" />
