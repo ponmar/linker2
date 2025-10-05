@@ -184,7 +184,7 @@ public partial class LinksViewModel : ObservableObject
             var selectedUrl = selectedLink?.Url;
             if (selectedUrl != Session!.Data.SelectedUrl)
             {
-                sessionSaver.SaveSelection(selectedUrl);
+                sessionSaver.UpdateSelection(selectedUrl);
             }
 
             var tags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name).ToList();
@@ -203,7 +203,7 @@ public partial class LinksViewModel : ObservableObject
                 {
                     try
                     {
-                        sessionSaver.SaveFilters(filters);
+                        sessionSaver.UpdateFilters(filters);
                     }
                     catch
                     {

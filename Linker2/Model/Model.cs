@@ -32,9 +32,9 @@ public interface ILinkModification
 
 public interface ISessionSaver
 {
-    void SaveSettings(SettingsDto settings);
-    void SaveSelection(string? selectedUrl);
-    void SaveFilters(FiltersDto filters);
+    void UpdateSettings(SettingsDto settings);
+    void UpdateSelection(string? selectedUrl);
+    void UpdateFilters(FiltersDto filters);
 }
 
 public record ImportSettings(string FilePath, bool IncludeLinks, bool IncludeFilters, bool IncludeSettings);
@@ -84,37 +84,23 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
         return session!.Save();
     }
 
-    public void SaveSettings(SettingsDto settings)
+    public void UpdateSettings(SettingsDto settings)
     {
         var data = new DataDto(settings, session!.Data.Links, session!.Data.Filters, session!.Data.SelectedUrl);
-        SaveData(data);
+        session?.UpdateData(data);
         Messenger.Send<SettingsUpdated>();
     }
 
-    public void SaveSelection(string? selectedUrl)
+    public void UpdateSelection(string? selectedUrl)
     {
         var data = new DataDto(session!.Data.Settings, session!.Data.Links, session!.Data.Filters, selectedUrl);
-        SaveData(data);
+        session?.UpdateData(data);
     }
 
-    public void SaveFilters(FiltersDto filters)
+    public void UpdateFilters(FiltersDto filters)
     {
         var data = new DataDto(session!.Data.Settings, session!.Data.Links, filters, session!.Data.SelectedUrl);
-        SaveData(data);
-    }
-
-    private void SaveData(DataDto data)
-    {
-        var validator = new DataDtoValidator();
-        var result = validator.Validate(data);
-        if (!result.IsValid)
-        {
-            throw new Exception("This should not happen");
-        }
-
-        // TODO: create update method?
-        session!.Data = data;
-        session.DataUpdated = true;
+        session?.UpdateData(data);
     }
 
     public void AddLink(LinkDto link)
@@ -183,12 +169,9 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
     {
         Messenger.Send<SessionStopping>();
 
-        if (session!.DataUpdated)
-        {
-            SaveSession();
-        }
+        SaveSession();
 
-        if (session.Data.Settings.ClearClipboardWhenSessionStops)
+        if (session!.Data.Settings.ClearClipboardWhenSessionStops)
         {
             clipboardService.ClearAsync();
         }
@@ -235,12 +218,12 @@ public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISession
 
         if (importSettings.IncludeSettings)
         {
-            SaveSettings(dataToImport.Settings);
+            UpdateSettings(dataToImport.Settings);
         }
 
         if (importSettings.IncludeFilters)
         {
-            SaveFilters(dataToImport.Filters);
+            UpdateFilters(dataToImport.Filters);
         }
 
         if (importSettings.IncludeLinks)

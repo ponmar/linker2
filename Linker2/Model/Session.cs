@@ -9,6 +9,7 @@ using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.Extensions;
 using Linker2.HttpHelpers;
+using Linker2.Validators;
 
 namespace Linker2.Model;
 
@@ -203,5 +204,18 @@ public class Session
         {
             ImageCache.Remove(linkToRemove.ThumbnailUrl);
         }
+    }
+
+    public void UpdateData(DataDto data)
+    {
+        var validator = new DataDtoValidator();
+        var result = validator.Validate(data);
+        if (!result.IsValid)
+        {
+            throw new Exception("This should not happen");
+        }
+
+        Data = data;
+        DataUpdated = true;
     }
 }
