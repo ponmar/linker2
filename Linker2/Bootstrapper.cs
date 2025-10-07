@@ -17,7 +17,7 @@ public static class Bootstrapper
             typeof(ILinkRepository),
             typeof(ISettingsProvider),
             typeof(ILinkModification),
-            typeof(ISessionSaver),
+            typeof(ISessionUpdater),
             typeof(ISessionUtils),
             typeof(IWebPageScraperProvider)]);
 

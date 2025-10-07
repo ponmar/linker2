@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="100" SharedSizeGroup="TagsColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="ThumbnailColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="FileAvailableIndicatorColumn" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" SharedSizeGroup="UrlColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="RatingColumn" />
                     <ColumnDefinition Width="auto" SharedSizeGroup="DateColumn" />
                 </Grid.ColumnDefinitions>

@@ -30,7 +30,7 @@ public interface ILinkModification
     void RemoveLink(string url);
 }
 
-public interface ISessionSaver
+public interface ISessionUpdater
 {
     void UpdateSettings(SettingsDto settings);
     void UpdateSelection(string? selectedUrl);
@@ -57,7 +57,7 @@ public interface IWebPageScraperProvider
     public IWebPageScraper HtmlAgilityPack { get; }
 }
 
-public class Model : ILinkRepository, ILinkModification, ISessionSaver, ISessionUtils, IWebPageScraperProvider, ISettingsProvider
+public class Model : ILinkRepository, ILinkModification, ISessionUpdater, ISessionUtils, IWebPageScraperProvider, ISettingsProvider
 {
     private Session? session = null;
 

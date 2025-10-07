@@ -46,13 +46,13 @@ public partial class SettingsViewModel : ObservableObject
 
     private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;
-    private readonly ISessionSaver sessionSaver;
+    private readonly ISessionUpdater sessionUpdater;
 
-    public SettingsViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionSaver sessionSaver, ISettingsProvider settingsProvider)
+    public SettingsViewModel(IFileSystem fileSystem, IDialogs dialogs, ISessionUpdater sessionUpdater, ISettingsProvider settingsProvider)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
-        this.sessionSaver = sessionSaver;
+        this.sessionUpdater = sessionUpdater;
 
         var settings = settingsProvider.Settings;
         showDetails = settings.ShowDetails;
@@ -127,7 +127,7 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        sessionSaver.UpdateSettings(settings);
+        sessionUpdater.UpdateSettings(settings);
         Messenger.Send<CloseDialog>();
     }
 }

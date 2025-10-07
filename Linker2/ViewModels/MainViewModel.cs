@@ -504,13 +504,20 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void LocateLinkFilesDirectory()
+    private async Task LocateLinkFilesDirectoryAsync()
     {
-        if (Session?.Data.Settings.LinkFilesDirectoryPath is not null)
+        var linkFilesDirPath = Session?.Data.Settings.LinkFilesDirectoryPath;
+        if (linkFilesDirPath is not null)
         {
+            if (!fileSystem.Directory.Exists(linkFilesDirPath))
+            {
+                await dialogs.ShowErrorDialogAsync($"Link files directory does not exist: {linkFilesDirPath}");
+                return;
+            }
+
             try
             {
-                fileUtils.SelectFileInExplorer(Session.Data.Settings.LinkFilesDirectoryPath);
+                fileUtils.SelectFileInExplorer(linkFilesDirPath);
             }
             catch
             {

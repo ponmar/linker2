@@ -45,7 +45,7 @@ public class Session
     public bool DataUpdated
     {
         get => dataUpdated;
-        set
+        private set
         {
             dataUpdated = value;
             Messenger.Send<DataUpdatedChanged>();

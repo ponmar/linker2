@@ -147,14 +147,10 @@ public partial class LinksViewModel : ObservableObject
     }
     private Session? session = null;
 
-    private readonly ISessionSaver sessionSaver;
-    private readonly ISessionUtils sessionUtils;
     private readonly ILinkFileRepository linkFileRepo;
 
-    public LinksViewModel(ISessionSaver sessionSaver, ISessionUtils sessionUtils, ILinkFileRepository linkFileRepo)
+    public LinksViewModel(ISessionUpdater sessionUpdater, ISessionUtils sessionUtils, ILinkFileRepository linkFileRepo)
     {
-        this.sessionSaver = sessionSaver;
-        this.sessionUtils = sessionUtils;
         this.linkFileRepo = linkFileRepo;
 
         foreach (var orderByValue in Enum.GetValues<OrderBy>())
@@ -184,7 +180,7 @@ public partial class LinksViewModel : ObservableObject
             var selectedUrl = selectedLink?.Url;
             if (selectedUrl != Session!.Data.SelectedUrl)
             {
-                sessionSaver.UpdateSelection(selectedUrl);
+                sessionUpdater.UpdateSelection(selectedUrl);
             }
 
             var tags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name).ToList();
@@ -203,7 +199,7 @@ public partial class LinksViewModel : ObservableObject
                 {
                     try
                     {
-                        sessionSaver.UpdateFilters(filters);
+                        sessionUpdater.UpdateFilters(filters);
                     }
                     catch
                     {
