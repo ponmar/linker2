@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Security;
-using System.Threading.Tasks;
 
 namespace Linker2.Model;
 
@@ -45,7 +44,7 @@ public interface ISessionUtils
     void StopSession();
     bool SaveSession();
     void ResetSessionTime();
-    Task OpenLinkWithExternalProgramAsync(LinkDto link);
+    void OpenLinkWithExternalProgramAsync(LinkDto link);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
 }
@@ -67,14 +66,12 @@ public class Model : ILinkRepository, ILinkModification, ISessionUpdater, ISessi
 
     private readonly IFileSystem fileSystem;
     private readonly IClipboardService clipboardService;
-    private readonly IDialogs dialogs;
     private readonly ILinkFileRepository linkFileRepo;
 
-    public Model(IFileSystem fileSystem, IClipboardService clipboardService, IDialogs dialogs, ILinkFileRepository linkFileRepo)
+    public Model(IFileSystem fileSystem, IClipboardService clipboardService, ILinkFileRepository linkFileRepo)
     {
         this.fileSystem = fileSystem;
         this.clipboardService = clipboardService;
-        this.dialogs = dialogs;
         this.linkFileRepo = linkFileRepo;
         this.RegisterForEvent<SessionStopped>(x => CleanupSession());
     }
@@ -123,24 +120,9 @@ public class Model : ILinkRepository, ILinkModification, ISessionUpdater, ISessi
         session?.ResetTime();
     }
 
-    public async Task OpenLinkWithExternalProgramAsync(LinkDto link)
+    public void OpenLinkWithExternalProgramAsync(LinkDto link)
     {
-        if (session is not null)
-        {
-            var openLinkCommand = session.Data.Settings.OpenLinkCommand.Split(";").FirstOrDefault(x => fileSystem.File.Exists(x));
-            if (openLinkCommand is null)
-            {
-                await dialogs.ShowErrorDialogAsync("No link command setting");
-                return;
-            }
-
-            var linkFilePath = linkFileRepo.GetLinkFilePath(link);
-            var openLinkArgs = linkFilePath is null ?
-                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url) :
-                session.Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + linkFilePath + '"');
-
-            ProcessRunner.Start(openLinkCommand, openLinkArgs);
-        }
+        session?.OpenLinkWithExternalProgramAsync(link);
     }
 
     // Throws on errors
@@ -189,21 +171,7 @@ public class Model : ILinkRepository, ILinkModification, ISessionUpdater, ISessi
 
     public void ChangePassword(SecureString currentPassword, SecureString newPassword)
     {
-        if (session is not null)
-        {
-            if (!session.HasPassword(newPassword))
-            {
-                throw new Exception("Wrong password");
-            }
-
-            var result = new PasswordValidator().Validate(newPassword);
-            if (!result.IsValid)
-            {
-                throw new ValidationException(result);
-            }
-
-            session.ChangePassword(newPassword);
-        }
+        session?.ChangePassword(currentPassword, newPassword);
     }
 
     public void Import(ImportSettings importSettings)

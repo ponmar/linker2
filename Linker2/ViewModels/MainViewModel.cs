@@ -158,7 +158,14 @@ public partial class MainViewModel : ObservableObject
 
     private void OpenLink(LinkDto linkDto)
     {
-        sessionUtils.OpenLinkWithExternalProgramAsync(linkDto);
+        try
+        {
+            sessionUtils.OpenLinkWithExternalProgramAsync(linkDto);
+        }
+        catch (Exception e)
+        {
+            dialogs.ShowErrorDialogAsync(e.Message);
+        }
     }
 
     [RelayCommand]

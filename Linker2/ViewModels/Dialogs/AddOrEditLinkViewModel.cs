@@ -16,6 +16,21 @@ using Linker2.Configuration;
 
 namespace Linker2.ViewModels.Dialogs;
 
+public partial class LinkTagViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private string name;
+    
+    [ObservableProperty]
+    private bool selected;
+
+    public LinkTagViewModel(string name, bool selected)
+    {
+        this.name = name;
+        this.selected = selected;
+    }
+}
+
 public partial class AddOrEditLinkViewModel : ObservableObject
 {
     [GeneratedRegex("[^a-zA-Z0-9 -]")]
@@ -29,10 +44,10 @@ public partial class AddOrEditLinkViewModel : ObservableObject
 
     partial void OnLinkUrlChanged(string value)
     {
-        if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(LinkTags) &&
+        if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(LinkTagsText) &&
             !string.IsNullOrEmpty(settingsProvider.Settings.DefaultTag))
         {
-            LinkTags = settingsProvider.Settings.DefaultTag;
+            LinkTagsText = settingsProvider.Settings.DefaultTag;
         }
 
         ValidateInput();
@@ -85,12 +100,15 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string linkTags = string.Empty;
+    private string linkTagsText = string.Empty;
 
-    partial void OnLinkTagsChanged(string value)
+    partial void OnLinkTagsTextChanged(string value)
     {
         ValidateInput();
+        UpdateAvailableTagsFromRepoAndText();
     }
+
+    public ObservableCollection<LinkTagViewModel> LinkTags { get; } = [];
 
     [ObservableProperty]
     private int? linkRating;
@@ -120,16 +138,16 @@ public partial class AddOrEditLinkViewModel : ObservableObject
 
         if (linkToEdit is not null)
         {
-            title = "Edit link";
+            title = "Edit Link";
             LinkUrl = linkToEdit.Url;
-            LinkTags = linkToEdit.Tags is null ? string.Empty : string.Join(',', linkToEdit.Tags);
+            LinkTagsText = linkToEdit.Tags is null ? string.Empty : string.Join(',', linkToEdit.Tags);
             LinkTitle = linkToEdit.Title ?? string.Empty;
             LinkRating = linkToEdit.Rating;
             LinkThumbnailUrl = linkToEdit.ThumbnailUrl ?? string.Empty;
         }
         else
         {
-            title = "Add link";
+            title = "Add Link";
             LinkUrl = string.Empty;
             try
             {
@@ -144,11 +162,21 @@ public partial class AddOrEditLinkViewModel : ObservableObject
             {
                 // ignore
             }
-            LinkTags = string.Empty;
+            LinkTagsText = string.Empty;
             LinkTitle = string.Empty;
             LinkRating = null;
             LinkThumbnailUrl = string.Empty;
         }
+    }
+
+    private void UpdateAvailableTagsFromRepoAndText()
+    {
+        var existingTags = linkRepository.Links.SelectMany(x => x.Tags).Distinct();
+        var tagsFromText = LinkTagsText.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Distinct();
+        var allTagsSorted = existingTags.Union(tagsFromText).Distinct().OrderBy(x => x).ToList();
+
+        LinkTags.Clear();
+        allTagsSorted.ForEach(x => LinkTags.Add(new LinkTagViewModel(x, tagsFromText.Contains(x))));
     }
 
     [RelayCommand]
@@ -168,10 +196,10 @@ public partial class AddOrEditLinkViewModel : ObservableObject
         LinkUrl = LinkUrl.Trim();
         LinkThumbnailUrl = LinkThumbnailUrl.Trim();
         LinkTitle = LinkTitle.Trim();
-        LinkTags = LinkTags.Trim();
+        LinkTagsText = LinkTagsText.Trim();
 
         var tags = new List<string>();
-        foreach (var tag in LinkTags.Split(','))
+        foreach (var tag in LinkTagsText.Split(','))
         {
             var trimmed = tag.Trim();
             if (!string.IsNullOrEmpty(trimmed))
@@ -179,7 +207,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
                 tags.Add(tag.Trim());
             }
         }
-        LinkTags = string.Join(",", tags);
+        LinkTagsText = string.Join(",", tags);
     }
 
     [RelayCommand]
@@ -236,7 +264,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
         }
 
         var loadedTitle = webPageScraper!.PageTitle;
-        var loadedThumbnailUrls = webPageScraper.GetImageSrcs(settingsProvider.Settings.ThumbnailImageIds);    
+        var loadedThumbnailUrls = webPageScraper.GetImageSrcs(settingsProvider.Settings.ThumbnailImageIds);
         if (loadedTitle is not null)
         {
             LinkTitle = loadedTitle;
@@ -254,12 +282,12 @@ public partial class AddOrEditLinkViewModel : ObservableObject
 
         LinkTitle = loadedTitle ?? string.Empty;
 
-        if (string.IsNullOrEmpty(LinkTags))
+        if (string.IsNullOrEmpty(LinkTagsText))
         {
-            LinkTags = settingsProvider.Settings.DefaultTag;
+            LinkTagsText = settingsProvider.Settings.DefaultTag;
         }
 
-        if (!EditingLink && LinkTags == settingsProvider.Settings.DefaultTag)
+        if (!EditingLink && LinkTagsText == settingsProvider.Settings.DefaultTag)
         {
             var tagsFromTitle = new List<string>();
             var existingTags = linkRepository.Links.SelectMany(x => x.Tags).Distinct();
@@ -275,21 +303,21 @@ public partial class AddOrEditLinkViewModel : ObservableObject
                 }
             }
 
-            if (!string.IsNullOrEmpty(LinkTags))
+            if (!string.IsNullOrEmpty(LinkTagsText))
             {
-                tagsFromTitle.Insert(0, LinkTags);
+                tagsFromTitle.Insert(0, LinkTagsText);
             }
-            LinkTags = string.Join(",", tagsFromTitle);
+            LinkTagsText = string.Join(",", tagsFromTitle);
         }
 
-        var parsedTags = LinkTags.Split(",").Distinct().ToList();
+        var parsedTags = LinkTagsText.Split(",").Distinct().ToList();
         parsedTags.Sort();
-        LinkTags = string.Join(",", parsedTags);
+        LinkTagsText = string.Join(",", parsedTags);
     }
 
     private ValidationResult ValidateInput()
     {
-        var tags = LinkTags.Split(",").ToList();
+        var tags = LinkTagsText.Split(",").ToList();
         var link = InputToDto(tags);
         var validator = new LinkDtoValidator();
         var validationResult = validator.Validate(link);
@@ -316,7 +344,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
             return;
         }
 
-        var sortedTags = LinkTags.Split(',').ToList();
+        var sortedTags = LinkTagsText.Split(',').ToList();
         sortedTags.Sort();
 
         var link = InputToDto(sortedTags);
@@ -359,5 +387,12 @@ public partial class AddOrEditLinkViewModel : ObservableObject
             index--;
             LinkThumbnailUrl = LinkThumbnailUrls[index];
         }
+    }
+
+    [RelayCommand]
+    private void ToggleTagSelection()
+    {
+        var selectedTags = LinkTags.Where(x => x.Selected).Select(x => x.Name);
+        LinkTagsText = string.Join(",", selectedTags.OrderBy(x => x));
     }
 }

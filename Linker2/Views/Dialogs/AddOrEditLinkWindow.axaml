@@ -22,7 +22,7 @@
         <converters:RatingToCharConverter x:Key="RatingToCharConverter" />
     </Window.Resources>
 
-    <Grid ColumnDefinitions="auto,*,auto" RowDefinitions="auto,auto,auto,auto,auto,auto,*,auto">
+    <Grid ColumnDefinitions="auto,*,auto" RowDefinitions="auto,auto,auto,auto,auto,auto,auto,*,auto">
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
@@ -88,16 +88,36 @@
             Margin="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
-            Text="{Binding LinkTags}" />
+            Text="{Binding LinkTagsText}" />
 
+		<WrapPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="3,0,3,3">
+			<ItemsControl
+                    ItemsSource="{Binding LinkTags}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<ToggleButton
+							Margin="2"
+							Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=((vm:AddOrEditLinkViewModel)DataContext).ToggleTagSelectionCommand}"
+							Content="{Binding Name}"
+							IsChecked="{Binding Selected}" />
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapPanel Orientation="Horizontal" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</WrapPanel>
+		
         <TextBlock
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Text="Rating:" />
         <StackPanel
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="5"
@@ -143,13 +163,13 @@
         </StackPanel>
 
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Text="Thumbnail:" />
         <TextBox
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="5"
@@ -159,7 +179,7 @@
             ToolTip.Tip="Enter an image URL" />
 
 		<StackPanel
-	        Grid.Row="5"
+	        Grid.Row="6"
 	        Grid.Column="1"
 	        Grid.ColumnSpan="2"
 	        HorizontalAlignment="Stretch"
@@ -186,7 +206,7 @@
 		</StackPanel>
 
 		<Image
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Margin="5"
@@ -195,7 +215,7 @@
             Source="{Binding LinkThumbnailUrlBitmap^}" />
 
         <StackPanel
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Margin="10"

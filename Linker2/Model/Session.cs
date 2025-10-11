@@ -120,13 +120,40 @@ public class Session
         Messenger.Send(new SessionStopped(Data.Settings));
     }
 
-    public void ChangePassword(SecureString newPassword)
+    public void ChangePassword(SecureString currentPassword, SecureString newPassword)
     {
+        if (!HasPassword(newPassword))
+        {
+            throw new Exception("Wrong password");
+        }
+
+        var result = new PasswordValidator().Validate(newPassword);
+        if (!result.IsValid)
+        {
+            throw new ValidationException(result);
+        }
+
         password = newPassword;
         DataUpdated = true;
         Save();
 
         ImageCache.ChangeKey(AesUtils.PasswordToKey(newPassword));
+    }
+
+    public void OpenLinkWithExternalProgramAsync(LinkDto link)
+    {
+        var openLinkCommand = Data.Settings.OpenLinkCommand.Split(";").FirstOrDefault(x => fileSystem.File.Exists(x));
+        if (openLinkCommand is null)
+        {
+            throw new Exception("No link command setting");
+        }
+
+        var linkFilePath = linkFileRepo.GetLinkFilePath(link);
+        var openLinkArgs = linkFilePath is null ?
+            Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, link.Url) :
+            Data.Settings.OpenLinkArguments.Replace(SettingsDtoValidator.UrlReplaceString, '"' + linkFilePath + '"');
+
+        ProcessRunner.Start(openLinkCommand, openLinkArgs);
     }
 
     public bool Save()
