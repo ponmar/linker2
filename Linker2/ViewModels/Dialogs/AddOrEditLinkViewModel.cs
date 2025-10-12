@@ -67,19 +67,21 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasPreviousThumbnailUrl))]
     private string linkThumbnailUrl = string.Empty;
 
-    public Task<Bitmap?> LinkThumbnailUrlBitmap => ImageHelper.LoadFromWeb(LinkThumbnailUrl);
-
-    [ObservableProperty]
-    private string linkThumbnailUrlIndexText = string.Empty;
-
-    public ObservableCollection<string> LinkThumbnailUrls { get; } = [];
-
     partial void OnLinkThumbnailUrlChanged(string value)
     {
         var index = LinkThumbnailUrls.IndexOf(value);
         LinkThumbnailUrlIndexText = index == -1 ? "" : $"{index + 1}/{LinkThumbnailUrls.Count}";
         ValidateInput();
     }
+
+    public Task<Bitmap?> LinkThumbnailUrlBitmap =>
+        sessionUtils.TryGetImage(LinkThumbnailUrl, out var bitmap) ? Task.FromResult(bitmap) :
+        ImageHelper.LoadFromWeb(LinkThumbnailUrl);
+
+    [ObservableProperty]
+    private string linkThumbnailUrlIndexText = string.Empty;
+
+    public ObservableCollection<string> LinkThumbnailUrls { get; } = [];
 
     public bool HasNextThumbnailUrl
     {
@@ -125,8 +127,9 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     private readonly ILinkRepository linkRepository;
     private readonly IWebPageScraperProvider webPageScraperProvider;
     private readonly ISettingsProvider settingsProvider;
+    private readonly ISessionUtils sessionUtils;
 
-    public AddOrEditLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, IClipboardService clipboardService, LinkDto? linkToEdit = null)
+    public AddOrEditLinkViewModel(IFileSystem fileSystem, IDialogs dialogs, ILinkModification linkModification, ILinkRepository linkRepository, IWebPageScraperProvider webPageScraperProvider, ISettingsProvider settingsProvider, IClipboardService clipboardService, ISessionUtils sessionUtils, LinkDto? linkToEdit = null)
     {
         this.fileSystem = fileSystem;
         this.dialogs = dialogs;
@@ -135,6 +138,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
         this.webPageScraperProvider = webPageScraperProvider;
         this.settingsProvider = settingsProvider;
         this.linkToEdit = linkToEdit;
+        this.sessionUtils = sessionUtils;
 
         if (linkToEdit is not null)
         {

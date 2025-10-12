@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media.Imaging;
 using Linker2.Configuration;
 using Linker2.HttpHelpers;
 using Linker2.Validators;
@@ -47,6 +48,7 @@ public interface ISessionUtils
     void OpenLinkWithExternalProgramAsync(LinkDto link);
     void Import(ImportSettings importSettings);
     void ChangePassword(SecureString currentPassword, SecureString newPassword);
+    bool TryGetImage(string filenameHash, out Bitmap? bitmap);
 }
 
 public interface IWebPageScraperProvider
@@ -123,6 +125,17 @@ public class Model : ILinkRepository, ILinkModification, ISessionUpdater, ISessi
     public void OpenLinkWithExternalProgramAsync(LinkDto link)
     {
         session?.OpenLinkWithExternalProgramAsync(link);
+    }
+
+    public bool TryGetImage(string filenameHash, out Bitmap? bitmap)
+    {
+        if (session is not null)
+        {
+            return session.ImageCache.TryGet(filenameHash, out bitmap);
+        }
+
+        bitmap = null;
+        return false;
     }
 
     // Throws on errors

@@ -48,10 +48,15 @@ public class ImageCache
         }
     }
 
+    public bool TryGet(string filenameHash, out Bitmap? bitmap)
+    {
+        var filePath = FilenameHashToFilePath(filenameHash);
+        return images.TryGetValue(filePath, out bitmap);
+    }
+
     public Bitmap Add(string filenameHash, string imageUrl)
     {
         var filePath = FilenameHashToFilePath(filenameHash);
-
         if (images.TryGetValue(filePath, out Bitmap? value))
         {
             return value;
