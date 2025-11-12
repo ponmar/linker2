@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.Model;
-using Linker2.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
