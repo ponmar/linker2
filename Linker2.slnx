@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Linker2.Desktop/Linker2.Desktop.csproj" />
+  <Project Path="Linker2/Linker2.csproj" />
+</Solution>
