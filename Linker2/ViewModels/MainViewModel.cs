@@ -533,7 +533,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void UpdateLinkFiles()
+    private void UpdateAvailableLinkFiles()
     {
         Session?.UpdateAvailableLinkFiles();
     }

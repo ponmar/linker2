@@ -23,18 +23,17 @@
 				<MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
 			</MenuItem>
 			<MenuItem Header="_Session" IsEnabled="{Binding SessionStarted}">
+				<MenuItem Header="_Save Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" HotKey="Ctrl+S"/>
+				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
 				<MenuItem Header="_Settings..." Command="{Binding OpenSettingsCommand}" />
 				<MenuItem Header="_Change password..." Command="{Binding OpenChangePasswordCommand}" />
 				<Separator />
 				<MenuItem Header="_Locate link files directory" Command="{Binding LocateLinkFilesDirectoryCommand}"/>
-				<MenuItem Header="_Update link files" Command="{Binding UpdateLinkFilesCommand}"/>
+				<MenuItem Header="_Reload link files" Command="{Binding UpdateAvailableLinkFilesCommand}"/>
 				<Separator />
 				<MenuItem Header="_Import..." Command="{Binding ImportCommand}" />
 				<MenuItem Header="_Export..." Command="{Binding ExportCommand}" />
 				<MenuItem Header="_Export links..." Command="{Binding ExportFilteredLinksCommand}" />
-				<Separator />
-				<MenuItem Header="_Save Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding UnsavedChanges}" HotKey="Ctrl+S"/>
-				<MenuItem Header="_Close" Command="{Binding CloseCommand}" />
 			</MenuItem>
 			<MenuItem Header="Link" IsEnabled="{Binding SessionStarted}">
 				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}"/>
