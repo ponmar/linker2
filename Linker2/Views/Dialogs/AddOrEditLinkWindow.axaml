@@ -9,7 +9,7 @@
     x:DataType="vm:AddOrEditLinkViewModel"
     Title="{Binding Title}"
     Width="500"
-    Height="500"
+    Height="700"
     MinWidth="350"
     MinHeight="300"
     d:DesignHeight="450"
