@@ -1,7 +1,8 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Linker2.Extensions;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 
 namespace Linker2.HttpHelpers;
 
@@ -40,7 +41,6 @@ public class FirefoxWebPageScraper : IWebPageScraper
         {
             return false;
         }
-
     }
 
     public string? PageTitle
@@ -65,57 +65,63 @@ public class FirefoxWebPageScraper : IWebPageScraper
 
     public List<string> GetImageSrcs(List<string> preferredImageIds)
     {
-        var result = new List<string>();
-        foreach (var imageId in preferredImageIds)
+        var results = new List<string>();
+
+        // Images inside divs with preferred classes
+        var divElements = driver.FindElements(By.TagName("div"));
+        foreach (var divElement in divElements)
         {
-            var imageSrc = GetImageSrc(imageId);
-            if (imageSrc is not null)
+            if (divElement.HasAnyClass(preferredImageIds.ToArray()))
             {
-                result.Add(imageSrc);
+                divElement.FindElements(By.TagName("img")).ToList().ForEach(imgTag =>
+                {
+                    var imageSrc = imgTag.GetDomAttribute("src");
+                    if (IsValidImageSrc(imageSrc) && !results.Contains(imageSrc!))
+                    {
+                        results.Add(imageSrc!);
+                    }
+                });
             }
         }
 
-        var allImageSrcs = GetAllImageSrcs();
-        result.AddRange(allImageSrcs);
-
-        return result.Distinct().ToList();
-    }
-
-    private string? GetImageSrc(string imageId)
-    {
-        try
-        {
-            var imgTag = driver.FindElement(By.Id(imageId));
-            return imgTag.GetDomAttribute("src");
-        }
-        catch (InvalidSelectorException)
-        {
-        }
-        catch (NoSuchElementException)
-        {
-        }
-        return null;
-    }
-
-    private List<string> GetAllImageSrcs()
-    {
-        var result = new List<string>();
-        foreach (var imageTag in driver.FindElements(By.TagName("img")))
+        // Find images by IDs
+        foreach (var imageId in preferredImageIds)
         {
             try
             {
-                var imageSrc = imageTag.GetDomAttribute("src");
-                if (imageSrc is not null &&
-                    (imageSrc.StartsWith("http://") || imageSrc.StartsWith("https://")) &&
-                    !imageSrc.Contains("svg"))
+                var imgTag = driver.FindElement(By.Id(imageId));
+                var imageSrc = imgTag.GetDomAttribute("src");
+                if (IsValidImageSrc(imageSrc) && !results.Contains(imageSrc!))
                 {
-                    result.Add(imageSrc);
+                    results.Add(imageSrc!);
                 }
             }
-            catch
+            catch (InvalidSelectorException)
+            {
+            }
+            catch (NoSuchElementException)
             {
             }
         }
-        return result;
+
+        // All other images
+        var imgElements = driver.FindElements(By.TagName("img"));
+        foreach (var imgElement in imgElements)
+        {
+            var imageSrc = imgElement.GetDomAttribute("src");
+            if (IsValidImageSrc(imageSrc) && !results.Contains(imageSrc!))
+            {
+                results.Add(imageSrc!);
+            }
+        }
+
+        return results;
+    }
+
+    private static bool IsValidImageSrc(string? imageSrc)
+    {
+        return imageSrc is not null &&
+               (imageSrc.StartsWith("http://") || imageSrc.StartsWith("https://")) &&
+               !imageSrc.Contains("svg");
     }
 }
