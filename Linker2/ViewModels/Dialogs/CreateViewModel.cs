@@ -16,11 +16,11 @@ public partial class CreateViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCreate))]
-    private string filename = string.Empty;
+    public partial string Filename { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCreate))]
-    private string password = string.Empty;
+    public partial string Password { get; set; } = string.Empty;
 
     public bool CanCreate =>
         !string.IsNullOrEmpty(Filename) &&

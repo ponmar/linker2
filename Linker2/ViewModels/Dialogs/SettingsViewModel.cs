@@ -12,37 +12,37 @@ namespace Linker2.ViewModels.Dialogs;
 public partial class SettingsViewModel : ObservableObject
 {
     [ObservableProperty]
-    private bool showDetails;
+    public partial bool ShowDetails { get; set; }
 
     [ObservableProperty]
-    private bool clearClipboardWhenSessionStops;
+    public partial bool ClearClipboardWhenSessionStops { get; set; }
 
     [ObservableProperty]
-    private string openLinkCommands;
+    public partial string OpenLinkCommands { get; set; }
 
     [ObservableProperty]
-    private string openLinkArguments;
+    public partial string OpenLinkArguments { get; set; }
 
     [ObservableProperty]
-    private string lockAfterSeconds;
+    public partial string LockAfterSeconds { get; set; }
 
     [ObservableProperty]
-    private string? geckoDriverPath;
+    public partial string? GeckoDriverPath { get; set; }
 
     [ObservableProperty]
-    private string thumbnailImageIds;
+    public partial string ThumbnailImageIds { get; set; }
 
     [ObservableProperty]
-    private string defaultTag;
+    public partial string DefaultTag { get; set; }
 
     [ObservableProperty]
-    private bool quitWhenSessionTimeouts;
+    public partial bool QuitWhenSessionTimeouts { get; set; }
 
     [ObservableProperty]
-    private bool deselectFileWhenSessionTimeouts;
+    public partial bool DeselectFileWhenSessionTimeouts { get; set; }
 
     [ObservableProperty]
-    private string linkFilesDirectoryPath;
+    public partial string LinkFilesDirectoryPath { get; set; }
 
     private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;
@@ -55,15 +55,15 @@ public partial class SettingsViewModel : ObservableObject
         this.sessionUpdater = sessionUpdater;
 
         var settings = settingsProvider.Settings;
-        showDetails = settings.ShowDetails;
-        clearClipboardWhenSessionStops = settings.ClearClipboardWhenSessionStops;
-        openLinkCommands = settings.OpenLinkCommand;
-        openLinkArguments = settings.OpenLinkArguments;
-        lockAfterSeconds = settings.LockAfterSeconds.ToString();
-        defaultTag = settings.DefaultTag;
-        geckoDriverPath = settings.GeckoDriverPath;
-        thumbnailImageIds = string.Join(',', settings.ThumbnailImageIds);
-        quitWhenSessionTimeouts = settings.QuitWhenSessionTimeouts;
+        ShowDetails = settings.ShowDetails;
+        ClearClipboardWhenSessionStops = settings.ClearClipboardWhenSessionStops;
+        OpenLinkCommands = settings.OpenLinkCommand;
+        OpenLinkArguments = settings.OpenLinkArguments;
+        LockAfterSeconds = settings.LockAfterSeconds.ToString();
+        DefaultTag = settings.DefaultTag;
+        GeckoDriverPath = settings.GeckoDriverPath;
+        ThumbnailImageIds = string.Join(',', settings.ThumbnailImageIds);
+        QuitWhenSessionTimeouts = settings.QuitWhenSessionTimeouts;
         DeselectFileWhenSessionTimeouts = settings.DeselectFileWhenSessionTimeouts;
         LinkFilesDirectoryPath = settings.LinkFilesDirectoryPath ?? string.Empty;
     }

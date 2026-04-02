@@ -18,13 +18,13 @@ namespace Linker2.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string password = string.Empty;
+    public partial string Password { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SessionStarted))]
     [NotifyPropertyChangedFor(nameof(SessionClosedAndFileSelected))]
     [NotifyPropertyChangedFor(nameof(UnsavedChanges))]
-    private Session? session;
+    public partial Session? Session { get; set; }
 
     public bool SessionStarted => Session is not null;
 
@@ -34,15 +34,14 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SessionClosedAndFileSelected))]
-    private string? selectedFilename = null;
-
+    public partial string? SelectedFilename { get; set; } = null;
     public ObservableCollection<string> Filenames { get; } = [];
 
     [ObservableProperty]
-    private string title = Constants.AppName;
+    public partial string Title { get; set; } = Constants.AppName;
 
     [ObservableProperty]
-    private string backgroundText = Constants.AppName;
+    public partial string BackgroundText { get; set; } = Constants.AppName;
 
     public bool LinkIsSelected => SelectedLink is not null;
     public bool LinkFileExists => SelectedLink is not null && linkFileRepo.LinkFileExists(SelectedLink);
@@ -52,7 +51,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(LinkIsSelected))]
     [NotifyPropertyChangedFor(nameof(LinkFileExists))]
     [NotifyPropertyChangedFor(nameof(LinkHasThumbnail))]
-    private LinkDto? selectedLink = null;
+    public partial LinkDto? SelectedLink { get; set; } = null;
 
     private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;

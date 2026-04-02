@@ -16,10 +16,10 @@ namespace Linker2.ViewModels;
 public partial class LinkTagViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string name;
+    public partial string Name { get; set; }
 
     [ObservableProperty]
-    private bool isChecked;
+    public partial bool IsChecked { get; set; }
 
     public LinkTagViewModel(string name, bool isChecked)
     {
@@ -38,20 +38,20 @@ public partial class LinkViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(ThumbnailHeight))]
     [NotifyPropertyChangedFor(nameof(FontSize))]
     [NotifyPropertyChangedFor(nameof(RatingFontSize))]
-    private bool showDetails;
+    public partial bool ShowDetails { get; set; }
 
     public int ThumbnailWidth => ShowDetails ? OriginalImageWidth / 3 : OriginalImageWidth;
 
     public int ThumbnailHeight => ShowDetails ? OriginalImageHeight / 3 : OriginalImageHeight;
 
     [ObservableProperty]
-    private bool fileExists;
+    public partial bool FileExists { get; set; }
 
     public int FontSize => ShowDetails ? 12 : 18;
     public int RatingFontSize => ShowDetails ? 20 : 30;
 
     [ObservableProperty]
-    private string title = string.Empty;
+    public partial string Title { get; set; } = string.Empty;
 
     public string VisualizedDateTime => LinkDto.DateTime.ToString("yyyy-MM-dd HH:mm");
     public string Url => LinkDto.Url;
@@ -61,10 +61,10 @@ public partial class LinkViewModel : ObservableObject
     public bool HasThumbnailUrl => !string.IsNullOrEmpty(LinkDto.ThumbnailUrl);
 
     [ObservableProperty]
-    private Bitmap? thumbnailImage;
+    public partial Bitmap? ThumbnailImage { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<LinkTagViewModel> tags = [];
+    public partial ObservableCollection<LinkTagViewModel> Tags { get; set; } = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RatingFontSize))]
@@ -74,7 +74,7 @@ public partial class LinkViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(RatingDescription))]
     [NotifyPropertyChangedFor(nameof(ThumbnailUrl))]
     [NotifyPropertyChangedFor(nameof(HasThumbnailUrl))]
-    private LinkDto linkDto;
+    public partial LinkDto LinkDto { get; set; }
 
     partial void OnLinkDtoChanged(LinkDto value)
     {
@@ -88,7 +88,7 @@ public partial class LinkViewModel : ObservableObject
     public LinkViewModel(LinkDto linkDto, IEnumerable<string> selectedTags, bool showDetails, ImageCache imageCache)
     {
         this.imageCache = imageCache;
-        this.linkDto = linkDto;
+        LinkDto = linkDto;
         OnLinkDtoChanged(linkDto);
 
         ShowDetails = showDetails;

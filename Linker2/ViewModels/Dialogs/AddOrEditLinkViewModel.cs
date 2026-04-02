@@ -19,14 +19,14 @@ namespace Linker2.ViewModels.Dialogs;
 public partial class LinkTagViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string name;
-    
+    public partial string Name { get; set; }
+
     [ObservableProperty]
     private bool selected;
 
     public LinkTagViewModel(string name, bool selected)
     {
-        this.name = name;
+        Name = name;
         this.selected = selected;
     }
 }
@@ -37,10 +37,10 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     private static partial Regex TagRegex();
 
     [ObservableProperty]
-    private string title;
+    public partial string Title { get; set; }
 
     [ObservableProperty]
-    private string linkUrl = string.Empty;
+    public partial string LinkUrl { get; set; } = string.Empty;
 
     partial void OnLinkUrlChanged(string value)
     {
@@ -54,7 +54,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string linkTitle = string.Empty;
+    public partial string LinkTitle { get; set; } = string.Empty;
 
     partial void OnLinkTitleChanged(string value)
     {
@@ -65,7 +65,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(LinkThumbnailUrlBitmap))]
     [NotifyPropertyChangedFor(nameof(HasNextThumbnailUrl))]
     [NotifyPropertyChangedFor(nameof(HasPreviousThumbnailUrl))]
-    private string linkThumbnailUrl = string.Empty;
+    public partial string LinkThumbnailUrl { get; set; } = string.Empty;
 
     partial void OnLinkThumbnailUrlChanged(string value)
     {
@@ -79,8 +79,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
         ImageHelper.LoadFromWeb(LinkThumbnailUrl);
 
     [ObservableProperty]
-    private string linkThumbnailUrlIndexText = string.Empty;
-
+    public partial string LinkThumbnailUrlIndexText { get; set; } = string.Empty;
     public ObservableCollection<string> LinkThumbnailUrls { get; } = [];
 
     public bool HasNextThumbnailUrl
@@ -102,7 +101,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string linkTagsText = string.Empty;
+    public partial string LinkTagsText { get; set; } = string.Empty;
 
     partial void OnLinkTagsTextChanged(string value)
     {
@@ -113,13 +112,13 @@ public partial class AddOrEditLinkViewModel : ObservableObject
     public ObservableCollection<LinkTagViewModel> LinkTags { get; } = [];
 
     [ObservableProperty]
-    private int? linkRating;
+    public partial int? LinkRating { get; set; }
 
     public bool EditingLink => linkToEdit is not null;
     private readonly LinkDto? linkToEdit;
 
     [ObservableProperty]
-    private bool savePossible;
+    public partial bool SavePossible { get; set; }
 
     private readonly IFileSystem fileSystem;
     private readonly IDialogs dialogs;
@@ -142,7 +141,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
 
         if (linkToEdit is not null)
         {
-            title = "Edit Link";
+            Title = "Edit Link";
             LinkUrl = linkToEdit.Url;
             LinkTagsText = linkToEdit.Tags is null ? string.Empty : string.Join(',', linkToEdit.Tags);
             LinkTitle = linkToEdit.Title ?? string.Empty;
@@ -151,7 +150,7 @@ public partial class AddOrEditLinkViewModel : ObservableObject
         }
         else
         {
-            title = "Add Link";
+            Title = "Add Link";
             LinkUrl = string.Empty;
             try
             {

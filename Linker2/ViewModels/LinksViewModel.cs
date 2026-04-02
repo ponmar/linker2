@@ -17,7 +17,7 @@ public partial class TagFilterViewModel : ObservableObject
     public string Name { get; }
 
     [ObservableProperty]
-    private bool isChecked;
+    public partial bool IsChecked { get; set; }
 
     public TagFilterViewModel(string name, bool isChecked)
     {
@@ -37,7 +37,7 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<OrderBy> OrderByValues { get; } = [];
 
     [ObservableProperty]
-    private OrderBy selectedOrderBy = OrderBy.Rating;
+    public partial OrderBy SelectedOrderBy { get; set; } = OrderBy.Rating;
 
     partial void OnSelectedOrderByChanged(OrderBy value)
     {
@@ -47,7 +47,7 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<LinkFileAvailability> CachedValues { get; } = [];
 
     [ObservableProperty]
-    private LinkFileAvailability? selectedCachedValue;
+    public partial LinkFileAvailability? SelectedCachedValue { get; set; }
 
     partial void OnSelectedCachedValueChanged(LinkFileAvailability? value)
     {
@@ -55,7 +55,7 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private bool combineTagFilters;
+    public partial bool CombineTagFilters { get; set; }
 
     partial void OnCombineTagFiltersChanged(bool value)
     {
@@ -68,7 +68,7 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<string> SiteFilteringValues { get; } = [];
 
     [ObservableProperty]
-    private string? selectedSiteFiltering;
+    public partial string? SelectedSiteFiltering { get; set; }
 
     partial void OnSelectedSiteFilteringChanged(string? value)
     {
@@ -78,7 +78,7 @@ public partial class LinksViewModel : ObservableObject
     public ObservableCollection<string> RatingFilteringValues { get; } = [];
 
     [ObservableProperty]
-    private string? selectedRatingFiltering;
+    public partial string? SelectedRatingFiltering { get; set; }
 
     partial void OnSelectedRatingFilteringChanged(string? value)
     {
@@ -86,10 +86,10 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private ObservableCollection<TagFilterViewModel> tagFilters = [];
+    public partial ObservableCollection<TagFilterViewModel> TagFilters { get; set; } = [];
 
     [ObservableProperty]
-    private bool reversedOrder = false;
+    public partial bool ReversedOrder { get; set; } = false;
 
     partial void OnReversedOrderChanged(bool value)
     {
@@ -97,7 +97,7 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string filterText = string.Empty;
+    public partial string FilterText { get; set; } = string.Empty;
 
     partial void OnFilterTextChanged(string value)
     {
@@ -105,7 +105,7 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string hiddenTagsText = string.Empty;
+    public partial string HiddenTagsText { get; set; } = string.Empty;
 
     partial void OnHiddenTagsTextChanged(string value)
     {
@@ -113,10 +113,10 @@ public partial class LinksViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string filtersHeading = string.Empty;
+    public partial string FiltersHeading { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private LinkViewModel? selectedLink;
+    public partial LinkViewModel? SelectedLink { get; set; }
 
     partial void OnSelectedLinkChanging(LinkViewModel? value)
     {
@@ -177,16 +177,16 @@ public partial class LinksViewModel : ObservableObject
 
         this.RegisterForEvent<SessionStopping>((x) =>
         {
-            var selectedUrl = selectedLink?.Url;
+            var selectedUrl = SelectedLink?.Url;
             if (selectedUrl != Session!.Data.SelectedUrl)
             {
                 sessionUpdater.UpdateSelection(selectedUrl);
             }
 
-            var tags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name).ToList();
-            var text = string.IsNullOrEmpty(filterText) ? null : filterText;
-            var hideTags = string.IsNullOrEmpty(hiddenTagsText) ? null : hiddenTagsText;
-            var filters = new FiltersDto(text, SelectedRatingFiltering, SelectedSiteFiltering, tags, combineTagFilters, hideTags, SelectedOrderBy, ReversedOrder, SelectedCachedValue);
+            var tags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name).ToList();
+            var text = string.IsNullOrEmpty(FilterText) ? null : FilterText;
+            var hideTags = string.IsNullOrEmpty(HiddenTagsText) ? null : HiddenTagsText;
+            var filters = new FiltersDto(text, SelectedRatingFiltering, SelectedSiteFiltering, tags, CombineTagFilters, hideTags, SelectedOrderBy, ReversedOrder, SelectedCachedValue);
 
             var prevFiltersJson = JsonConvert.SerializeObject(Session!.Data.Filters);
             var filtersJson = JsonConvert.SerializeObject(filters);
@@ -224,7 +224,7 @@ public partial class LinksViewModel : ObservableObject
 
         this.RegisterForEvent<LinkAdded>((m) =>
         {
-            var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
+            var selectedTags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             var minimize = session!.Data.Settings.ShowDetails;
             allLinks.Add(new LinkViewModel(m.Link, selectedTags, minimize, session!.ImageCache) { FileExists = linkFileRepo.LinkFileExists(m.Link) });
             ReloadAvailableTags();
@@ -240,7 +240,7 @@ public partial class LinksViewModel : ObservableObject
             var updatedLink = allLinks.First(x => x.Url == m.Link.Url);
             updatedLink.LinkDto = m.Link;
             updatedLink.FileExists = linkFileRepo.LinkFileExists(m.Link);
-            var selectedTags = tagFilters.Where(x => x.IsChecked).Select(x => x.Name);
+            var selectedTags = TagFilters.Where(x => x.IsChecked).Select(x => x.Name);
             updatedLink.UpdateSelectedTags(selectedTags);
 
             ReloadAvailableSites();

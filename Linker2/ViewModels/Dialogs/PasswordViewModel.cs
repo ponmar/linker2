@@ -12,11 +12,11 @@ public partial class PasswordViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSave))]
-    private string currentPassword = string.Empty;
+    public partial string CurrentPassword { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSave))]
-    private string newPassword = string.Empty;
+    public partial string NewPassword { get; set; } = string.Empty;
 
     public bool CanSave => CurrentPassword.Length > 0 && NewPassword.Length > 0;
 
