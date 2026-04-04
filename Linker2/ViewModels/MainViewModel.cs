@@ -1,4 +1,11 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.IO.Abstractions;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,12 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using Linker2.Configuration;
 using Linker2.Cryptography;
 using Linker2.Model;
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Linker2.ViewModels;
 
@@ -438,6 +440,68 @@ public partial class MainViewModel : ObservableObject
             {
                 await dialogs.ShowErrorDialogAsync($"Unable to export links to {exportFilePath}:\n{e.Message}");
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task ExportFilteredLinksM3u()
+    {
+        if (Session is null)
+        {
+            return;
+        }
+
+        var m3uDir = Session.Data.Settings.LinkFilesDirectoryPath;
+        if (m3uDir is null)
+        {
+            await dialogs.ShowErrorDialogAsync($"No configured link files directory");
+            return;
+        }
+
+        var filteredLinkVms = ServiceLocator.Resolve<LinksViewModel>().Links;
+        if (!filteredLinkVms.Any())
+        {
+            await dialogs.ShowErrorDialogAsync($"No links to export");
+            return;
+        }
+
+        var linkVmsWithFile = filteredLinkVms.Where(x => x.FileExists);
+        if (!linkVmsWithFile.Any())
+        {
+            await dialogs.ShowErrorDialogAsync($"No links with file available");
+            return;
+        }
+
+        var m3uPath = Path.Combine(m3uDir, "export.m3u");
+        if (fileSystem.File.Exists(m3uPath))
+        {
+            var overwriteConfirmed = await dialogs.ShowConfirmDialogAsync($"File {m3uPath} already exists. Overwrite?");
+            if (!overwriteConfirmed)
+            {
+                return;
+            }
+        }
+
+        var m3uContentSs = new StringBuilder();
+        m3uContentSs.AppendLine("#EXTM3U");
+        foreach (var linkDto in linkVmsWithFile.Select(x => x.LinkDto))
+        {
+            var filePath = linkFileRepo.GetLinkFilePath(linkDto);
+            m3uContentSs.AppendLine($"#EXTINF:-1,{linkDto.Title ?? filePath}");
+            m3uContentSs.AppendLine(filePath);
+            m3uContentSs.AppendLine();
+        }
+
+        var m3uContent = m3uContentSs.ToString();
+        fileSystem.File.WriteAllText(m3uPath, m3uContent);
+
+        try
+        {
+            fileUtils.SelectFileInExplorer(m3uPath);
+        }
+        catch
+        {
+            // Windows only - ignore in Linux
         }
     }
 

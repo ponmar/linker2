@@ -34,6 +34,7 @@
 				<MenuItem Header="_Import..." Command="{Binding ImportCommand}" />
 				<MenuItem Header="_Export..." Command="{Binding ExportCommand}" />
 				<MenuItem Header="_Export links..." Command="{Binding ExportFilteredLinksCommand}" />
+				<MenuItem Header="_Export m3u playlist for link files..." Command="{Binding ExportFilteredLinksM3uCommand}" />
 			</MenuItem>
 			<MenuItem Header="Link" IsEnabled="{Binding SessionStarted}">
 				<MenuItem Header="_Add..." Command="{Binding OpenAddLinkCommand}"/>
