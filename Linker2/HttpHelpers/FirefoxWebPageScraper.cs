@@ -12,12 +12,7 @@ public class FirefoxWebPageScraper : IWebPageScraper
 
     public FirefoxWebPageScraper(string driverPath, bool headless)
     {
-        var options = new FirefoxOptions();
-        if (headless)
-        {
-            options.AddArgument("-headless");
-        }
-        driver = new FirefoxDriver(driverPath, options);
+        driver = new FirefoxDriverBuilder().WithDriverPath(driverPath).WithHeadless(headless).Build();
     }
 
     public void Close()
