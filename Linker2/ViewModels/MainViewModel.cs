@@ -482,18 +482,18 @@ public partial class MainViewModel : ObservableObject
             }
         }
 
-        var m3uContentSs = new StringBuilder();
-        m3uContentSs.AppendLine("#EXTM3U");
+        var playlistContentSs = new StringBuilder();
+        playlistContentSs.AppendLine("#EXTM3U");
         foreach (var linkDto in linkVmsWithFile.Select(x => x.LinkDto))
         {
             var absoluteFilePath = linkFileRepo.GetLinkFilePath(linkDto);
             var filePath = Path.GetFileName(absoluteFilePath);
-            m3uContentSs.AppendLine($"#EXTINF:-1 {linkDto.Title ?? filePath}");
-            m3uContentSs.AppendLine(filePath);
-            m3uContentSs.AppendLine();
+            playlistContentSs.AppendLine($"#EXTINF:-1 {linkDto.Title ?? filePath}");
+            playlistContentSs.AppendLine(filePath);
+            playlistContentSs.AppendLine();
         }
 
-        var playlistContent = m3uContentSs.ToString();
+        var playlistContent = playlistContentSs.ToString();
         fileSystem.File.WriteAllText(playlistPath, playlistContent);
 
         try
