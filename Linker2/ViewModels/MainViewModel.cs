@@ -444,15 +444,15 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ExportFilteredLinksM3u()
+    private async Task ExportFilteredLinksPlaylist()
     {
         if (Session is null)
         {
             return;
         }
 
-        var m3uDir = Session.Data.Settings.LinkFilesDirectoryPath;
-        if (m3uDir is null)
+        var playlistDir = Session.Data.Settings.LinkFilesDirectoryPath;
+        if (playlistDir is null)
         {
             await dialogs.ShowErrorDialogAsync($"No configured link files directory");
             return;
@@ -472,10 +472,10 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var m3uPath = Path.Combine(m3uDir, "export.m3u");
-        if (fileSystem.File.Exists(m3uPath))
+        var playlistPath = Path.Combine(playlistDir, "export.m3u8");
+        if (fileSystem.File.Exists(playlistPath))
         {
-            var overwriteConfirmed = await dialogs.ShowConfirmDialogAsync($"File {m3uPath} already exists. Overwrite?");
+            var overwriteConfirmed = await dialogs.ShowConfirmDialogAsync($"File {playlistPath} already exists. Overwrite?");
             if (!overwriteConfirmed)
             {
                 return;
@@ -486,18 +486,19 @@ public partial class MainViewModel : ObservableObject
         m3uContentSs.AppendLine("#EXTM3U");
         foreach (var linkDto in linkVmsWithFile.Select(x => x.LinkDto))
         {
-            var filePath = linkFileRepo.GetLinkFilePath(linkDto);
-            m3uContentSs.AppendLine($"#EXTINF:-1,{linkDto.Title ?? filePath}");
+            var absoluteFilePath = linkFileRepo.GetLinkFilePath(linkDto);
+            var filePath = Path.GetFileName(absoluteFilePath);
+            m3uContentSs.AppendLine($"#EXTINF:-1 {linkDto.Title ?? filePath}");
             m3uContentSs.AppendLine(filePath);
             m3uContentSs.AppendLine();
         }
 
-        var m3uContent = m3uContentSs.ToString();
-        fileSystem.File.WriteAllText(m3uPath, m3uContent);
+        var playlistContent = m3uContentSs.ToString();
+        fileSystem.File.WriteAllText(playlistPath, playlistContent);
 
         try
         {
-            fileUtils.SelectFileInExplorer(m3uPath);
+            fileUtils.SelectFileInExplorer(playlistPath);
         }
         catch
         {
