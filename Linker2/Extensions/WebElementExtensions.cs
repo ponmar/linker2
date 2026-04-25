@@ -57,7 +57,7 @@ public static class WebElementExtensions
 
             return htmlClasses.Any(elementClasses.Contains);
         }
-        catch (StaleElementReferenceException e)
+        catch (StaleElementReferenceException)
         {
             return false;
         }

@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Linker2.Views;
 using System.Diagnostics;
@@ -17,12 +16,8 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        // Line below is needed to remove Avalonia data validation.
-        // Without this line you will get duplicate validations from both Avalonia and CT
-        BindingPlugins.DataValidators.RemoveAt(0);
-
-        Process proc = Process.GetCurrentProcess();
-        var count = Process.GetProcesses().Where(p => p.ProcessName == proc.ProcessName).Count();
+        var proc = Process.GetCurrentProcess();
+        var count = Process.GetProcesses().Count(p => p.ProcessName == proc.ProcessName);
 
         Bootstrapper.Bootstrap();
 
